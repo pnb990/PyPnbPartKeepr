@@ -1,0 +1,7 @@
+Django>=3.0
+django-bootstrap4
+django-cleanup
+django-jsonify
+django-dbbackup
+django-debug-toolbar
+psycopg2>=2.7.0.0,<3.0.0.0
