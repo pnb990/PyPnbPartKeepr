@@ -111,7 +111,12 @@ Create super user
 ./manage.py createsuperuser
 ```
 
-* For debug start :
+If you use static files
+```
+python manage.py collectstatic
+```
+
+For debug start :
 ```
 ./debug_server.sh
 ```
