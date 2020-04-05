@@ -1,14 +1,18 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 from phone_field import PhoneField
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils import timezone
+from .Currency import CURRENCY_LIST_ACRONYM 
 
 def get_default_user_id():
-    u,created = User.objects.get_or_create(username="inconnu")
+    u,created = User.objects.get(username="nobody")
     if created:
         print("Created %s"%str(u))
     return u.id
+
+
 
 ###############################################################################
 # Category
@@ -27,7 +31,6 @@ class Category(MPTTModel):
            'self',
            on_delete=models.SET_NULL,
            null=True,
-           blank=True, 
            related_name='children'
            )
     description = models.TextField(
@@ -61,7 +64,6 @@ class StorageLocation(models.Model):
     image = models.ImageField(
             upload_to='stockLocation/images/%Y/%m/%d/', 
             null=True,
-            blank=True,
             help_text='Image'
             )
     category = models.ForeignKey(
@@ -94,7 +96,6 @@ class Footprint(models.Model):
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
             null=True,
-            blank=True,
             help_text='Image'
             )
 
@@ -119,19 +120,19 @@ class Company(models.Model):
             help_text='Postal address'
             )
     url = models.URLField(
-            blank=True,
+            null=True,
             help_text='Web site url'
             )
     phone = PhoneField(
-            blank=True,
+            null=True,
             help_text='Contact phone number'
             )
     fax = PhoneField(
-            blank=True,
+            null=True,
             help_text='Contact fax number'
             )
     email = models.EmailField(
-            blank=True,
+            null=True,
             help_text='Contact fax number'
             )
     comment = models.TextField(
@@ -141,7 +142,6 @@ class Company(models.Model):
     image = models.ImageField(
             upload_to=UPLOAD_TO, 
             null=True,
-            blank=True,
             help_text='Image'
             )
 
@@ -201,13 +201,24 @@ class Unit(models.Model):
              help_text='Defines the allowed System International prefix for this parameter unit'
              )
 
+class PartMeasurementUnit(models.Model):
+    name = models.CharField(
+            help_text='name',
+            max_length=255
+            )
+
+    shortName = models.CharField(
+            help_text='Short name',
+            max_length=16
+            )
+
+
 ###############################################################################
 # Part 
 ###############################################################################
 
 class Part(models.Model):
     name = models.CharField(
-            unique=True,
             blank=False,
             help_text='name',
             max_length=255
@@ -223,19 +234,18 @@ class Part(models.Model):
             )
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
-            blank=True,
+            null=True,
             help_text='Image'
             )
     footprint = models.ForeignKey(
             Footprint, 
             on_delete=models.PROTECT, 
-            blank=True,
+            null=True,
             help_text='footprint'
             )
     storageLocation = models.ForeignKey(
             StorageLocation, 
             on_delete=models.PROTECT, 
-            blank=False,
             help_text='Storage location'
             )
     comment = models.TextField(
@@ -254,16 +264,16 @@ class Part(models.Model):
             help_text='General average part\'s price'
             )
     status = models.CharField(
-            blank=True,
+            null=True,
             help_text='a status ... may be active/end of life/development ???',
             max_length=255
             )
-    needReview = models.BooleanField(
+    needsReview = models.BooleanField(
             default=True,
             help_text='Use this one for pricing calculation'
             )
     partCondition = models.CharField(
-            blank=True,
+            null=True,
             help_text='I don\' know...',
             max_length=255
             )
@@ -278,6 +288,12 @@ class Part(models.Model):
     removals = models.BooleanField(
             default=False,
             help_text='Need to be removed ?'
+            )
+    partUnit = models.ForeignKey(
+            PartMeasurementUnit, 
+            on_delete=models.CASCADE, 
+            null=True,
+            help_text=''
             )
 
     productionRemarks = models.CharField(
@@ -303,7 +319,7 @@ class PartDistributor(models.Model):
             )
     orderNumber = models.CharField(
             unique=True,
-            blank=False,
+            null=True,
             help_text='name',
             max_length=255
             )
@@ -313,18 +329,18 @@ class PartDistributor(models.Model):
     price = models.DecimalField(
             max_digits=13,
             decimal_places=4,
-            blank=True,
+            null=True,
             help_text='Price per part'
             )
     currency = models.CharField(
-            unique=True,
             blank=False,
             help_text='Money system',
-            max_length=3
+            max_length=3,
+            choices=CURRENCY_LIST_ACRONYM
             )
     sku = models.CharField(
             unique=True,
-            blank=True,
+            null=True,
             help_text='Stock keeping unit',
             max_length=255
             )
@@ -347,7 +363,7 @@ class PartManufacturer(models.Model):
             )
     partNumber = models.CharField(
             unique=True,
-            blank=False,
+            null=True,
             help_text='name',
             max_length=255
             )
@@ -356,6 +372,28 @@ class PartManufacturer(models.Model):
 ###############################################################################
 # Project
 ###############################################################################
+
+
+class Project(models.Model):
+
+    name = models.CharField(
+            help_text='name',
+            max_length=255
+            )
+
+    owner = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            related_name='+',
+            null=True,
+            on_delete=models.SET_NULL,
+            default=get_default_user_id
+            )
+
+    description = models.CharField(
+            blank=True,
+            help_text='description',
+            max_length=255
+            )
 
 class ProjectPart(models.Model): 
 
@@ -378,11 +416,10 @@ class ProjectPart(models.Model):
             help_text='Part quantity inside'
             )
             
-    part = models.ForeignKey(
-            Part, 
-            blank=False,
-            on_delete=models.PROTECT, 
-            help_text='part'
+    project = models.ForeignKey(
+            Project, 
+            on_delete=models.CASCADE, 
+            help_text='project'
             )
 
     remarks = models.CharField(
@@ -415,27 +452,6 @@ class ProjectPart(models.Model):
             help_text='The total quantity including overage',
             )
 
-
-class Project(models.Model):
-
-    name = models.CharField(
-            help_text='name',
-            max_length=255
-            )
-
-    owner = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            related_name='+',
-            null=True,
-            on_delete=models.SET_NULL,
-            default=get_default_user_id
-            )
-
-    description = models.CharField(
-            blank=True,
-            help_text='description',
-            max_length=255
-            )
 
 class ProjectRun(models.Model):
 
@@ -499,7 +515,7 @@ class Parameter(models.Model):
             )
 
     normalizedValue = models.FloatField(
-            blank=True,
+            null=True,
             help_text="normalized value"
             )
 
@@ -511,13 +527,13 @@ class Parameter(models.Model):
             )
 
     stringValue = models.CharField(
-            blank=True,
+            null=True,
             help_text='Value in case of string',
             max_length=255
             )
 
     valueType = models.CharField(
-            blank=True,
+            null=True,
             help_text='The type of the value',
             max_length=10,
             choices=TYPE_CHOICES
@@ -525,7 +541,7 @@ class Parameter(models.Model):
 
     unit = models.ForeignKey(
             Unit,
-            blank=True,
+            null=True,
             on_delete=models.CASCADE, 
             help_text="The unit for this type. May be null"
             )
@@ -555,7 +571,7 @@ class PartParameter(models.Model):
             )
 
     normalizedMinValue = models.FloatField(
-            blank=True,
+            null=True,
             help_text="normalized minimum value"
             )
 
@@ -571,7 +587,7 @@ class PartParameter(models.Model):
             )
 
     normalizedMaxValue = models.FloatField(
-            blank=True,
+            null=True,
             help_text="normalized maximum value"
             )
 
@@ -631,7 +647,7 @@ class StockEntry(models.Model):
     price = models.DecimalField(
             max_digits=13,
             decimal_places=4,
-            blank=True,
+            null=True,
             help_text='Bought stock price per part'
             )
     boughtAt = models.DateTimeField(
