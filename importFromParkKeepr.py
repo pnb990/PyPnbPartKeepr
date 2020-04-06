@@ -37,7 +37,9 @@ def get_user(user_id):
     cursor2 = connection.cursor()
     user = None
     if user_id != None:
-        cursor2.execute("SELECT `id`, `username` FROM `partkeepruser` WHERE id={};".format(user_id))
+        nbr = cursor2.execute("SELECT `id`, `username` FROM `partkeepruser` WHERE id={};".format(user_id))
+        if nbr != 1:
+            print("Warning user_id {} is not unique !".format(user_id))
         for id,username in cursor2:
             if id == user_id:
                 user,created = User.objects.get_or_create(username=username)
@@ -45,6 +47,28 @@ def get_user(user_id):
                     print('user {} {} created'.format(user_id,username))
     return user
 
+def get_image_filenam(folder,tableName,column_id_name,image_id):
+    cursor2 = connection.cursor()
+    image = None
+    if image_id != None:
+        nbr = cursor2.execute("SELECT `id`, `{0}`, `filename`, `mimetype`, `extension` FROM `{1}` WHERE {0}={2};".format(
+            column_id_name,
+            tableName,
+            image_id
+            )
+            )
+        if nbr > 1:
+            print("Warning in table {} for column {}, {} is not unique !".format(tableName,column_id_name,image_id))
+        for id, column, filename, mimetype, extension in cursor2:
+            if nbr > 1 :
+                print(id, column, filename, mimetype, extension)
+            if column == image_id:
+
+                if extension == '':
+                    extension = mimetype.split('/')[1]
+
+                image = "{}.{}".format(os.path.join(folder,filename),extension)
+    return image
 
 # loading django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyPnbPartKeepr.settings")
@@ -106,8 +130,17 @@ for id,category_id,name in cursor:
     storagelocation,created = models.StorageLocation.objects.get_or_create(id=id,category=category)
     if created:
         print("    StorageLocation id {} name {} created".format(id,name))
+
     storagelocation.category    = category
     storagelocation.name        = name
+
+    storagelocation.image       = get_image_filenam(
+            "stockLocation/images",
+            'storagelocationimage',
+            'storagelocation_id',
+            id
+            )
+
     storagelocation.save()
 
 
@@ -127,6 +160,14 @@ for id,category_id,name,description in cursor:
     footprint.name          = name
     footprint.description   = description
     footprint.category      = category
+    
+    footprint.image       = get_image_filenam(
+            "footprint/images",
+            'footprintimage',
+            'footprint_id',
+            id
+            )
+    footprint.save()
 
 
 ###############################################################################
@@ -148,6 +189,13 @@ for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in curs
     distributor.comment     = comment
     distributor.skuurl      = skuurl
     distributor.forReports  = enabledForReports
+
+#    distributor.image       = get_image_filenam(
+#            "distributor/images",
+#            'distributorimage',
+#            'distributor_id',
+#            id
+#            )
     distributor.save()
 
 print("importing {} --------------------------------------------".format('manufacturer'))
@@ -163,6 +211,14 @@ for id,name,address,url,phone,fax,email,comment in cursor:
     manufacturer.fax         = fax
     manufacturer.email       = email
     manufacturer.comment     = comment
+
+    manufacturer.image       = get_image_filenam(
+            "manufacturer/images",
+            'manufacturericlogo',
+            'manufacturer_id',
+            id
+            )
+
     manufacturer.save()
 
 ###############################################################################
@@ -261,6 +317,14 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
     part.partUnit           = partUnit
     part.productionRemarks  = productionRemarks
     part.metaPart           = metaPart
+
+    part.image = get_image_filenam(
+            "part/images",
+            'partimage',
+            'part_id',
+            id
+            )
+
     part.save()
 
 print("importing {} --------------------------------------------".format('partdistributor'))
@@ -509,7 +573,82 @@ for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in cu
     stockEntry.comment      =comment if comment != None else ''
     stockEntry.save()
 
+###############################################################################
+# Attachment
+###############################################################################
 
+def setAttachment(attachment, folder, filename,  originalname,  mimetype,  extension,  description,  createAt):
+
+    timezone = pytz.timezone("UTC")
+    createatUtc = timezone.localize(createAt)
+
+    if extension == '':
+        extension = mimetype.split('/')[1]
+
+    attachment.filename     = originalname
+    attachment.uploadedAt   = createatUtc
+    attachment.content = "{}.{}".format(os.path.join(folder,filename),extension)
+    attachment.description = description if description != None else ''
+    
+
+print("importing {} --------------------------------------------".format('projectattachment'))
+cursor.execute("SELECT  `id`,  `project_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `projectattachment` ")
+for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+
+    project = models.Project.objects.get( id=project_id )
+
+    projectAttachment,created = models.ProjectAttachment.objects.get_or_create( 
+            id=id,
+            project=project
+            )
+
+    if created:
+        print("    ProjectAttachment id {} name {} created".format(id,name))
+
+    projectAttachment.project = project
+    setAttachment(projectAttachment,'project/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
+    projectAttachment.save()
+
+
+
+print("importing {} --------------------------------------------".format('partattachment'))
+cursor.execute("SELECT  `id`,  `part_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `partattachment` ")
+for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+
+    part = models.Part.objects.get( id=part_id )
+
+    partAttachment,created = models.PartAttachment.objects.get_or_create(
+            id=id,
+            part=part
+            )
+
+    if created:
+        print("    PartAttachment id {} name {} created".format(id,name))
+
+    partAttachment.part = part
+    setAttachment(partAttachment,'part/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
+    partAttachment.save()
+
+print("importing {} --------------------------------------------".format('footprintattachment'))
+cursor.execute("SELECT  `id`,  `footprint_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `footprintattachment` ")
+for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+
+    footprint = models.Footprint.objects.get( id=footprint_id )
+
+    footprintAttachment,created = models.FootprintAttachment.objects.get_or_create(
+            id=id,
+            footprint=footprint
+            )
+
+    if created:
+        print("    FootprintAttachment id {} name {} created".format(id,name))
+
+    footprintAttachment.part = part
+    setAttachment(footprintAttachment,'footprint/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
+    footprintAttachment.save()
+
+
+TODO Copy image old to new place ...
 
 
 

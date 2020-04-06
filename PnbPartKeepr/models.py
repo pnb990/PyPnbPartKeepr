@@ -668,13 +668,16 @@ class Attachment(models.Model):
 
     UPLOAD_TO = None
     filename = models.CharField(
-            blank=False,
             help_text='original filename',
             max_length=255
             )
     uploadedAt = models.DateTimeField(
             auto_now_add=True,
             help_text='Upload date of filename',
+            )
+    description = models.TextField(
+            blank=True,
+            help_text='Some details'
             )
     content = models.FileField(upload_to=UPLOAD_TO,
             null=False,
