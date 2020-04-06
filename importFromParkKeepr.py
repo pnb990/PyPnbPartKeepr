@@ -33,12 +33,42 @@ connection = pymysql.connect(
         )
 cursor = connection.cursor()
 
+def get_user(user_id):
+    cursor2 = connection.cursor()
+    user = None
+    if user_id != None:
+        cursor2.execute("SELECT `id`, `username` FROM `partkeepruser` WHERE id={};".format(user_id))
+        for id,username in cursor2:
+            if id == user_id:
+                user,created = User.objects.get_or_create(username=username)
+                if created:
+                    print('user {} {} created'.format(user_id,username))
+    return user
+
+
 # loading django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyPnbPartKeepr.settings")
 import django
 django.setup()
+from django.contrib.auth.models import User
 from PnbPartKeepr import models
 
+###############################################################################
+# User
+###############################################################################
+
+print("importing {} --------------------------------------------".format('partkeepruser'))
+cursor.execute("SELECT `username`, `email` FROM `partkeepruser`;")
+for username,email in cursor:
+
+    user,created = User.objects.get_or_create(username=username)
+    if created:
+        print("Created %s"%str(user))
+
+    user.username   = username
+    user.email      = email
+    user.save()
+    
 
 ###############################################################################
 # Category
@@ -299,18 +329,17 @@ print("importing {} --------------------------------------------".format('projec
 cursor.execute("SELECT  `id`, `user_id`, `name`, `description` FROM `project` ")
 for id, user_id, name, description in cursor:
 
-    #TODO try to import user owner PNB
+    user = get_user(user_id)
 
     project,created = models.Project.objects.get_or_create(
             id=id,
-            owner=None,
             name=name
             )
     if created:
         print("    Project id {} name {} created".format(id,name))
 
     project.name        = name
-    project.owner       = None
+    project.owner       = user
     project.description = description
     project.save()
 
@@ -447,4 +476,42 @@ for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, st
     metaPartParameterCriteria.valueType        =valueType
     metaPartParameterCriteria.siPrefix         =siPrefix,
     metaPartParameterCriteria.save()
+
+###############################################################################
+# Stock
+###############################################################################
+
+print("importing {} --------------------------------------------".format('stockentry'))
+cursor.execute("SELECT  `id`, `part_id`, `user_id`, `stockLevel`, `price`, `dateTime`, `correction`, `comment`  FROM `stockentry` ")
+for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in cursor:
+
+    part = models.Part.objects.get( id=part_id )
+    user = get_user(user_id)
+
+    stockEntry,created = models.StockEntry.objects.get_or_create(
+            id=id,
+            owner=user,
+            part=part,
+            quantity=quantity,
+            )
+    if created:
+        print("    StockEntry id {} name {} created".format(id,name))
+
+    timezone = pytz.timezone("UTC")
+    dateTimeUtc = timezone.localize(dateTime)
+
+    stockEntry.owner        =user
+    stockEntry.quantity     =quantity
+    stockEntry.part         =part
+    stockEntry.price        =price
+    stockEntry.boughtAt     =dateTimeUtc
+    stockEntry.description  =description
+    stockEntry.comment      =comment if comment != None else ''
+    stockEntry.save()
+
+
+
+
+
+
 

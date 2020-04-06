@@ -7,7 +7,7 @@ from django.utils import timezone
 from .Currency import CURRENCY_LIST_ACRONYM 
 
 def get_default_user_id():
-    u,created = User.objects.get(username="nobody")
+    u,created = User.objects.get_or_create(username="nobody")
     if created:
         print("Created %s"%str(u))
     return u.id
