@@ -18,6 +18,7 @@ parser.add_argument('--host',           type=str, default='localhost')
 parser.add_argument('-p','--port',      type=int, default='3306')
 parser.add_argument('-u','--user',      type=str, default='')
 parser.add_argument('-P','--password',  type=str, default='')
+parser.add_argument('-d','--data-dir',  type=str, default='.')
 parser.add_argument('database',  type=str, default='partkeeprdb')
 
 args = parser.parse_args()
@@ -47,11 +48,12 @@ def get_user(user_id):
                     print('user {} {} created'.format(user_id,username))
     return user
 
-def get_image_filenam(folder,tableName,column_id_name,image_id):
+def get_image_filename(basepath,tableName,column_id_name,image_id):
     cursor2 = connection.cursor()
-    image = None
+    image       = None
+    filename    = None
     if image_id != None:
-        nbr = cursor2.execute("SELECT `id`, `{0}`, `filename`, `mimetype`, `extension` FROM `{1}` WHERE {0}={2};".format(
+        nbr = cursor2.execute("SELECT `id`, `{0}`, `filename`, `originalname`, `mimetype`, `extension` FROM `{1}` WHERE {0}={2};".format(
             column_id_name,
             tableName,
             image_id
@@ -59,7 +61,7 @@ def get_image_filenam(folder,tableName,column_id_name,image_id):
             )
         if nbr > 1:
             print("Warning in table {} for column {}, {} is not unique !".format(tableName,column_id_name,image_id))
-        for id, column, filename, mimetype, extension in cursor2:
+        for id, column, filename, originalname, mimetype, extension in cursor2:
             if nbr > 1 :
                 print(id, column, filename, mimetype, extension)
             if column == image_id:
@@ -67,8 +69,12 @@ def get_image_filenam(folder,tableName,column_id_name,image_id):
                 if extension == '':
                     extension = mimetype.split('/')[1]
 
-                image = "{}.{}".format(os.path.join(folder,filename),extension)
-    return image
+            image = "{}.{}".format(os.path.join(args.data_dir,basepath,filename),extension)
+            filename = originalname
+
+    if image != None:
+        image = open(image,'rb')
+    return filename,image
 
 # loading django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyPnbPartKeepr.settings")
@@ -127,20 +133,25 @@ cursor.execute("SELECT  `id`,  `category_id`,  `name` FROM `storagelocation`;")
 for id,category_id,name in cursor:
     category = models.StorageLocationCategory.objects.get(id=category_id)
 
+    filename,image = get_image_filename(
+            'images/storagelocation',
+            'storagelocationimage',
+            'storagelocation_id', 
+            id
+            )
+
     storagelocation,created = models.StorageLocation.objects.get_or_create(id=id,category=category)
     if created:
         print("    StorageLocation id {} name {} created".format(id,name))
 
+
     storagelocation.category    = category
     storagelocation.name        = name
 
-    storagelocation.image       = get_image_filenam(
-            "stockLocation/images",
-            'storagelocationimage',
-            'storagelocation_id',
-            id
-            )
-
+    storagelocation.image.delete()
+    storagelocation.image = None
+    if image != None:
+        storagelocation.image.save(filename,image)
     storagelocation.save()
 
 
@@ -154,6 +165,14 @@ for id,category_id,name,description in cursor:
     if category_id == None:
         category_id = 1
     category = models.FootprintCategory.objects.get(id=category_id)
+
+    filename,image = get_image_filename(
+            'images/footprint',
+            'footprintimage',
+            'footprint_id',
+            id
+            )
+
     footprint,created = models.Footprint.objects.get_or_create(id=id,name=name,category=category)
     if created:
         print("Footprint id {} name {} created".format(id,name))
@@ -161,12 +180,11 @@ for id,category_id,name,description in cursor:
     footprint.description   = description
     footprint.category      = category
     
-    footprint.image       = get_image_filenam(
-            "footprint/images",
-            'footprintimage',
-            'footprint_id',
-            id
-            )
+    footprint.image.delete()
+    footprint.image = None
+    if image != None:
+        footprint.image.save(filename,image)
+
     footprint.save()
 
 
@@ -189,8 +207,9 @@ for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in curs
     distributor.comment     = comment
     distributor.skuurl      = skuurl
     distributor.forReports  = enabledForReports
+    distributor.image       = None
 
-#    distributor.image       = get_image_filenam(
+#    distributor.image       = get_image_filename(
 #            "distributor/images",
 #            'distributorimage',
 #            'distributor_id',
@@ -201,23 +220,30 @@ for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in curs
 print("importing {} --------------------------------------------".format('manufacturer'))
 cursor.execute("SELECT  `id`,  `name`,  `address`,  `url`,  `phone`,  `fax`,  `email`,  `comment` FROM `manufacturer` ")
 for id,name,address,url,phone,fax,email,comment in cursor:
-    manufacturer,created = models.Manufacturer.objects.get_or_create(id=id)
-    if created:
-        print("    Manufacturer id {} name {} created".format(id,name))
-    manufacturer.name        = name
-    manufacturer.address     = name
-    manufacturer.url         = url
-    manufacturer.phone       = phone
-    manufacturer.fax         = fax
-    manufacturer.email       = email
-    manufacturer.comment     = comment
 
-    manufacturer.image       = get_image_filenam(
-            "manufacturer/images",
+    filename,image = get_image_filename(
+            'images/iclogo',
             'manufacturericlogo',
             'manufacturer_id',
             id
             )
+
+    manufacturer,created = models.Manufacturer.objects.get_or_create(id=id)
+    if created:
+        print("    Manufacturer id {} name {} created".format(id,name))
+
+    manufacturer.name        = name
+    manufacturer.address     = address  if address  != None else ''
+    manufacturer.url         = url      if url      != None else ''
+    manufacturer.phone       = phone    if phone    != None else ''
+    manufacturer.fax         = fax      if fax      != None else ''
+    manufacturer.email       = email    if email    != None else ''
+    manufacturer.comment     = comment  if comment  != None else ''
+
+    manufacturer.image.delete()
+    manufacturer.image = None
+    if image != None:
+        manufacturer.image.save(filename,image)
 
     manufacturer.save()
 
@@ -286,6 +312,13 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
     timezone = pytz.timezone("UTC")
     createDateUtc = timezone.localize(createDate)
 
+    filename,image = get_image_filename(
+            'images/part',
+            'partimage',
+            'part_id',
+            id
+            )
+
     if productionRemarks == None:
         productionRemarks = ''
 
@@ -318,12 +351,11 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
     part.productionRemarks  = productionRemarks
     part.metaPart           = metaPart
 
-    part.image = get_image_filenam(
-            "part/images",
-            'partimage',
-            'part_id',
-            id
-            )
+    part.image.delete()
+    part.image = None
+    if image != None:
+        part.image.save(filename,image)
+
 
     part.save()
 
@@ -587,6 +619,7 @@ def setAttachment(attachment, folder, filename,  originalname,  mimetype,  exten
 
     attachment.filename     = originalname
     attachment.uploadedAt   = createatUtc
+    use same function as get_image_filename
     attachment.content = "{}.{}".format(os.path.join(folder,filename),extension)
     attachment.description = description if description != None else ''
     
@@ -648,9 +681,8 @@ for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  exten
     footprintAttachment.save()
 
 
-TODO Copy image old to new place ...
 
-
-
+#TODO Copy image old to new place ...
+#Use python magic to reconise files...
 
 

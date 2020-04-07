@@ -120,19 +120,19 @@ class Company(models.Model):
             help_text='Postal address'
             )
     url = models.URLField(
-            null=True,
+            blank=True,
             help_text='Web site url'
             )
     phone = PhoneField(
-            null=True,
+            blank=True,
             help_text='Contact phone number'
             )
     fax = PhoneField(
-            null=True,
+            blank=True,
             help_text='Contact fax number'
             )
     email = models.EmailField(
-            null=True,
+            blank=True,
             help_text='Contact fax number'
             )
     comment = models.TextField(
@@ -141,7 +141,7 @@ class Company(models.Model):
             )
     image = models.ImageField(
             upload_to=UPLOAD_TO, 
-            null=True,
+            blank=True,
             help_text='Image'
             )
 
@@ -157,8 +157,9 @@ class Distributor(Company):
             help_text='Use this one for pricing calculation'
             )
 
-class Manufacturer(models.Model):
+class Manufacturer(Company):
     UPLOAD_TO = 'manufacturer/images/%Y/%m/%d/'
+    pass
 
 ###############################################################################
 # Unit
