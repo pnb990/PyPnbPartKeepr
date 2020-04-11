@@ -121,3 +121,14 @@ For debug start :
 ./debug_server.sh
 ```
 
+### importing old PartKeepr data
+
+To import old database and file use importFromParkKeepr script.
+
+see help with python importFromParkKeepr -h 
+
+exemple:
+```
+./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
+```
+

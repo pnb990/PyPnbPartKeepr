@@ -18,7 +18,7 @@ parser.add_argument('--host',           type=str, default='localhost')
 parser.add_argument('-p','--port',      type=int, default='3306')
 parser.add_argument('-u','--user',      type=str, default='')
 parser.add_argument('-P','--password',  type=str, default='')
-parser.add_argument('-d','--data-dir',  type=str, default='.')
+parser.add_argument('-d','--data-dir',  type=str, default='.', required=True)
 parser.add_argument('database',  type=str, default='partkeeprdb')
 
 args = parser.parse_args()
@@ -49,6 +49,14 @@ def get_user(user_id):
     return user
 
 def get_image_filename(basepath,tableName,column_id_name,image_id):
+    """
+    Give a tuple with image filename and opened image.
+    basepath        : old location folder
+    tableName       : tableName in old database
+    column_id_name  : name of column in old database for image id
+    image_id        : image id in old database
+    """
+
     cursor2 = connection.cursor()
     image       = None
     filename    = None
@@ -69,8 +77,8 @@ def get_image_filename(basepath,tableName,column_id_name,image_id):
                 if extension == '':
                     extension = mimetype.split('/')[1]
 
-            image = "{}.{}".format(os.path.join(args.data_dir,basepath,filename),extension)
-            filename = originalname
+                image = "{}.{}".format(os.path.join(args.data_dir,basepath,filename),extension)
+                filename = originalname
 
     if image != None:
         image = open(image,'rb')
@@ -609,7 +617,8 @@ for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in cu
 # Attachment
 ###############################################################################
 
-def setAttachment(attachment, folder, filename,  originalname,  mimetype,  extension,  description,  createAt):
+
+def setAttachment(attachment, basepath, filename,  originalname,  mimetype,  extension,  description,  createAt):
 
     timezone = pytz.timezone("UTC")
     createatUtc = timezone.localize(createAt)
@@ -617,12 +626,13 @@ def setAttachment(attachment, folder, filename,  originalname,  mimetype,  exten
     if extension == '':
         extension = mimetype.split('/')[1]
 
-    attachment.filename     = originalname
+    filePath = "{}.{}".format(os.path.join(args.data_dir,basepath,filename),extension)
+
     attachment.uploadedAt   = createatUtc
-    use same function as get_image_filename
-    attachment.content = "{}.{}".format(os.path.join(folder,filename),extension)
-    attachment.description = description if description != None else ''
-    
+    attachment.description  = description if description != None else ''
+
+    attachment.content  = None
+    attachment.content.save(originalname,open(filePath,'rb'))
 
 print("importing {} --------------------------------------------".format('projectattachment'))
 cursor.execute("SELECT  `id`,  `project_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `projectattachment` ")
@@ -638,8 +648,18 @@ for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extensi
     if created:
         print("    ProjectAttachment id {} name {} created".format(id,name))
 
+    setAttachment(
+            projectAttachment,
+            'files/ProjectAttachment', 
+            filename,  
+            originalname,  
+            mimetype, 
+            extension,  
+            description,  
+            createAt
+            )
+
     projectAttachment.project = project
-    setAttachment(projectAttachment,'project/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
     projectAttachment.save()
 
 
@@ -658,8 +678,18 @@ for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,
     if created:
         print("    PartAttachment id {} name {} created".format(id,name))
 
+    setAttachment(
+            partAttachment,
+            'files/PartAttachment', 
+            filename,  
+            originalname,  
+            mimetype, 
+            extension,
+            description,
+            createAt
+            )
+
     partAttachment.part = part
-    setAttachment(partAttachment,'part/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
     partAttachment.save()
 
 print("importing {} --------------------------------------------".format('footprintattachment'))
@@ -676,8 +706,18 @@ for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  exten
     if created:
         print("    FootprintAttachment id {} name {} created".format(id,name))
 
-    footprintAttachment.part = part
-    setAttachment(footprintAttachment,'footprint/attachments', filename,  originalname,  mimetype, extension,  description,  createAt)
+    setAttachment(
+            footprintAttachment,
+            'files/FootprintAttachment', 
+            filename,
+            originalname,
+            mimetype,
+            extension,
+            description,
+            createAt
+            )
+
+    footprintAttachment.footprint = footprint
     footprintAttachment.save()
 
 

@@ -107,8 +107,6 @@ class Company(models.Model):
     class Meta:
         abstract = True
 
-    UPLOAD_TO=None
-
     name = models.CharField(
             unique=True,
             blank=False,
@@ -139,14 +137,14 @@ class Company(models.Model):
             blank=True,
             help_text='Comment'
             )
+
+class Distributor(Company):
+
     image = models.ImageField(
-            upload_to=UPLOAD_TO, 
+            upload_to='distributor/images/%Y/%m/%d/',
             blank=True,
             help_text='Image'
             )
-
-class Distributor(Company):
-    UPLOAD_TO = 'distributor/images/%Y/%m/%d/'
     skuUrl = models.URLField(
             blank=True,
             help_text='SKU URL'
@@ -158,8 +156,11 @@ class Distributor(Company):
             )
 
 class Manufacturer(Company):
-    UPLOAD_TO = 'manufacturer/images/%Y/%m/%d/'
-    pass
+    image = models.ImageField(
+            upload_to='manufacturer/images/%Y/%m/%d/',
+            blank=True,
+            help_text='Image'
+            )
 
 ###############################################################################
 # Unit
@@ -667,11 +668,6 @@ class Attachment(models.Model):
     class Meta:
         abstract = True
 
-    UPLOAD_TO = None
-    filename = models.CharField(
-            help_text='original filename',
-            max_length=255
-            )
     uploadedAt = models.DateTimeField(
             auto_now_add=True,
             help_text='Upload date of filename',
@@ -680,14 +676,13 @@ class Attachment(models.Model):
             blank=True,
             help_text='Some details'
             )
-    content = models.FileField(upload_to=UPLOAD_TO,
-            null=False,
-            blank=False,
-            help_text='Footprint attachment content'
-            )
 
 class ProjectAttachment(Attachment):
-    UPLOAD_TO = 'project/attachments/%Y/%m/%d/' 
+    content = models.FileField(upload_to='project/attachments/%Y/%m/%d/',
+            null=False,
+            blank=False,
+            help_text='Project attachment file'
+            )
 
     project = models.ForeignKey(
             Project, 
@@ -697,7 +692,11 @@ class ProjectAttachment(Attachment):
 
 
 class PartAttachment(Attachment):
-    UPLOAD_TO = 'part/attachments/%Y/%m/%d/' 
+    content = models.FileField(upload_to='part/attachments/%Y/%m/%d/',
+            null=False,
+            blank=False,
+            help_text='Part attachment file'
+            )
 
     part = models.ForeignKey(
             Part, 
@@ -706,7 +705,11 @@ class PartAttachment(Attachment):
             )
 
 class FootprintAttachment(Attachment):
-    UPLOAD_TO = 'footprint/attachments/%Y/%m/%d/' 
+    content = models.FileField(upload_to='footprint/attachments/%Y/%m/%d/',
+            null=False,
+            blank=False,
+            help_text='Footprint attachment file'
+            )
 
     footprint = models.ForeignKey(
             Footprint, 
