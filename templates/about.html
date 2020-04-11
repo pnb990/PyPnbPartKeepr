@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
 
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}
-About
+{% block title %}
+    {% trans "about" %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -13,10 +15,13 @@ About
 {% block page-content %}
 {% endblock %}
 
+{% block page-anonymous %}
+{% endblock %}
+
 {% block tail %}
 <ul>
   <li>
-    <strong>Copyright &copy; 2015 
+    <strong>Copyright &copy; 2020 
         <a href="https://fr.linkedin.com/pub/pierre-noel-bouteville/1/376/123">Pierre-Noel Bouteville</a>.
         <a href="mailto:pnbchrono@gmail.com?subject=PNBChrono&body=Hello"><span class="glyphicon glyphicon-envelope"></span></a>
     </strong>

@@ -22,6 +22,7 @@ urlpatterns = [
     path('',        TemplateView.as_view(template_name='index.html'), name="home"),
     path('about',   TemplateView.as_view(template_name='about.html'), name="about"),
     path('PnbPartKeepr/', include('PnbPartKeepr.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]
 

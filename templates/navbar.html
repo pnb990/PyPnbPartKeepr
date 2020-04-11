@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load bootstrap4 %}
+
+<!-- Nav Bar -->
+<div class="container">
+    <div class="navbar navbar-expand-md navbar-static-top navbar-light bg-lignt" role="navigation">
+        <a class="navbar-brand" href="/">PnbPartKeepr</a>
+        <button class="navbar-toggler collapsed"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarsMain"
+                aria-controls="navbarsMain"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+                <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarsMain">
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_anonymous %}
+                    {% include "navbar_item.html" with routeName="login" label="login" %}
+                {% else %}
+{% comment %}
+                    {% include "navbar_item.html" with routeName="app_part" label="parts" %}
+                    {% include "navbar_item.html" with routeName="app_footprint" label="footprints" %}
+                    {% include "navbar_item.html" with routeName="app_storageLocation" label="storages.location" %}
+{% endcomment %}
+                    {% include "navbar_item.html" with routeName="logout" label="logout" %}
+                {% endif %}
+                {% include "navbar_item.html" with routeName="about" label="about" %}
+            </ul>
+        </div>
+    </div>
+    {% block breadcrumb %}
+        <ol class="breadcrumb">
+            {% for val in breadcrumb %}
+                <li class="breadcrumb-item ">
+                    <a href="#">
+                        {% trans val %}
+                    </a>
+                </li>
+            {% empty %}
+                <li>
+                    {% trans "nobreadcrumb" %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% endblock %}
+</div>
+<!-- Nav Bar end -->
+
