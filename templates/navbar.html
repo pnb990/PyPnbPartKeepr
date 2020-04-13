@@ -5,8 +5,8 @@
 {% endcomment %}
 
 <!-- Nav Bar -->
-<div class="container">
-    <div class="navbar navbar-expand-md navbar-static-top navbar-light bg-lignt" role="navigation">
+<header class="navbar">
+    <div class="navbar navbar-expand" role="navigation">
         <a class="navbar-brand" href="/">PnbPartKeepr</a>
         <button class="navbar-toggler collapsed"
                 type="button"
@@ -20,22 +20,22 @@
         </button>
 
         <div class="navbar-collapse collapse" id="navbarsMain">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ">
                 {% if user.is_anonymous %}
-                    {% include "navbar_item.html" with routeName="login" label="login" %}
+                {% include "navbar_item.html" with routeName="login" label="login" %}
                 {% else %}
-                    {% include "navbar_item.html" with routeName="PnbPartKeepr_part_list" label="parts" %}
-                    {% include "navbar_item.html" with routeName="PnbPartKeepr_footprint_list" label="footprints" %}
-                    {% include "navbar_item.html" with routeName="PnbPartKeepr_storageLocation_list" label="storages.location" %}
-                    {% include "navbar_item.html" with routeName="logout" label="logout" %}
+                {% include "navbar_item.html" with routeName="PnbPartKeepr_part_list" label="parts" %}
+                {% include "navbar_item.html" with routeName="PnbPartKeepr_footprint_list" label="footprints" %}
+                {% include "navbar_item.html" with routeName="PnbPartKeepr_storageLocation_list" label="storages.location" %}
+                {% include "navbar_item.html" with routeName="logout" label="logout" %}
                 {% endif %}
                 {% include "navbar_item.html" with routeName="about" label="about" %}
             </ul>
         </div>
     </div>
     {% block breadcrumbs %}
-        {% render_breadcrumbs %}
+    {% render_breadcrumbs %}
     {% endblock %}
-</div>
+</header>
 <!-- Nav Bar end -->
 

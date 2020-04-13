@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% load bootstrap4 %}
-{% load font_awesome %}
-
 {% load i18n %}
 {% load static %}
 {% load humanize %}
@@ -11,51 +9,46 @@
 {% endcomment %}
 
 {% block page-header %}
-{% blocktrans with name=owner|default:"everybody" %}
-Part of {{name}}.
-{% endblocktrans %}
-{% endblock %}
-
-{% block page-content %}
-<div class="container-fluid">
-    <table id="glucose-table" class="table display responsive" width="100%">
-        <tr>
-            <th scope="col">{% trans "Id"               %}</th>
-            <th scope="col">{% trans "Name"             %}</th>
-            <th scope="col">{% trans "Footprint"        %}</th>
-            <th scope="col">{% trans "Stock level"      %}</th>
-            <th scope="col">{% trans "Stock location"   %}</th>
-            <th scope="col">{% trans "Category"         %}</th>
-            <th scope="col">{% trans "Created"          %}</th>
-            <th scope="col">{% trans "Action"           %}</th>
-        </tr>
-
-        {% for p in object_list %}
-        <tr onclick="document.location='{% url "PnbPartKeepr_part_detail" pk=p.id %}';" >
-            <td>{{ p.id                                                                                  }}</td>
-            <td>{{ p.name                                                                                }}</td>
-            <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.footprint                       %}</td>
-            <td>{{ p.stockLevel                                                                          }}</td>
-            <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation                 %}</td>
-            <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category                        %}</td>
-            <td>{{ p.createDate|naturaltime                                                              }}</td>
-            <td>{% include "PnbPartKeepr/cell_action.html"   with id=p.id entity="PnbPartKeepr_part"     %}</td>
-        </tr>
-        {% empty %}
-        {% trans "No vehicle" %}
-        {% endfor %}
-    </table>
-
-        {% comment %}
-    <a href="{% url 'PnbPartKeepr_part_new' %}">
+<div class="d-flex justify-content-between">
+    {% trans "Parts" %}
+    <a href="{% url 'PnbPartKeepr_part_create' %}">
         <button class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus">
-            </span>
+            <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
         </button>
     </a>
-        {% endcomment %}
-
 </div>
+{% endblock %}
+
+{% block page-content %}
+<table class="table">
+    <tr>
+        <th scope="col">{% trans "Id"               %}</th>
+        <th scope="col">{% trans "Name"             %}</th>
+        <th scope="col">{% trans "Footprint"        %}</th>
+        <th scope="col">{% trans "Stock level"      %}</th>
+        <th scope="col">{% trans "Min Stock level"  %}</th>
+        <th scope="col">{% trans "Stock location"   %}</th>
+        <th scope="col">{% trans "Category"         %}</th>
+        <th scope="col">{% trans "Created"          %}</th>
+        <th scope="col">{% trans "Action"           %}</th>
+    </tr>
+
+    {% for p in object_list %}
+    <tr onclick="document.location='{% url "PnbPartKeepr_part_detail" pk=p.id %}';" >
+        <td>{{ p.id                                                                                  }}</td>
+        <td>{{ p.name                                                                                }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.footprint                       %}</td>
+        <td>{{ p.stockLevel                                                                          }}</td>
+        <td>{{ p.minStockLevel                                                                       }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation                 %}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category                        %}</td>
+        <td>{{ p.createDate|naturaltime                                                              }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with id=p.id entity="PnbPartKeepr_part"     %}</td>
+    </tr>
+    {% empty %}
+    {% trans "No Part" %}
+    {% endfor %}
+</table>
 {% endblock %}
 

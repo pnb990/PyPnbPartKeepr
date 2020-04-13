@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load bootstrap4 %}
-{% load font_awesome %}
 
 {% load static %}
 {% load humanize %}
@@ -10,58 +9,43 @@
 {% endcomment %}
 
 {% block page-header %}
-{% trans "Footprints" %}
-<a href={% url "PnbPartKeepr_footprint_create" %} >
-    <button class="btn btn-defaults">
-        {% fa "fa-plus-circle" %}
-    </button>
-</a>
-{% endblock %}
-
-{% block page-content %}
-<div class="container-fluid">
-    <table id="glucose-table" class="table display responsive" width="100%">
-        <tr>
-            <th scope="col">{% trans "Id"               %}</th>
-            <th scope="col">{% trans "Name"             %}</th>
-            <th scope="col">{% trans "Image"            %}</th>
-            <th scope="col">{% trans "Description"      %}</th>
-            <th scope="col">{% trans "Category"         %}</th>
-            <th scope="col">{% trans "Action"           %}</th>
-        </tr>
-
-        {% for f in object_list %}
-        {% comment %}
-        
-        {% endcomment %}
-        <tr onclick="document.location='{% url "PnbPartKeepr_footprint_detail" pk=f.id %}';" >
-            <td>{{ f.id }}</td>
-            <td>{{ f.name }}</td> 
-            <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f.storageLocation                  %}</td>
-            <td>{{ f.description }}</td> 
-            <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category                         %}</td>
-            <td>{% include "PnbPartKeepr/cell_action.html"  with id=f.id entity="PnbPartKeepr_footprint" %}</td>
-        </tr>
-        {% empty %}
-        {% trans "No footprint" %}
-        {% endfor %}
-        {% comment %}
-        <td><a href="{% url "PnbPartKeepr_part_detail" p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-eye-open"></span></button></a></td>
-        <td><a href="{% url "PnbPartKeepr_part_delete"    p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-remove"  ></span></button></a></td>
-        <td>{% include 'session_viewer/vehicle_icon_list.html' %}</td>
-        {% endcomment %}
-    </table>
-
-        {% comment %}
-    <a href="{% url 'PnbPartKeepr_part_new' %}">
+<div class="d-flex justify-content-between">
+    {% trans "Footprints" %}
+    <a href={% url "PnbPartKeepr_footprint_create" %} >
         <button class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus">
-            </span>
+            <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
         </button>
     </a>
-        {% endcomment %}
-
 </div>
+{% endblock %}
+
+{% block page-content %}
+<table class="table">
+    <tr>
+        <th scope="col">{% trans "Id"               %}</th>
+        <th scope="col">{% trans "Name"             %}</th>
+        <th scope="col">{% trans "Image"            %}</th>
+        <th scope="col">{% trans "Description"      %}</th>
+        <th scope="col">{% trans "Category"         %}</th>
+        <th scope="col">{% trans "Action"           %}</th>
+    </tr>
+
+    {% for f in object_list %}
+    {% comment %}
+
+    {% endcomment %}
+    <tr onclick="document.location='{% url "PnbPartKeepr_footprint_detail" pk=f.id %}';" >
+        <td>{{ f.id }}</td>
+        <td>{{ f.name }}</td> 
+        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f.storageLocation                  %}</td>
+        <td>{{ f.description }}</td> 
+        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category                         %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"  with id=f.id entity="PnbPartKeepr_footprint" %}</td>
+    </tr>
+    {% empty %}
+    {% trans "No footprint" %}
+    {% endfor %}
+</table>
 {% endblock %}
 

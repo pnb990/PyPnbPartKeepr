@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'mptt',
     'bootstrap4',
     'django_bootstrap_breadcrumbs',
-    'fa', # font_awesome
 ]
 
 MIDDLEWARE = [

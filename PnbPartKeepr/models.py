@@ -317,6 +317,12 @@ class Part(models.Model):
         print('toto')
         return self.footprint.name
 
+
+    def stockLevel(self):
+        return sum([i.quantity for i in self.stockentry_set.all()])
+
+
+
 class PartDistributor(models.Model):
     part = models.ForeignKey(
             Part, 

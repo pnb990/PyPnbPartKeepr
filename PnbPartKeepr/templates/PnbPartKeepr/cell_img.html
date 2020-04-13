@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load bootstrap4 %}
-{% load font_awesome %}
 {% load static %}
 
 {% if elem and elem.image %}
@@ -9,5 +8,5 @@
     alt="element image"
 />
 {% else %}
-{% fa "fa-image" %}
+<span class="fas fa-image" />
 {% endif %}

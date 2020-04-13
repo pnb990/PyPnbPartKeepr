@@ -7,6 +7,11 @@ urlpatterns = [
         # Part
         #
     path(
+        'part/create',
+        views.PnbPartKeeprCreateView.as_view(model=models.Part),
+        name='PnbPartKeepr_part_create'
+        ),
+    path(
         'part/list',
         views.PnbPartKeeprListView.as_view(model=models.Part),
         name='PnbPartKeepr_part_list'

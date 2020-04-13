@@ -1,10 +1,9 @@
 {% load bootstrap4 %}
-{% load font_awesome %}
 
 {% if elem %}
 <a href={% url entity|add:"_detail" pk=elem.id %} >
     <button class="btn btn-defaults">
-        {% fa "fa-link" %}
+        <span class="fas fa-link"></span>
     </button>
 </a>
 {% endif %}

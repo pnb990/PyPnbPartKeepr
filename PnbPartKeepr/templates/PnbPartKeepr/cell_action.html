@@ -1,11 +1,10 @@
 {% load bootstrap4 %}
-{% load font_awesome %}
 
 {% with entity|add:"_detail" as url_name %}
 {% if not url_name in request.resolver_match.view_name %}
 <a href={% url url_name pk=id %} >
     <button class="btn btn-defaults">
-        {% fa "fa-eye" %}
+        <span class="fas fa-eye" ></span>
     </button>
 </a>
 {% endif %}
@@ -15,7 +14,7 @@
 {% if not url_name in request.resolver_match.view_name %}
 <a href={% url url_name pk=id %} >
     <button class="btn btn-defaults">
-        {% fa "fa-edit" %}
+        <span class="fas fa-edit"></span>
     </button>
 </a>
 {% endif %}
@@ -25,7 +24,7 @@
 {% if not url_name in request.resolver_match.view_name %}
 <a href={% url url_name pk=id %} >
     <button class="btn btn-defaults">
-        {% fa "fa-remove" %}
+        <span class="fas fa-trash" ></span>
     </button>
 </a>
 {% endif %}

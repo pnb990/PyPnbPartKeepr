@@ -6,7 +6,6 @@ django-dbbackup
 django-debug-toolbar
 django-phone-field
 django-mptt
-django-fa
 django-view-breadcrumbs
 psycopg2>=2.7.0.0,<3.0.0.0
 whitenoise

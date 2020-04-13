@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+{% load fontawesome %}
+
+{% load static %}
+{% load humanize %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}
+{% trans "Footprint" %}{{ footprint.name }}
+{% endblock %}
+
+{% block page-content %}
+<div>
+    <dl class="row">
+
+        <th class="col-md-1">{% trans "Name"             %}</th>
+        <td class="col-md-1">{{ part.name }}</td>
+
+        <th class="col-md-2">{% trans "Footprint"        %}</th>
+        <td class="col-md-1">{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_footprint" elem=part.footprint %}</td>
+
+        <th class="col-md-2">{% trans "Created"          %}</th>
+        <td class="col-md-1">{{ part.createDate|naturaltime }}</td>
+
+        <th class="col-md-2">{% trans "Stock level"      %}</th>
+        <td class="col-md-1">{{ part.stockLevel }}</td>
+
+        <th class="col-md-2">{% trans "Stock location"   %}</th>
+        <td class="col-md-3">{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_storageLocation" elem=part.storageLocation %}</td>
+
+        <th class="col-md-2">{% trans "Category"         %}</th>
+        <td class="col-md-6">{% include "PnbPartKeepr/cell_name.html" with elem=part.category %}</td>
+
+    </dl>
+    {% include "PnbPartKeepr/cell_action.html" with id=part.id entity="PnbPartKeepr_part" %}
+</div>
+{% endblock %}
+
