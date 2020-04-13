@@ -1,11 +1,13 @@
+{% load i18n %}
+{% load bootstrap4 %}
+{% load font_awesome %}
 {% load static %}
 
-<img class="pnbpartkeepr-elem-list-icon"
 {% if elem and elem.image %}
+<img class="pnbpartkeepr-elem-list-icon"
     src="{{ elem.image.url }}"
     alt="element image"
-{% else %}
-    src="{% static "PnbPartKeepr/images/icons8-no-image-50.png" %}"
-    alt="no image"
-{% endif %}
 />
+{% else %}
+{% fa "fa-image" %}
+{% endif %}

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load static %}
 {% load bootstrap4 %}
+{% load font_awesome %}
+
+{% load static %}
 {% load humanize %}
 
 {% comment %}
@@ -9,6 +11,11 @@
 
 {% block page-header %}
 {% trans "Footprints" %}
+<a href={% url "PnbPartKeepr_footprint_create" %} >
+    <button class="btn btn-defaults">
+        {% fa "fa-plus-circle" %}
+    </button>
+</a>
 {% endblock %}
 
 {% block page-content %}
@@ -25,14 +32,15 @@
 
         {% for f in object_list %}
         {% comment %}
-        onclick="document.location='"{% url "PnbPartKeepr_part_show" pk=f.id %}';"
+        
         {% endcomment %}
-        <tr >
+        <tr onclick="document.location='{% url "PnbPartKeepr_footprint_detail" pk=f.id %}';" >
             <td>{{ f.id }}</td>
             <td>{{ f.name }}</td> 
             <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f.storageLocation                  %}</td>
+            <td>{{ f.description }}</td> 
             <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category                         %}</td>
-            <td>{% include "PnbPartKeepr/cell_action.html"  with pk=f.id entity="PnbPartKeepr_footprint" %}</td>
+            <td>{% include "PnbPartKeepr/cell_action.html"  with id=f.id entity="PnbPartKeepr_footprint" %}</td>
         </tr>
         {% empty %}
         {% trans "No footprint" %}

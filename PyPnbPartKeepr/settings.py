@@ -59,11 +59,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django_bootstrap_breadcrumbs',
     'view_breadcrumbs',
     'PnbPartKeepr',
     'mptt',
     'bootstrap4',
+    'django_bootstrap_breadcrumbs',
+    'fa', # font_awesome
 ]
 
 MIDDLEWARE = [

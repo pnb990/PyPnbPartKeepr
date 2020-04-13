@@ -1,12 +1,33 @@
-{% load static %}
+{% load bootstrap4 %}
+{% load font_awesome %}
 
-<a href={% url entity|add:"_detail" pk=id %} >
-    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-preview-pane-50.png" %}" alt="Show" />
+{% with entity|add:"_detail" as url_name %}
+{% if not url_name in request.resolver_match.view_name %}
+<a href={% url url_name pk=id %} >
+    <button class="btn btn-defaults">
+        {% fa "fa-eye" %}
+    </button>
 </a>
-<a href={% url entity|add:"_update" pk=id %} >
-    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-edit-50.png" %}" alt="modify" />
+{% endif %}
+{% endwith %}
+
+{% with entity|add:"_update" as url_name %}
+{% if not url_name in request.resolver_match.view_name %}
+<a href={% url url_name pk=id %} >
+    <button class="btn btn-defaults">
+        {% fa "fa-edit" %}
+    </button>
 </a>
-<a href={% url entity|add:"_delete" pk=id %} >
-    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-delete-50.png" %}" alt="delete" />
+{% endif %}
+{% endwith %}
+
+{% with entity|add:"_delete" as url_name %}
+{% if not url_name in request.resolver_match.view_name %}
+<a href={% url url_name pk=id %} >
+    <button class="btn btn-defaults">
+        {% fa "fa-remove" %}
+    </button>
 </a>
-    <a href="{% url "PnbPartKeepr_part_detail" p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-eye-open"></span></button></a></td>
+{% endif %}
+{% endwith %}
+

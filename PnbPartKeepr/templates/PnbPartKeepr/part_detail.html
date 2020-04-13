@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load static %}
 {% load bootstrap4 %}
+{% load font_awesome %}
+
+{% load static %}
 {% load humanize %}
 
 {% comment %}
@@ -39,16 +41,7 @@
                 <td>{{ part.createDate|naturaltime }}</td>
             </tr>
     </table>
-    <a href={% url "PnbPartKeepr_part_update" pk=part.id %} >
-        <button class="btn btn-default">
-            <img class="pnbparkeepr-elem-icon" src="{% static "PnbPartKeepr/images/icons8-edit-50.png" %}" alt="modify" />
-        </button>
-    </a>
-    <a href={% url "PnbPartKeepr_part_delete" pk=part.id %} >
-        <button class="btn btn-default">
-            <img class="pnbparkeepr-elem-icon" src="{% static "PnbPartKeepr/images/icons8-delete-50.png" %}" alt="delete" />
-        </button>
-    </a>
+    {% include "PnbPartKeepr/cell_action.html" with id=part.id entity="PnbPartKeepr_part" %}
 </div>
 {% endblock %}
 

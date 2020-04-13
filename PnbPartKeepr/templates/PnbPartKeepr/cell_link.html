@@ -1,7 +1,10 @@
-{% load static %}
+{% load bootstrap4 %}
+{% load font_awesome %}
 
 {% if elem %}
 <a href={% url entity|add:"_detail" pk=elem.id %} >
-    <img class="pnbpartkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-link-50.png" %}" alt="link" />
+    <button class="btn btn-defaults">
+        {% fa "fa-link" %}
+    </button>
 </a>
 {% endif %}
