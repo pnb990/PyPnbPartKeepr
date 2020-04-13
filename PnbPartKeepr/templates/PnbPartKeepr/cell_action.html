@@ -1,0 +1,12 @@
+{% load static %}
+
+<a href={% url entity|add:"_detail" pk=id %} >
+    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-preview-pane-50.png" %}" alt="Show" />
+</a>
+<a href={% url entity|add:"_update" pk=id %} >
+    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-edit-50.png" %}" alt="modify" />
+</a>
+<a href={% url entity|add:"_delete" pk=id %} >
+    <img class="pnbparkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-delete-50.png" %}" alt="delete" />
+</a>
+    <a href="{% url "PnbPartKeepr_part_detail" p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-eye-open"></span></button></a></td>

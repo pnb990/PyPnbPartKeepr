@@ -1,0 +1,11 @@
+{% load static %}
+
+<img class="pnbpartkeepr-elem-list-icon"
+{% if elem and elem.image %}
+    src="{{ elem.image.url }}"
+    alt="element image"
+{% else %}
+    src="{% static "PnbPartKeepr/images/icons8-no-image-50.png" %}"
+    alt="no image"
+{% endif %}
+/>

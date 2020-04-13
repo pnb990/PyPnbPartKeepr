@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page-header %}
+{% trans "Not allowed" %}
+{% endblock %}
+
+{% block page-content %}
+{% if exception %}
+  <p>{{ exception }}</p>
+{% else %}
+  <p>Static generic message</p>
+{% endif %}
+{% endblock %}
+

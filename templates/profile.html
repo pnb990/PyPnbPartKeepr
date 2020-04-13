@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}Profile{% endblock %}
+
+{% block page-content %}
+<table class="table">
+    <tr>
+        <td>{% trans "First name:" %}</td><td>{{ user.first_name }}</td>
+    </tr>
+    <tr>
+        <td>{% trans "Name:" %}</td><td>{{ user.last_name }}</td>
+    </tr>
+    <tr>
+        <td>{% trans "Email:" %}</td><td>{{ user.email }}</td>
+    </tr>
+    <tr>
+        <td>{% trans "Password" %}</td><td>
+        <a href="{% url 'password_change' %}">
+            {% trans 'modify' %}
+        </a></td>
+    </tr>
+</table>
+    <a href="{% url 'logout' %}">
+      <button class="btn btn-default">
+          <span class="glyphicon glyphicon-log-in">
+          </span>
+          {% trans "Logout" %}
+      </button>
+    </a>
+{% endblock %}
+

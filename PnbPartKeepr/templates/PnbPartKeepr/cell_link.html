@@ -1,0 +1,7 @@
+{% load static %}
+
+{% if elem %}
+<a href={% url entity|add:"_detail" pk=elem.id %} >
+    <img class="pnbpartkeepr-elem-list-icon" src="{% static "PnbPartKeepr/images/icons8-link-50.png" %}" alt="link" />
+</a>
+{% endif %}

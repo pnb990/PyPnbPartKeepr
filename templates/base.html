@@ -11,9 +11,11 @@
     <head>
         <meta charset="UTF-8">
 
-        <title>{% block title %}PnbParKeepr{% endblock %}</title>
+        <title>{% block title %}PnbPartKeepr{% endblock %}</title>
         {% bootstrap_css %}
 
+        <!-- PnbPartKeepr style -->
+        <link href="{% static "PnbPartKeepr/css/styles.css" %}" rel="stylesheet" type="text/css" />
         <!-- My style -->
         <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css" />
 
@@ -31,39 +33,35 @@
         <header>
             {% block navbar %}{% include 'navbar.html' %}{% endblock %}
         </header>
-        <!-- bootstrap_messages -->
-        {% bootstrap_messages %}
-        <!-- bootstrap_messages end -->
 
-        <!-- Content Wrapper. Contains page content -->
-        {% if not user.is_anonymous %}
-            <div class="container">
-                {# Display django.contrib.messages as Bootstrap alerts #}
-                {% bootstrap_messages %} 
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                <div class="breadcrumb">
-                    {% block breadcrumb %}
-                    {% endblock %}
-                </div>
-                <h1>
-                    {% block page-header %}TODO{% endblock %}
-                </h1>
-            </div>
-
-            {% block page-content %}TODO{% endblock %}
-        {% else %}
-            {% block page-anonymous %}<h1>Not Logged</h1>{% endblock %}
-        {% endif %}
+        <div class="container">
+            {# Display django.contrib.messages as Bootstrap alerts #}
+            {% bootstrap_messages %} 
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <h1>{% block page-header %}TODO{% endblock %}</h1>
+        </div>
+        {% block page-content %}TODO{% endblock %}
         {% include 'pagination.html' %}
 
-        {% bootstrap_javascript %}
+        {% if user.is_anonymous %}
+        {% trans "last connection" %}
+        {{ user.last_login }}
+        {{ user.last_login|naturaltime }}
+        {% endif %}
 
+        <!-- 
+            **************************************************
+            * Java script 
+            **************************************************
+        -->
+
+        {% bootstrap_javascript %}
         <!-- Optionally, you can add Slimscroll and FastClick plugins.
             Both of these plugins are recommended to enhance the
             user experience. Slimscroll is required when using the
@@ -71,12 +69,7 @@
             <script src="{% static "js/base.js" %}" type="text/javascript"></script>
             <script> $( document ).ready(function() { base.init() }); </script>
             -->
-            {% block tail %}{% endblock %}
+        {% block tail %}{% endblock %}
 
-            {% if user.is_anonymous %}
-            {% trans "last connection" %}
-            {{ user.last_login }}
-            {{ user.last_login|naturaltime }}
-            {% endif %}
     </body>
 </html>

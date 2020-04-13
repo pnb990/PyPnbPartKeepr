@@ -1,24 +1,15 @@
 {% extends "base.html" %}
+
 {% load i18n %}
 {% load bootstrap4 %}
 
 {% comment %}
 {% endcomment %}
-
-{% block title %}
-    {% trans "about" %}
-{% endblock %}
-
-{% block breadcrumbs %}
+{% block page-header %}
+    {% trans "About" %}
 {% endblock %}
 
 {% block page-content %}
-{% endblock %}
-
-{% block page-anonymous %}
-{% endblock %}
-
-{% block tail %}
 <ul>
   <li>
     <strong>Copyright &copy; 2020 
@@ -34,7 +25,7 @@
     <a href="https://icons8.com">Icon pack by Icons8</a>
   </li>
   <li> 
-    <div>Icons made by <a href="http://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+      <div>{% trans "Icons made by" %}<a href="http://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
   </li>
 </ul>
 {% endblock %}

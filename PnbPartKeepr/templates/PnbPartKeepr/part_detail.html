@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}
+{% trans "Part" %}{{ part.name }}
+{% endblock %}
+
+{% block page-content %}
+<div>
+    <table>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <td>{{ part.name }}</td>
+            </rt>
+            <tr>
+                <th>{% trans "Footprint" %}</th>
+                <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_footprint" elem=part.footprint %}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Stock level" %}</th>
+                <td>{{ part.stockLevel }}</th>
+            </tr>
+            <tr>
+                <th>{% trans "Stock location" %}</th>
+                <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_storageLocation" elem=part.storageLocation %}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Category" %}</th>
+                <td>{% include "PnbPartKeepr/cell_name.html" with elem=part.category %}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Created" %}</th>
+                <td>{{ part.createDate|naturaltime }}</td>
+            </tr>
+    </table>
+    <a href={% url "PnbPartKeepr_part_update" pk=part.id %} >
+        <button class="btn btn-default">
+            <img class="pnbparkeepr-elem-icon" src="{% static "PnbPartKeepr/images/icons8-edit-50.png" %}" alt="modify" />
+        </button>
+    </a>
+    <a href={% url "PnbPartKeepr_part_delete" pk=part.id %} >
+        <button class="btn btn-default">
+            <img class="pnbparkeepr-elem-icon" src="{% static "PnbPartKeepr/images/icons8-delete-50.png" %}" alt="delete" />
+        </button>
+    </a>
+</div>
+{% endblock %}
+

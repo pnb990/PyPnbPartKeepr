@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block page-anonymous %}
-<h1>Logged out!</h1>
-Thanks for you visite!
-{% endblock %}
+{% block page-header %}{% trans "Logged out!" %}{% endblock %}
+{% block page-content %}{% trans "Thanks for you visite!" %}{% endblock %}
 

@@ -3,6 +3,7 @@
 {% comment %}
 set active = (app.request.get('_route') matches '/^'~routeName~'.*/') %}
 {% endcomment %}
+
 {% if routeName in request.resolver_match.view_name %}
 <li class="nav-item active" > <a class="nav-link active"
 {% else %}

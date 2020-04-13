@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}
+{% blocktrans with name=owner|default:"everybody" %}
+Part of {{name}}.
+{% endblocktrans %}
+{% endblock %}
+
+{% block page-content %}
+<div class="container-fluid">
+    <div class="rows">
+        <div class="col-md-10">
+            <div class="dropdown pull-left">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{ owner|default:'all' }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="{% url "PnbPartKeepr_part_list" %}">{% trans 'all' %}</a></li>
+                    {% for t in owner_list %}
+                    <li><a href="{% url "PnbPartKeepr_part_list" owner=t.id %}">{{ t }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <table id="glucose-table" class="table display responsive" width="100%">
+        <tr>
+            <th scope="col">{% trans "Id"               %}</th>
+            <th scope="col">{% trans "Name"             %}</th>
+            <th scope="col">{% trans "Footprint"        %}</th>
+            <th scope="col">{% trans "Stock level"      %}</th>
+            <th scope="col">{% trans "Stock location"   %}</th>
+            <th scope="col">{% trans "Category"         %}</th>
+            <th scope="col">{% trans "Created"          %}</th>
+            <th scope="col">{% trans "Action"           %}</th>
+        </tr>
+
+        {% for part in object_list %}
+        {% comment %}
+        onclick="document.location='"{% url "PnbPartKeepr_part_show" id=part.id %}';"
+        {% endcomment %}
+        <tr >
+            <td>{{ part.id                                                                                  }}</td>
+            <td>{{ part.name                                                                                }}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=part.footprint                       %}</td>
+            <td>{{ part.stockLevel                                                                          }}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=part.storageLocation                 %}</td>
+            <td>{% include "PnbPartKeepr/cell_name.html"     with elem=part.category                        %}</td>
+            <td>{{ part.createDate|naturaltime                                                              }}</td>
+            <td>{% include "PnbPartKeepr/cell_action.html"   with id=part.id entity="PnbPartKeepr_part"     %}</td>
+        </tr>
+        {% empty %}
+        {% trans "No vehicle" %}
+        {% endfor %}
+        {% comment %}
+        <td><a href="{% url "PnbPartKeepr_part_detail" p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-eye-open"></span></button></a></td>
+        <td><a href="{% url "PnbPartKeepr_part_delete"    p.id %}"><button class="btn btn-defaults"><span class="glyphicon glyphicon-remove"  ></span></button></a></td>
+        <td>{% include 'session_viewer/vehicle_icon_list.html' %}</td>
+        {% endcomment %}
+    </table>
+
+        {% comment %}
+    <a href="{% url 'PnbPartKeepr_part_new' %}">
+        <button class="btn btn-primary">
+            <span class="glyphicon glyphicon-plus">
+            </span>
+            {% trans 'Add a New one' %}
+        </button>
+    </a>
+        {% endcomment %}
+
+</div>
+{% endblock %}
+

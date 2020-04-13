@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_bootstrap_breadcrumbs',
+    'view_breadcrumbs',
     'PnbPartKeepr',
     'mptt',
     'bootstrap4',
@@ -171,6 +173,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+BREADCRUMBS_HOME_LABEL = "Home"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

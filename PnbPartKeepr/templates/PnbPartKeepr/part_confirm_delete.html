@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block page-header %}
+{% blocktrans with name=object.name id=object.id footprint=object.footprint.name %}Delete {{ name }}/{{ footprint }} part ({{ id }}), are you sure?{% endblocktrans %}
+{% endblock %}
+
+{% block page-content %}
+<form method="post" action="">
+   {% csrf_token %}
+   <p>
+   <label for="imsure">{% trans "Yes! I'm sure!" %}</label><input id="imsure" type="checkbox" name="imsure" /> 
+   </p>
+   <p>
+   <button type="submit" class="btn btn-primary" onclick="return $(':imsure:checked')"
+       >{% trans "Yes" %}</button>
+   </p>
+   <a href="{% url 'PnbPartKeepr_part_detail' object.id %}">
+       <button class="btn btn-default">{% trans "No" %}</button>
+   </a>
+</form>
+{% endblock %}

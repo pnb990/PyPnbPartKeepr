@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.urls import reverse
+
 from phone_field import PhoneField
 from mptt.models import MPTTModel, TreeForeignKey
-from django.utils import timezone
 from .Currency import CURRENCY_LIST_ACRONYM 
 
 def get_default_user_id():
@@ -307,6 +309,13 @@ class Part(models.Model):
             default=False,
             help_text='is a meta part ?'
             )
+
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_part_detail', args=[str(self.id)])
+
+    def get_footprint_display(self):
+        print('toto')
+        return self.footprint.name
 
 class PartDistributor(models.Model):
     part = models.ForeignKey(
