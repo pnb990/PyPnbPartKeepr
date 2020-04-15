@@ -11,8 +11,35 @@
     height: 200px;
 }
 
+.pnbpartkeepr-detail-image
+{
+    height: 400px;
+    width: 400px;
+}
+
 .fas
 {
     color:white;
 }
+
+/*
+ul
+{
+    color:white;
+    background:#00bc8c;
+}
+
+li .nav-item
+{
+    color:white;
+}
+*/
+
+li .active
+{
+    color:white;
+    background:#00efb2;
+    border-radius:4px;
+}
+
 

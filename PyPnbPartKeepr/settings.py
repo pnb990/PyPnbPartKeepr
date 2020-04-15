@@ -59,12 +59,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'view_breadcrumbs',
-    'PnbPartKeepr',
-    'mptt',
     'bootstrap4',
-    'django_bootstrap_breadcrumbs',
+    'mptt',
+    'PnbPartKeepr',
 ]
+    #'view_breadcrumbs',
+    #'django_bootstrap_breadcrumbs',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

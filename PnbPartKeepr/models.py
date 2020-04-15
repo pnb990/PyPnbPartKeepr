@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
@@ -691,6 +693,9 @@ class Attachment(models.Model):
             blank=True,
             help_text='Some details'
             )
+
+    def filename(self):
+        return os.path.basename(self.content.name)
 
 class ProjectAttachment(Attachment):
     content = models.FileField(upload_to='project/attachments/%Y/%m/%d/',

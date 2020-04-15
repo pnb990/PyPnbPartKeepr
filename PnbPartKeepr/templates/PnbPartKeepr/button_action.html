@@ -1,10 +1,13 @@
+{% load i18n %}
 {% load bootstrap4 %}
 
+<div class="d-flex justify-content-around">
 {% with entity|add:"_detail" as url_name %}
 {% if not url_name in request.resolver_match.view_name %}
 <a href={% url url_name pk=id %} >
     <button class="btn btn-primary">
         <span class="fas fa-eye" ></span>
+        {% trans "View" %}
     </button>
 </a>
 {% endif %}
@@ -15,6 +18,7 @@
 <a href={% url url_name pk=id %} >
     <button class="btn btn-warning">
         <span class="fas fa-edit"></span>
+        {% trans "Modify" %}
     </button>
 </a>
 {% endif %}
@@ -25,8 +29,10 @@
 <a href={% url url_name pk=id %} >
     <button class="btn btn-danger">
         <span class="fas fa-trash" ></span>
+        {% trans "Delete" %}
     </button>
 </a>
 {% endif %}
 {% endwith %}
+</div>
 

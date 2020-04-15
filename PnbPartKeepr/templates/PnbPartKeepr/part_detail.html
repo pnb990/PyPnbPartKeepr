@@ -8,7 +8,7 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% endblock %}
+{% block page-header %}{% trans "Part" %} {{part.id}}{% endblock %}
 
 {% block page-content %}
 <div>
@@ -16,42 +16,64 @@
         <tr>
             <th>{% trans "Name"            %}</th>
             <td>{{ part.name }}</td>
-
+        </tr>
+        <tr>
             <th>{% trans "Footprint"       %}</th>
             <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_footprint" elem=part.footprint %}</td>
-
+        </tr>
+        <tr>
             <th>{% trans "Created"         %}</th>
             <td>{{ part.createDate|naturaltime }}</td>
         </tr>
-
-        <th>{% trans "Average price"    %}</th>
-        <td>{{ part.averagePrice       }}</td>
-
-        <th>{% trans "Stock"%}</th>
-        <td>
-            <th>{% trans "level"       %}</th>
+        <tr>
+            <th>{% trans "Average price"    %}</th>
+            <td>{{ part.averagePrice       }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Stock"%} {% trans "level"       %}</th>
             <td>{{ part.stockLevel     }}</td>
-
-            <th>{% trans "Minimum"     %}</th>
+        </tr>
+        <tr>
+            <th>{% trans "Stock"%} {% trans "Minimum"     %}</th>
             <td>{{ part.minStockLevel  }}</td>
-        </td>
-
-        <th>{% trans "Stock location"   %}</th>
-        <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_storageLocation" elem=part.storageLocation %}</td>
-
-        <th>{% trans "Category"         %}</th>
-        <td>{% include "PnbPartKeepr/cell_name.html" with elem=part.category %}</td>
-
-        <th>{% trans "Image"       %}</th>
-        <td>{{ part.image          }}</td>
-
-        <th>{% trans "Description" %}</th>
-        <td>{{ part.description    }}</td>
-
-        <th>{% trans "Comment"     %}</th>
-        <td>{{ part.comment        }}</td>
-    </dl>
-    {% include "PnbPartKeepr/cell_action.html" with id=part.id entity="PnbPartKeepr_part" %}
+        </tr>
+        <tr>
+            <th>{% trans "Stock location"   %}</th>
+            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_storageLocation" elem=part.storageLocation %}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Category"         %}</th>
+            <td>{% include "PnbPartKeepr/cell_name.html" with elem=part.category %}</td>
+        </tr>
+            <th>{% trans "Description" %}</th>
+            <td>{{ part.description    }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Comment"     %}</th>
+            <td>{{ part.comment        }}</td>
+        </tr>
+    </table>
 </div>
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Image"       %}</th>
+            <th>{% trans "Attachment"  %}</th>
+        </tr>
+        <tr>
+            <td>{{ part.image          }}</td>
+            <td>
+                <ul>
+                    {% for f in part.partattachment_set.all %}
+                    <li><a href="{{ f.content.url }}">{{ f.filename }}</a></li>
+                    {% empty %}
+                    {% trans "No attachment" %}
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>
+{% include "PnbPartKeepr/button_action.html" with id=part.id entity="PnbPartKeepr_part" %}
 {% endblock %}
 

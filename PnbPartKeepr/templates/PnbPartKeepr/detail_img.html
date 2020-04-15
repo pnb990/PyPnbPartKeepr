@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% if elem and elem.image %}
+<img class="pnbpartkeepr-detail-image"
+    src="{{ elem.image.url }}"
+    alt="element image"
+/>
+{% else %}
+<span class="fas fa-image" />
+{% endif %}

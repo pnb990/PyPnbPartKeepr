@@ -1,7 +1,6 @@
 {% load i18n %}
-{% load django_bootstrap_breadcrumbs %}
-
 {% comment %}
+{% load django_bootstrap_breadcrumbs %}
 {% endcomment %}
 
 <!-- Nav Bar -->
@@ -33,9 +32,11 @@
             </ul>
         </div>
     </div>
+{% comment %}
     {% block breadcrumbs %}
     {% render_breadcrumbs %}
     {% endblock %}
+{% endcomment %}
 </header>
 <!-- Nav Bar end -->
 

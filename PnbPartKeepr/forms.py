@@ -27,4 +27,15 @@ class PnbPartKeeprPartForm(forms.ModelForm):
                 )
 
 
+class PnbPartKeeprFootprintForm(forms.ModelForm):
+    class Meta:
+        model = models.Part
+        fields = (
+                'name',
+                'description',
+                'category',
+                'image',
+                )
+
+
 

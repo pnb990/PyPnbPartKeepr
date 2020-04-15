@@ -51,7 +51,7 @@ urlpatterns = [
         ),
     path(
         'footprint/<int:pk>/update',
-        views.PnbPartKeeprUpdateView.as_view(model=models.Footprint),
+        views.PnbPartKeeprUpdateView.as_view(model=models.Footprint, form_class=forms.PnbPartKeeprFootprintForm ),
         name='PnbPartKeepr_footprint_update'
         ),
     path(
