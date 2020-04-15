@@ -15,11 +15,9 @@ Part of {{name}}.
 
 {% block page-content %}
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="submit" value="Submit" />
     {% csrf_token %}
-    to continue...
-    {{ bootstrap4 form.as_p }}
-    <input type="submit" value="Submit" />
+    {% bootstrap_form form %}
+    {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
 </form>
 {% endblock %}
 

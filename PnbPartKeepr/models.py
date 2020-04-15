@@ -35,6 +35,7 @@ class Category(MPTTModel):
            'self',
            on_delete=models.SET_NULL,
            null=True,
+           blank=True,
            related_name='children'
            )
     description = models.TextField(
@@ -44,15 +45,27 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    def __str__(self):
+        return  self.name
+
+    def path(self,sep=' > '):
+        s = self.name
+        if self.parent != None:
+            s = self.parent.path()+sep+s
+        return s
+
 
 class PartCategory(Category):
-    pass
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_part_category_detail', args=[str(self.id)])
 
 class FootprintCategory(Category):
-    pass
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_footprint_category_detail', args=[str(self.id)])
 
 class StorageLocationCategory(Category):
-    pass
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_storage_location_category_detail', args=[str(self.id)])
 
 ###############################################################################
 # Storage
@@ -70,7 +83,7 @@ class StorageLocation(models.Model):
             null=True,
             help_text='Image'
             )
-    category = models.ForeignKey(
+    category = TreeForeignKey(
             StorageLocationCategory, 
             on_delete=models.PROTECT, 
             help_text='Category'
@@ -92,7 +105,7 @@ class Footprint(models.Model):
             blank=True,
             help_text='Some details'
             )
-    category = models.ForeignKey(
+    category = TreeForeignKey(
             FootprintCategory, 
             on_delete=models.PROTECT, 
             help_text='Category'
@@ -102,6 +115,9 @@ class Footprint(models.Model):
             null=True,
             help_text='Image'
             )
+
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_footprint_detail', args=[str(self.id)])
 
 ###############################################################################
 # Company
@@ -233,7 +249,7 @@ class Part(models.Model):
             blank=True,
             help_text='Some details'
             )
-    category = models.ForeignKey(
+    category = TreeForeignKey(
             PartCategory, 
             on_delete=models.PROTECT, 
             help_text='Category'

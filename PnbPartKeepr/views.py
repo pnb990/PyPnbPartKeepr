@@ -24,9 +24,34 @@ from django.shortcuts import \
          get_object_or_404, \
          redirect
 
+from mptt.exceptions import InvalidMove
+from mptt.forms import MoveNodeForm
+
 from . import models
 
+#TODO remove for MPTT teste
+def show_part_category(request):
+    return render(request,"show_part_category.html",{'category':models.PartCategory.objects.all()})
 
+#TODO remove for MPTT teste
+def move_category(request, pk):
+    category = get_object_or_404(models.PartCategory, pk=pk)
+    if request.method == 'POST':
+        form = MoveNodeForm(category, request.POST)
+        if form.is_valid():
+            try:
+                category = form.save()
+                return HttpResponseRedirect(category.get_absolute_url())
+            except InvalidMove:
+                pass
+    else:
+        form = MoveNodeForm(category)
+
+    return render(request,'PnbPartKeepr/footprint_form.html', {
+        'form': form,
+        'category': category,
+        'category_tree': models.PartCategory.objects.all(),
+    })
 
 class PnbPartKeeprCreateView(LoginRequiredMixin,CreateView):
     pass

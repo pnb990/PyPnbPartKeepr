@@ -61,7 +61,13 @@
             <th>{% trans "Attachment"  %}</th>
         </tr>
         <tr>
-            <td>{{ part.image          }}</td>
+            <td>
+                {% if part.image %}
+                <img src="{{ part.image.url }}"/>
+                {% else %}
+                <span class="fas fa-image" />
+                {% endif %}
+            </td>
             <td>
                 <ul>
                     {% for f in part.partattachment_set.all %}

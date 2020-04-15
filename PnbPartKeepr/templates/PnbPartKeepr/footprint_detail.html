@@ -5,6 +5,8 @@
 {% load static %}
 {% load humanize %}
 
+{% load mptt_tags %}
+
 {% comment %}
 {% endcomment %}
 
@@ -19,7 +21,7 @@
         </tr>
         <tr>
             <th>{% trans "Category"         %}</th>
-            <td>{% include "PnbPartKeepr/cell_name.html" with elem=footprint.category %}</td>
+            <td>{{ footprint.category.path  }}</td>
         </tr>
     </table>
 </div>

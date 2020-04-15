@@ -4,6 +4,17 @@ from . import views,models,forms
 
 urlpatterns = [
         #
+        # Test
+        #
+    path( 'test/part_category', views.show_part_category ),
+    path( 'test/part_category/<int:pk>/', views.move_category ),
+        #
+        # PartCategory
+        #
+    path( 'part_category/<int:pk>/', 
+        views.PnbPartKeeprDetailView.as_view(model=models.PartCategory),
+        name='PnbPartKeepr_part_category_detail'),
+        #
         # Part
         #
     path(
@@ -51,7 +62,10 @@ urlpatterns = [
         ),
     path(
         'footprint/<int:pk>/update',
-        views.PnbPartKeeprUpdateView.as_view(model=models.Footprint, form_class=forms.PnbPartKeeprFootprintForm ),
+        views.PnbPartKeeprUpdateView.as_view(
+            model=models.Footprint, 
+            form_class=forms.PnbPartKeeprFootprintForm 
+            ),
         name='PnbPartKeepr_footprint_update'
         ),
     path(

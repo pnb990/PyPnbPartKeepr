@@ -60,8 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'bootstrap4',
-    'mptt',
     'PnbPartKeepr',
+    'mptt',
 ]
     #'view_breadcrumbs',
     #'django_bootstrap_breadcrumbs',
