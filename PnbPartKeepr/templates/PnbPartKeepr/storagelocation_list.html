@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load bootstrap4 %}
 
+{% load bootstrap4 %}
+{% load i18n %}
 {% load static %}
 {% load humanize %}
 
@@ -10,8 +10,8 @@
 
 {% block page-header %}
 <div class="d-flex justify-content-between">
-    {% trans "Footprints" %}
-    <a href={% url "PnbPartKeepr_footprint_create" %} >
+    {% trans "Storage location" %}
+    <a href="{% url "PnbPartKeepr_storageLocation_create" %}">
         <button class="btn btn-primary">
             <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
@@ -24,28 +24,26 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"            %}</th>
+        <th scope="col">{% trans "Image"             %}</th>
         <th scope="col">{% trans "Name"             %}</th>
-        <th scope="col">{% trans "Description"      %}</th>
         <th scope="col">{% trans "Category"         %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
-    {% for f in object_list %}
+    {% for sl in object_list %}
     {% comment %}
     {% endcomment %}
-    <tr onclick="document.location='{% url "PnbPartKeepr_footprint_detail" pk=f.id %}';" 
+    <tr onclick="document.location='{% url "PnbPartKeepr_storageLocation_detail" pk=sl.id %}';" 
         class="pnbpartkeepr-elem-list"
         >
-        <td>{{ f.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html" with elem=f %}</td>
-        <td>{{ f.name }}</td>
-        <td>{{ f.description }}</td> 
-        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"  with id=f.id entity="PnbPartKeepr_footprint" %}</td>
+        <td>{{ sl.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=sl %}</td>
+        <td>{{ sl.name }}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=sl.category %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with id=sl.id entity="PnbPartKeepr_storageLocation" %}</td>
     </tr>
     {% empty %}
-    {% trans "No footprint" %}
+    {% trans "No Storage location" %}
     {% endfor %}
 </table>
 {% endblock %}

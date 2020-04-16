@@ -75,7 +75,6 @@ class PnbPartKeeprDeleteView(LoginRequiredMixin,DeleteView):
         """ Hook to ensure object is owned by request.user. """
         obj = super(PnbPartKeeprDeleteView, self).get_object()
         if self.model == models.Part:
-            print(obj.__dict__)
             if obj.stockentry_set.count() > 0 :
                 raise PermissionDenied("At least one strock entry use this part")
             if obj.projectpart_set.count() > 0 :

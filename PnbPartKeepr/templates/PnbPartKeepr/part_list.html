@@ -24,6 +24,7 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
+        <th scope="col">{% trans "Image"             %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Footprint"        %}</th>
         <th scope="col">{% trans "Stock level"      %}</th>
@@ -35,16 +36,21 @@
     </tr>
 
     {% for p in object_list %}
-    <tr onclick="document.location='{% url "PnbPartKeepr_part_detail" pk=p.id %}';" >
-        <td>{{ p.id                                                                                  }}</td>
-        <td>{{ p.name                                                                                }}</td>
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.footprint                       %}</td>
-        <td>{{ p.stockLevel                                                                          }}</td>
-        <td>{{ p.minStockLevel                                                                       }}</td>
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation                 %}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category                        %}</td>
-        <td>{{ p.createDate|naturaltime                                                              }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with id=p.id entity="PnbPartKeepr_part"     %}</td>
+    {% comment %}
+    {% endcomment %}
+    <tr onclick="document.location='{% url "PnbPartKeepr_part_detail" pk=p.id %}';" 
+        class="pnbpartkeepr-elem-list"
+        >
+        <td>{{ p.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=p %}</td>
+        <td>{{ p.name }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.footprint %}</td>
+        <td>{{ p.stockLevel }}</td>
+        <td>{{ p.minStockLevel  }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation %}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category %}</td>
+        <td>{{ p.createDate|naturaltime }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with id=p.id entity="PnbPartKeepr_part" %}</td>
     </tr>
     {% empty %}
     {% trans "No Part" %}

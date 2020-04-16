@@ -3,7 +3,7 @@
 {% load bootstrap4 %}
 
 {% block page-header %}
-{% blocktrans with name=object.name id=object.id footprint=object.footprint.name %}Delete {{ name }}/{{ footprint }} part ({{ id }}), are you sure?{% endblocktrans %}
+{% blocktrans with name=object.name id=object.id %}Delete {{ name }} storage location ({{ id }}), are you sure?{% endblocktrans %}
 {% endblock %}
 
 {% block page-content %}
@@ -17,7 +17,7 @@
        >{% trans "Yes" %}</button>
    </p>
 </form>
-<a href="{% url 'PnbPartKeepr_part_detail' object.id %}">
+<a href="{% url 'PnbPartKeepr_storageLocation_detail' object.id %}">
    <button class="btn btn-default">{% trans "No" %}</button>
 </a>
 {% endblock %}

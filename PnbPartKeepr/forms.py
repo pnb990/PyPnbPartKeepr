@@ -1,7 +1,7 @@
 from django import forms
 from . import models
 
-class PnbPartKeeprPartForm(forms.ModelForm):
+class PartForm(forms.ModelForm):
     class Meta:
         model = models.Part
         fields = (
@@ -26,12 +26,21 @@ class PnbPartKeeprPartForm(forms.ModelForm):
                 )
 
 
-class PnbPartKeeprFootprintForm(forms.ModelForm):
+class FootprintForm(forms.ModelForm):
     class Meta:
         model = models.Footprint
         fields = (
                 'name',
                 'description',
+                'category',
+                'image',
+                )
+
+class StorageLocationForm(forms.ModelForm):
+    class Meta:
+        model = models.StorageLocation
+        fields = (
+                'name',
                 'category',
                 'image',
                 )

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}
+{% blocktrans with name=object.name %}
+Storage location of {{name}}.
+{% endblocktrans %}
+{% endblock %}
+
+{% block page-content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+</form>
+{% endblock %}
+

@@ -2,7 +2,13 @@
 .pnbpartkeepr-elem-list-icon
 {
     padding: 0px;
-    height: 25px;
+    max-height: 50px;
+    max-width:100px;
+}
+
+.pnbpartkeepr-elem-list:hover
+{
+    background:#00efb2
 }
 
 .pnbpartkeepr-elem-icon
@@ -13,8 +19,8 @@
 
 .pnbpartkeepr-detail-image
 {
-    height: 400px;
-    width: 400px;
+    max-height: 400px;
+    max-width: 400px;
 }
 
 .fas

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+
+{% load mptt_tags %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}{% trans "Storage location" %} {{ storageLocation.id }}{% endblock %}
+
+{% block page-content %}
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Name"             %}</th>
+            <td>{{ storagelocation.name }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Category"                 %}</th>
+            <td>{{ storagelocation.category.path   }}</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table class="table">
+        <tr>
+            <td>{% include "PnbPartKeepr/detail_img.html" with elem=storagelocation %}</td>
+        </tr>
+    </table>
+</div>
+{% include "PnbPartKeepr/button_action.html" with id=storagelocation.id entity="PnbPartKeepr_storageLocation" %}
+{% endblock %}
+

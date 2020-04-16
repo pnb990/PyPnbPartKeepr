@@ -48,24 +48,26 @@ class Category(MPTTModel):
     def __str__(self):
         return  self.name
 
-    def path(self,sep=' > '):
+    def path(self,sep=' > ',name = None):
         s = self.name
         if self.parent != None:
             s = self.parent.path()+sep+s
+        if name != None:
+            s = s+sep+name
         return s
 
 
 class PartCategory(Category):
     def get_absolute_url(self):
-        return reverse('PnbPartKeepr_part_category_detail', args=[str(self.id)])
+        return reverse('PnbPartKeepr_partCategory_detail', args=[str(self.id)])
 
 class FootprintCategory(Category):
     def get_absolute_url(self):
-        return reverse('PnbPartKeepr_footprint_category_detail', args=[str(self.id)])
+        return reverse('PnbPartKeepr_footprintCategory_detail', args=[str(self.id)])
 
 class StorageLocationCategory(Category):
     def get_absolute_url(self):
-        return reverse('PnbPartKeepr_storage_location_category_detail', args=[str(self.id)])
+        return reverse('PnbPartKeepr_storageLocationCategory_detail', args=[str(self.id)])
 
 ###############################################################################
 # Storage
@@ -80,7 +82,8 @@ class StorageLocation(models.Model):
             )
     image = models.ImageField(
             upload_to='stockLocation/images/%Y/%m/%d/', 
-            null=True,
+            blank=True,
+            default='',
             help_text='Image'
             )
     category = TreeForeignKey(
@@ -88,6 +91,12 @@ class StorageLocation(models.Model):
             on_delete=models.PROTECT, 
             help_text='Category'
             )
+
+    def __str__(self):
+        return self.category.path(name=self.name)
+
+    def get_absolute_url(self):
+        return reverse('PnbPartKeepr_storageLocation_detail', args=[str(self.id)])
 
 
 ###############################################################################
@@ -112,9 +121,13 @@ class Footprint(models.Model):
             )
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
-            null=True,
+            blank=True,
+            default='',
             help_text='Image'
             )
+
+    def __str__(self):
+        return self.category.path(name=self.name)
 
     def get_absolute_url(self):
         return reverse('PnbPartKeepr_footprint_detail', args=[str(self.id)])
@@ -163,6 +176,7 @@ class Distributor(Company):
     image = models.ImageField(
             upload_to='distributor/images/%Y/%m/%d/',
             blank=True,
+            default='',
             help_text='Image'
             )
     skuUrl = models.URLField(
@@ -179,6 +193,7 @@ class Manufacturer(Company):
     image = models.ImageField(
             upload_to='manufacturer/images/%Y/%m/%d/',
             blank=True,
+            default='',
             help_text='Image'
             )
 
@@ -256,7 +271,8 @@ class Part(models.Model):
             )
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
-            null=True,
+            blank=True,
+            default='',
             help_text='Image'
             )
     footprint = models.ForeignKey(
@@ -286,8 +302,9 @@ class Part(models.Model):
             help_text='General average part\'s price'
             )
     status = models.CharField(
-            null=True,
+            blank=True,
             help_text='a status ... may be active/end of life/development ???',
+            default='',
             max_length=255
             )
     needsReview = models.BooleanField(
@@ -295,8 +312,9 @@ class Part(models.Model):
             help_text='Use this one for pricing calculation'
             )
     partCondition = models.CharField(
-            null=True,
+            blank=True,
             help_text='I don\' know...',
+            default='',
             max_length=255
             )
     createDate = models.DateTimeField(
@@ -332,9 +350,7 @@ class Part(models.Model):
         return reverse('PnbPartKeepr_part_detail', args=[str(self.id)])
 
     def get_footprint_display(self):
-        print('toto')
         return self.footprint.name
-
 
     def stockLevel(self):
         return sum([i.quantity for i in self.stockentry_set.all()])
