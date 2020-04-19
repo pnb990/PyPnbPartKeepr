@@ -1,32 +1,27 @@
 {% load bootstrap4 %}
 
-{% with entity|add:"_detail" as url_name %}
-{% if not url_name in request.resolver_match.view_name %}
-<a href={% url url_name pk=id %} >
+{% if not elem.get_absolute_url  in request.resolver_match.view_name %}
+<a href={{ elem.get_absolute_url }} >
     <button class="btn btn-primary">
         <span class="fas fa-eye" ></span>
     </button>
 </a>
 {% endif %}
-{% endwith %}
 
-{% with entity|add:"_update" as url_name %}
-{% if not url_name in request.resolver_match.view_name %}
-<a href={% url url_name pk=id %} >
+{% if not elem.get_absolute_update_url  in request.resolver_match.view_name %}
+<a href={{ elem.get_absolute_update_url }} >
     <button class="btn btn-warning">
         <span class="fas fa-edit"></span>
     </button>
 </a>
 {% endif %}
-{% endwith %}
 
-{% with entity|add:"_delete" as url_name %}
-{% if not url_name in request.resolver_match.view_name %}
-<a href={% url url_name pk=id %} >
+{% if not elem.get_absolute_delete_url  in request.resolver_match.view_name %}
+<a href={{ elem.get_absolute_delete_url }} >
     <button class="btn btn-danger">
         <span class="fas fa-trash" ></span>
     </button>
 </a>
 {% endif %}
-{% endwith %}
+
 

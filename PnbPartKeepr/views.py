@@ -1,5 +1,5 @@
 
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ImproperlyConfigured,PermissionDenied
 from django.urls import reverse_lazy
 from django.template.context_processors import csrf
 from django.contrib.auth.models import User
@@ -7,22 +7,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from view_breadcrumbs import ListBreadcrumbMixin
 
-from django.http import \
-         HttpResponse,   \
-         HttpResponseRedirect, \
-         JsonResponse
-from django.views.generic import \
-         CreateView,\
-         UpdateView,\
-         DetailView,\
-         ListView,\
-         DeleteView,\
-         ArchiveIndexView,\
-         FormView
-from django.shortcuts import \
-         render,\
-         get_object_or_404, \
-         redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.views import generic
+from django.shortcuts import render, get_object_or_404, redirect
 
 from mptt.exceptions import InvalidMove
 from mptt.forms import MoveNodeForm
@@ -30,7 +17,7 @@ from mptt.forms import MoveNodeForm
 from . import models
 
 #TODO remove for MPTT teste
-def show_part_category(request):
+def PartCategoryListView(request):
     return render(request,"show_part_category.html",{'category':models.PartCategory.objects.all()})
 
 #TODO remove for MPTT teste
@@ -53,27 +40,29 @@ def move_category(request, pk):
         'category_tree': models.PartCategory.objects.all(),
     })
 
-class PnbPartKeeprCreateView(LoginRequiredMixin,CreateView):
+class CreateView(LoginRequiredMixin,generic.CreateView):
     pass
 
 
-class PnbPartKeeprDetailView(LoginRequiredMixin,DetailView):
-    def get_queryset(self):
-            return self.model.objects.filter(id=self.kwargs['pk'])
+class DetailView(LoginRequiredMixin,generic.DetailView):
+#    def get_queryset(self):
+#            return self.model.objects.filter(id=self.kwargs['pk'])
 
-    def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+#    def get_context_data(self, **kwargs):
+#        context = super().get_context_data(**kwargs)
 
 #        if self.model == models.track_session:
 #            context['object_list'] = [context['object'],]
 #            context['showed'] = file_types_showed(context['object_list'])
 
-        return context
+#        return context
+    pass
 
-class PnbPartKeeprDeleteView(LoginRequiredMixin,DeleteView):
+class DeleteView(LoginRequiredMixin,generic.DeleteView):
+    template_name = 'PnbPartKeepr/confirm_delete.html'
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
-        obj = super(PnbPartKeeprDeleteView, self).get_object()
+        obj = super().get_object()
         if self.model == models.Part:
             if obj.stockentry_set.count() > 0 :
                 raise PermissionDenied("At least one strock entry use this part")
@@ -81,21 +70,30 @@ class PnbPartKeeprDeleteView(LoginRequiredMixin,DeleteView):
                 raise PermissionDenied("At least one project use this part")
             if obj.projectrunpart_set.count() > 0 :
                 raise PermissionDenied("At least one project run use this part")
+        elif issubclass(self.model,models.Category):
+            if obj.children.count() > 0 :
+                raise PermissionDenied("At least one sub category_tree in it")
         return obj
 
-class PnbPartKeeprUpdateView(LoginRequiredMixin,UpdateView):
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(PnbPartKeeprUpdateView, self).get_object()
+class UpdateView(LoginRequiredMixin,generic.UpdateView):
+    template_name = 'PnbPartKeepr/update_form.html'
+#    def get_object(self, queryset=None):
+#        """ Hook to ensure object is owned by request.user. """
+#        obj = super().get_object()
 #       TODO some validation is it modifiable
 #        if not obj.owner == self.request.user:
 #            raise PermissionDenied
-        return obj
+#        return obj
+    pass
 
-class PnbPartKeeprListView(LoginRequiredMixin,ListView):
+class ListView(LoginRequiredMixin,generic.ListView):
     paginate_by = 10
 
-#    def get_queryset(self):
+    def get_queryset(self):
+        if issubclass(self.model,models.Category):
+            return self.model.objects.filter(parent_id=self.kwargs.get('pk',None))
+        return super().get_queryset()
+
 #
 #        track_id    = self.get_id('track') 
 #        owner_id    = self.get_id('owner')
@@ -123,7 +121,7 @@ class PnbPartKeeprListView(LoginRequiredMixin,ListView):
 #            except:
 #                pass
 #
-#        context = super(get_list, self).get_context_data(**kwargs)
+#        context = super().get_context_data(**kwargs)
 #
 #        self.request.session[page_key] = context['page_obj'].number
 #

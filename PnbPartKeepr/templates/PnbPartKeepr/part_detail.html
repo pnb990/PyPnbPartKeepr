@@ -4,6 +4,7 @@
 
 {% load static %}
 {% load humanize %}
+{% load mptt_tags %}
 
 {% comment %}
 {% endcomment %}
@@ -19,7 +20,7 @@
         </tr>
         <tr>
             <th>{% trans "Footprint"       %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_footprint" elem=part.footprint %}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=part.footprint %}</td>
         </tr>
         <tr>
             <th>{% trans "Created"         %}</th>
@@ -39,7 +40,7 @@
         </tr>
         <tr>
             <th>{% trans "Stock location"   %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with entity="PnbPartKeepr_storageLocation" elem=part.storageLocation %}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=part.storageLocation %}</td>
         </tr>
         <tr>
             <th>{% trans "Category"         %}</th>
@@ -76,6 +77,6 @@
         </tr>
     </table>
 </div>
-{% include "PnbPartKeepr/button_action.html" with id=part.id entity="PnbPartKeepr_part" %}
+{% include "PnbPartKeepr/button_action.html" with id=part.id entity="PnbPartKeepr_Part" %}
 {% endblock %}
 

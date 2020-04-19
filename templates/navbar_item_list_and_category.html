@@ -14,8 +14,8 @@ set active = (app.request.get('_route') matches '/^'~routeName~'.*/') %}
         {% trans label %}
     </a>
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="{% url routeName|add:"_list" %}"         >list</a>
-        <a class="dropdown-item" href="{% url routeName|add:"Category_list" %}" >category</a>
+        <a class="dropdown-item" href="{% url routeName|add:".list" %}"         >list</a>
+        <a class="dropdown-item" href="{% url routeName|add:"category.list" %}" >category</a>
     </div>
 </li>
 

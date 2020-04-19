@@ -8,9 +8,7 @@
 {% endcomment %}
 
 {% block page-header %}
-{% blocktrans with name=object.name %}
-Footprint of {{name}}.
-{% endblocktrans %}
+{% blocktrans with id=object.id %}Update {{object}} ({{ id }}).{% endblocktrans %}
 {% endblock %}
 
 {% block page-content %}

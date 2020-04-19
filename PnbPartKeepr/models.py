@@ -16,13 +16,24 @@ def get_default_user_id():
         print("Created %s"%str(u))
     return u.id
 
+class ReverseUrlMixin(object):
+    def get_absolute_url(self,action='detail'):
+        urlName = 'pnbpartkeepr.{}.{}'.format(self.__class__.__name__.lower(),action)
+        return reverse(urlName, args=[str(self.id)])
+
+    def get_absolute_update_url(self):
+        return self.get_absolute_url('update')
+    
+    def get_absolute_delete_url(self):
+        return self.get_absolute_url('delete')
+
 
 
 ###############################################################################
 # Category
 ###############################################################################
 
-class Category(MPTTModel):
+class Category(ReverseUrlMixin,MPTTModel):
     class Meta:
         abstract = True
 
@@ -58,22 +69,19 @@ class Category(MPTTModel):
 
 
 class PartCategory(Category):
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_partCategory_detail', args=[str(self.id)])
+    pass
 
 class FootprintCategory(Category):
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_footprintCategory_detail', args=[str(self.id)])
+    pass
 
 class StorageLocationCategory(Category):
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_storageLocationCategory_detail', args=[str(self.id)])
+    pass
 
 ###############################################################################
 # Storage
 ###############################################################################
 
-class StorageLocation(models.Model):
+class StorageLocation(ReverseUrlMixin,models.Model):
     name = models.CharField(
             unique=True,
             blank=False,
@@ -95,15 +103,12 @@ class StorageLocation(models.Model):
     def __str__(self):
         return self.category.path(name=self.name)
 
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_storageLocation_detail', args=[str(self.id)])
-
 
 ###############################################################################
 # Footprint
 ###############################################################################
 
-class Footprint(models.Model):
+class Footprint(ReverseUrlMixin,models.Model):
     name = models.CharField(
             unique=True,
             blank=False,
@@ -127,16 +132,13 @@ class Footprint(models.Model):
             )
 
     def __str__(self):
-        return self.category.path(name=self.name)
-
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_footprint_detail', args=[str(self.id)])
+        return self.name
 
 ###############################################################################
 # Company
 ###############################################################################
 
-class Company(models.Model):
+class Company(ReverseUrlMixin,models.Model):
     class Meta:
         abstract = True
 
@@ -201,7 +203,7 @@ class Manufacturer(Company):
 # Unit
 ###############################################################################
 
-class SiPrefix(models.Model):
+class SiPrefix(ReverseUrlMixin,models.Model):
     prefix = models.CharField(
             help_text='System International prefix name (e.g. yotta, deca, deci, centi)',
             max_length=255
@@ -225,7 +227,7 @@ class SiPrefix(models.Model):
     def calculateProduct(value):
         return value * self.base**self.exponent
 
-class Unit(models.Model):
+class Unit(ReverseUrlMixin,models.Model):
     name = models.CharField(
             help_text='The name of the unit (e.g. Volts, Ampere, Farad, Metres)',
             max_length=255
@@ -238,7 +240,7 @@ class Unit(models.Model):
              help_text='Defines the allowed System International prefix for this parameter unit'
              )
 
-class PartMeasurementUnit(models.Model):
+class PartMeasurementUnit(ReverseUrlMixin,models.Model):
     name = models.CharField(
             help_text='name',
             max_length=255
@@ -254,7 +256,7 @@ class PartMeasurementUnit(models.Model):
 # Part 
 ###############################################################################
 
-class Part(models.Model):
+class Part(ReverseUrlMixin,models.Model):
     name = models.CharField(
             blank=False,
             help_text='name',
@@ -346,18 +348,16 @@ class Part(models.Model):
             help_text='is a meta part ?'
             )
 
-    def get_absolute_url(self):
-        return reverse('PnbPartKeepr_part_detail', args=[str(self.id)])
-
     def get_footprint_display(self):
         return self.footprint.name
 
     def stockLevel(self):
+        #TODO review to optimise this request with https://docs.djangoproject.com/fr/3.0/topics/db/aggregation/
         return sum([i.quantity for i in self.stockentry_set.all()])
 
 
 
-class PartDistributor(models.Model):
+class PartDistributor(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
             Part, 
             on_delete=models.CASCADE, 
@@ -401,7 +401,7 @@ class PartDistributor(models.Model):
             help_text='Use this one for pricing calculation'
             )
 
-class PartManufacturer(models.Model):
+class PartManufacturer(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
             Part, 
             on_delete=models.CASCADE, 
@@ -425,7 +425,7 @@ class PartManufacturer(models.Model):
 ###############################################################################
 
 
-class Project(models.Model):
+class Project(ReverseUrlMixin,models.Model):
 
     name = models.CharField(
             help_text='name',
@@ -446,7 +446,7 @@ class Project(models.Model):
             max_length=255
             )
 
-class ProjectPart(models.Model): 
+class ProjectPart(ReverseUrlMixin,models.Model): 
 
     # TODO check utility PNB
     OVERAGE_TYPE_ABSOLUTE = "absolute";
@@ -504,7 +504,7 @@ class ProjectPart(models.Model):
             )
 
 
-class ProjectRun(models.Model):
+class ProjectRun(ReverseUrlMixin,models.Model):
 
     runDateTime = models.DateTimeField(
             default=timezone.now
@@ -522,7 +522,7 @@ class ProjectRun(models.Model):
             )
 
 
-class ProjectRunPart(models.Model):
+class ProjectRunPart(ReverseUrlMixin,models.Model):
 
     projectRun = models.ForeignKey(
             ProjectRun, 
@@ -550,7 +550,7 @@ class ProjectRunPart(models.Model):
 # Parameter
 ###############################################################################
 
-class Parameter(models.Model):
+class Parameter(ReverseUrlMixin,models.Model):
     class Meta:
         abstract = True
 
@@ -600,7 +600,7 @@ class Parameter(models.Model):
 
 
 
-class PartParameter(models.Model):
+class PartParameter(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
             Part, 
             on_delete=models.CASCADE, 
@@ -679,7 +679,7 @@ class MetaPartParameterCriteria(Parameter):
 # Stock
 ###############################################################################
 
-class StockEntry(models.Model):
+class StockEntry(ReverseUrlMixin,models.Model):
     owner = models.ForeignKey(
             settings.AUTH_USER_MODEL,
             related_name='+',
@@ -713,7 +713,7 @@ class StockEntry(models.Model):
 ###############################################################################
 # Attachment
 ###############################################################################
-class Attachment(models.Model):
+class Attachment(ReverseUrlMixin,models.Model):
     class Meta:
         abstract = True
 

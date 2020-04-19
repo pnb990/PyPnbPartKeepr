@@ -4,14 +4,15 @@
 
 {% load static %}
 {% load humanize %}
+{% load mptt_tags %}
 
 {% comment %}
 {% endcomment %}
 
 {% block page-header %}
 <div class="d-flex justify-content-between">
-    {% trans "Footprints" %}
-    <a href="{% url "pnbpartkeepr.footprint.create" %}" >
+    {% trans "Storage location Categories list" %}
+    <a href="{% url "pnbpartkeepr.storagelocation.create" %}">
         <button class="btn btn-primary">
             <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
@@ -24,26 +25,26 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
+        <th scope="col">{% trans "Parent"           %}</th>
         <th scope="col">{% trans "Description"      %}</th>
-        <th scope="col">{% trans "Category"         %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
-    {% for f in object_list %}
-    <tr onclick="document.location='{{ f.get_absolute_url }}';" 
+    {% for slc in object_list %}
+    {% comment %}
+    {% endcomment %}
+    <tr onclick="document.location='{{ slc.get_absolute_url }}';" 
         class="pnbpartkeepr-elem-list"
         >
-        <td>{{ f.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f %}</td>
-        <td>{{ f.name }}</td>
-        <td>{{ f.description|truncatechars:40 }}</td> 
-        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"  with elem=f %}</td>
+        <td>{{ slc.id }}</td>
+        <td>{{ slc.name }}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=slc.parent %}</td>
+        <td>{{ slc.description }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=slc %}</td>
     </tr>
     {% empty %}
-    {% trans "No footprint" %}
+    {% trans "No Part" %}
     {% endfor %}
 </table>
 {% endblock %}

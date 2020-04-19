@@ -1,6 +1,36 @@
 from django import forms
 from . import models
 
+class CategoryForm(forms.ModelForm):
+    pass 
+
+class PartCategoryForm(CategoryForm):
+    class Meta:
+        model = models.PartCategory
+        fields = (
+                'name',
+                'parent',
+                'description',
+                )
+
+class FootprintCategoryForm(CategoryForm):
+    class Meta:
+        model = models.FootprintCategory
+        fields = (
+                'name',
+                'parent',
+                'description',
+                )
+
+class StorageLocationCategoryForm(CategoryForm):
+    class Meta:
+        model = models.StorageLocationCategory
+        fields = (
+                'name',
+                'parent',
+                'description',
+                )
+
 class PartForm(forms.ModelForm):
     class Meta:
         model = models.Part

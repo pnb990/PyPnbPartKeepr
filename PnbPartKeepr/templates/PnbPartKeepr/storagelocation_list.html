@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
-{% load bootstrap4 %}
 {% load i18n %}
+{% load bootstrap4 %}
+
 {% load static %}
 {% load humanize %}
 
@@ -11,7 +11,7 @@
 {% block page-header %}
 <div class="d-flex justify-content-between">
     {% trans "Storage location" %}
-    <a href="{% url "PnbPartKeepr_storageLocation_create" %}">
+    <a href="{% url "pnbpartkeepr.storagelocation.create" %}">
         <button class="btn btn-primary">
             <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
@@ -24,7 +24,7 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"             %}</th>
+        <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Category"         %}</th>
         <th scope="col">{% trans "Action"           %}</th>
@@ -33,14 +33,14 @@
     {% for sl in object_list %}
     {% comment %}
     {% endcomment %}
-    <tr onclick="document.location='{% url "PnbPartKeepr_storageLocation_detail" pk=sl.id %}';" 
+    <tr onclick="document.location='{{ sl.get_absolute_url }}';" 
         class="pnbpartkeepr-elem-list"
         >
         <td>{{ sl.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html" with elem=sl %}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=sl %}</td>
         <td>{{ sl.name }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=sl.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with id=sl.id entity="PnbPartKeepr_storageLocation" %}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=sl.category %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"  with elem=sl %}</td>
     </tr>
     {% empty %}
     {% trans "No Storage location" %}

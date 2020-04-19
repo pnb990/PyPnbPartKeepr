@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
-{% load bootstrap4 %}
 {% load i18n %}
+{% load bootstrap4 %}
+
 {% load static %}
 {% load humanize %}
 
@@ -11,7 +11,7 @@
 {% block page-header %}
 <div class="d-flex justify-content-between">
     {% trans "Parts" %}
-    <a href="{% url 'PnbPartKeepr_part_create' %}">
+    <a href="{% url "pnbpartkeepr.part.create" %}">
         <button class="btn btn-primary">
             <span class="fas fa-plus"></span>
             {% trans 'Add a New one' %}
@@ -24,7 +24,7 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"             %}</th>
+        <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Footprint"        %}</th>
         <th scope="col">{% trans "Stock level"      %}</th>
@@ -38,7 +38,7 @@
     {% for p in object_list %}
     {% comment %}
     {% endcomment %}
-    <tr onclick="document.location='{% url "PnbPartKeepr_part_detail" pk=p.id %}';" 
+    <tr onclick="document.location='{{ elem.get_success_url }}';" 
         class="pnbpartkeepr-elem-list"
         >
         <td>{{ p.id }}</td>
@@ -50,7 +50,7 @@
         <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation %}</td>
         <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category %}</td>
         <td>{{ p.createDate|naturaltime }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with id=p.id entity="PnbPartKeepr_part" %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
     </tr>
     {% empty %}
     {% trans "No Part" %}
