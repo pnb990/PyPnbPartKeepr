@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+{% load mptt_tags %}
+
+<ul>
+    {% for f in file_list %}
+    <li><a href="{{ f.content.url }}">{{ f.filename }}</a></li>
+    {% empty %}
+    {% trans "No attachment" %}
+    {% endfor %}
+</ul>
+

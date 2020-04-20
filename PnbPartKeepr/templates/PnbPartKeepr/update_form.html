@@ -8,11 +8,16 @@
 {% endcomment %}
 
 {% block page-header %}
-{% blocktrans with id=object.id %}Update {{object}} ({{ id }}).{% endblocktrans %}
+{% if object %}
+{% blocktrans with id=object.id %}Update {{object.get_object_name}} {{object}}{% endblocktrans %}
+{% else %}
+{% trans "Create" %} {{ view.model.get_object_name }}
+{% endif %}
 {% endblock %}
 
 {% block page-content %}
 <form action="" method="post" enctype="multipart/form-data">
+    {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}

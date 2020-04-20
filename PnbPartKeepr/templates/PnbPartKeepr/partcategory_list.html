@@ -10,15 +10,7 @@
 {% endcomment %}
 
 {% block page-header %}
-<div class="d-flex justify-content-between">
-    {% trans "Part Categories list" %}
-    <a href="{% url "pnbpartkeepr.part.create" %}">
-        <button class="btn btn-primary">
-            <span class="fas fa-plus"></span>
-            {% trans 'Add a New one' %}
-        </button>
-    </a>
-</div>
+{% include "PnbPartKeepr/title_list.html" %}
 {% endblock %}
 
 {% block page-content %}

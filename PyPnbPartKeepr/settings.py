@@ -65,6 +65,12 @@ INSTALLED_APPS = [
 ]
     #'view_breadcrumbs',
     #'django_bootstrap_breadcrumbs',
+if DEBUG:
+    # need pip install django-extensions
+    INSTALLED_APPS.append('django_extensions')
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS.append('debug_toolbar')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,7 +84,6 @@ MIDDLEWARE = [
 ]
 
 if DEBUG_TOOLBAR:
-    INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 

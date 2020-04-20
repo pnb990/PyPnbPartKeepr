@@ -38,7 +38,7 @@
     {% for p in object_list %}
     {% comment %}
     {% endcomment %}
-    <tr onclick="document.location='{{ elem.get_success_url }}';" 
+    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
         class="pnbpartkeepr-elem-list"
         >
         <td>{{ p.id }}</td>

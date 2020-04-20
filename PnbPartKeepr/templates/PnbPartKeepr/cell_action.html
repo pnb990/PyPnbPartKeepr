@@ -1,6 +1,6 @@
 {% load bootstrap4 %}
 
-{% if not elem.get_absolute_url  in request.resolver_match.view_name %}
+{% if not elem.get_name_url  in request.resolver_match.view_name %}
 <a href={{ elem.get_absolute_url }} >
     <button class="btn btn-primary">
         <span class="fas fa-eye" ></span>
@@ -8,7 +8,7 @@
 </a>
 {% endif %}
 
-{% if not elem.get_absolute_update_url  in request.resolver_match.view_name %}
+{% if not elem.get_name_update_url  in request.resolver_match.view_name %}
 <a href={{ elem.get_absolute_update_url }} >
     <button class="btn btn-warning">
         <span class="fas fa-edit"></span>
@@ -16,7 +16,7 @@
 </a>
 {% endif %}
 
-{% if not elem.get_absolute_delete_url  in request.resolver_match.view_name %}
+{% if not elem.get_name_delete_url  in request.resolver_match.view_name %}
 <a href={{ elem.get_absolute_delete_url }} >
     <button class="btn btn-danger">
         <span class="fas fa-trash" ></span>

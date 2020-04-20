@@ -40,8 +40,6 @@ def move_category(request, pk):
         'category_tree': models.PartCategory.objects.all(),
     })
 
-class CreateView(LoginRequiredMixin,generic.CreateView):
-    pass
 
 
 class DetailView(LoginRequiredMixin,generic.DetailView):
@@ -57,6 +55,12 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 
 #        return context
     pass
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(context)
+        return context
+
 
 class DeleteView(LoginRequiredMixin,generic.DeleteView):
     template_name = 'PnbPartKeepr/confirm_delete.html'
@@ -75,16 +79,26 @@ class DeleteView(LoginRequiredMixin,generic.DeleteView):
                 raise PermissionDenied("At least one sub category_tree in it")
         return obj
 
+class CreateView(LoginRequiredMixin,generic.CreateView):
+    template_name = 'PnbPartKeepr/update_form.html'
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk',None)
+        if pk != None:
+            instance = form.save(commit=False)
+            if isinstance(instance,models.ProjectAttachment):
+                instance.project = models.Project.objects.get(id=pk)
+            elif isinstance(instance,models.PartAttachment):
+                instance.part = models.Part.objects.get(id=pk)
+            elif isinstance(instance,models.FootprintAttachment):
+                instance.footprint = models.Footprint.objects.get(id=pk)
+            else:
+                raise ValueError("This instance is not linked to an other!")
+        return super().form_valid(form)
+
+
 class UpdateView(LoginRequiredMixin,generic.UpdateView):
     template_name = 'PnbPartKeepr/update_form.html'
-#    def get_object(self, queryset=None):
-#        """ Hook to ensure object is owned by request.user. """
-#        obj = super().get_object()
-#       TODO some validation is it modifiable
-#        if not obj.owner == self.request.user:
-#            raise PermissionDenied
-#        return obj
-    pass
 
 class ListView(LoginRequiredMixin,generic.ListView):
     paginate_by = 10

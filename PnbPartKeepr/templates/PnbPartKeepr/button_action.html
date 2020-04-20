@@ -2,8 +2,8 @@
 {% load bootstrap4 %}
 
 <div class="d-flex justify-content-around">
-{% if not elem.get_absolute_url  in request.resolver_match.view_name %}
-<a href={{ elem.get_absolute_url }} >
+{% if not object.get_name_url  in request.resolver_match.view_name %}
+<a href={{ object.get_absolute_url }} >
     <button class="btn btn-primary">
         <span class="fas fa-eye" ></span>
         {% trans "View" %}
@@ -11,8 +11,8 @@
 </a>
 {% endif %}
 
-{% if not elem.get_absolute_update_url  in request.resolver_match.view_name %}
-<a href={{ elem.get_absolute_update_url }} >
+{% if not object.get_name_update_url  in request.resolver_match.view_name %}
+<a href={{ object.get_absolute_update_url }} >
     <button class="btn btn-warning">
         <span class="fas fa-edit"></span>
         {% trans "Modify" %}
@@ -20,13 +20,23 @@
 </a>
 {% endif %}
 
-{% if not elem.get_absolute_delete_url  in request.resolver_match.view_name %}
-<a href={{ elem.get_absolute_delete_url }} >
+{% if object.get_addattachment_url %}
+<a href={{ object.get_addattachment_url }} >
+    <button class="btn btn-info">
+        <span class="fas fa-plus" ></span>
+        {% trans "Add file" %}
+    </button>
+</a>
+{% endif %}
+
+{% if not object.get_name_delete_url  in request.resolver_match.view_name %}
+<a href={{ object.get_absolute_delete_url }} >
     <button class="btn btn-danger">
         <span class="fas fa-trash" ></span>
         {% trans "Delete" %}
     </button>
 </a>
 {% endif %}
+
 </div>
 

@@ -185,7 +185,7 @@ for id,category_id,name,description in cursor:
     if created:
         print("Footprint id {} name {} created".format(id,name))
     footprint.name          = name
-    footprint.description   = description
+    footprint.description   = description if description != None else ''
     footprint.category      = category
     
     footprint.image.delete()
@@ -207,14 +207,14 @@ for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in curs
     if created:
         print("    Distributor id {} name {} created".format(id,name))
     distributor.name        = name
-    distributor.address     = name
-    distributor.url         = url
-    distributor.phone       = phone
-    distributor.fax         = fax
-    distributor.email       = email
-    distributor.comment     = comment
-    distributor.skuurl      = skuurl
-    distributor.forReports  = enabledForReports
+    distributor.address     = address           if address              != None else ''
+    distributor.url         = url               if url                  != None else ''
+    distributor.phone       = phone             if phone                != None else ''
+    distributor.fax         = fax               if fax                  != None else ''
+    distributor.email       = email             if email                != None else ''
+    distributor.comment     = comment           if comment              != None else ''
+    distributor.skuurl      = skuurl            if skuurl               != None else ''
+    distributor.forReports  = enabledForReports if enabledForReports    != None else False
     distributor.image       = None
 
 #    distributor.image       = get_image_filename(
@@ -241,12 +241,12 @@ for id,name,address,url,phone,fax,email,comment in cursor:
         print("    Manufacturer id {} name {} created".format(id,name))
 
     manufacturer.name        = name
-    manufacturer.address     = address  if address  != None else ''
-    manufacturer.url         = url      if url      != None else ''
-    manufacturer.phone       = phone    if phone    != None else ''
-    manufacturer.fax         = fax      if fax      != None else ''
-    manufacturer.email       = email    if email    != None else ''
-    manufacturer.comment     = comment  if comment  != None else ''
+    manufacturer.address     = address           if address              != None else ''
+    manufacturer.url         = url               if url                  != None else ''
+    manufacturer.phone       = phone             if phone                != None else ''
+    manufacturer.fax         = fax               if fax                  != None else ''
+    manufacturer.email       = email             if email                != None else ''
+    manufacturer.comment     = comment           if comment              != None else ''
 
     manufacturer.image.delete()
     manufacturer.image = None
@@ -313,7 +313,7 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
 
     category        = models.PartCategory.objects.get(          id=category_id          )
     if footprint_id != None:
-        footprint       = models.Footprint.objects.get(             id=footprint_id         )
+        footprint       = models.Footprint.objects.get(         id=footprint_id         )
     storageLocation = models.StorageLocation.objects.get(       id=storageLocation_id   )
     partUnit        = models.PartMeasurementUnit.objects.get(   id=partUnit_id          )
 
@@ -335,8 +335,7 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
             category=category,
             storageLocation=storageLocation,
             partUnit=partUnit,
-            minStockLevel=minStockLevel,
-            productionRemarks=productionRemarks
+            minStockLevel=minStockLevel
             )
     if created:
         print("    Part id {} name {} created".format(id,name))
@@ -346,17 +345,17 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
     if footprint_id != None:
         part.footprint          = footprint
     part.storagelocation    = storagelocation
-    part.comment            = comment
+    part.comment            = comment               if comment              != None else ''
     part.minStockLevel      = minStockLevel
     part.averagePrice       = averagePrice
-    part.status             = status
+    part.status             = status                if status               != None else ''
     part.needsReview        = needsReview
-    part.partCondition      = partCondition
+    part.partCondition      = partCondition         if partCondition        != None else ''
     part.createDate         = createDateUtc
-    part.internalPartNumber = internalPartNumber
+    part.internalPartNumber = internalPartNumber    if internalPartNumber   != None else ''
     part.removals           = removals
     part.partUnit           = partUnit
-    part.productionRemarks  = productionRemarks
+    part.productionRemarks  = productionRemarks     if productionRemarks    != None else ''
     part.metaPart           = metaPart
 
     part.image.delete()
@@ -393,10 +392,10 @@ for id, part_id, distributor_id, orderNumber, packagingUnit, price, sku, currenc
 
     partDistributor.part            = part
     partDistributor.distributor     = distributor
-    partDistributor.orderNumber     = orderNumber if orderNumber != '' else None
+    partDistributor.orderNumber     = orderNumber   if orderNumber  != None else ''
     partDistributor.packagingUnit   = packagingUnit
     partDistributor.price           = price
-    partDistributor.sku             = sku if sku != '' else None
+    partDistributor.sku             = sku           if sku          != None else ''
     partDistributor.currency        = currency
     partDistributor.forReports      = forReports
     partDistributor.save()
@@ -422,7 +421,7 @@ for id, part_id, manufacturer_id, partNumber in cursor:
 
     partManufacturer.part            = part
     partManufacturer.manufacturer    = manufacturer
-    partManufacturer.partNumber      = partNumber if partNumber != '' else None
+    partManufacturer.partNumber      = partNumber if partNumber != None else ''
     partManufacturer.save()
 
 ###############################################################################
@@ -444,7 +443,7 @@ for id, user_id, name, description in cursor:
 
     project.name        = name
     project.owner       = user
-    project.description = description
+    project.description = description   if description  != None else ''
     project.save()
 
 print("importing {} --------------------------------------------".format('projectpart'))
@@ -466,10 +465,10 @@ for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber 
     projectPart.part       = part
     projectPart.project    = project
     projectPart.quantity   = quantity
-    projectPart.remarks    = remarks
+    projectPart.remarks    = remarks        if remarks      != None else ''
     projectPart.overageType= overageType
     projectPart.overage    = overage
-    projectPart.lotNumber  = lotNumber
+    projectPart.lotNumber  = lotNumber      if lotNumber    != None else ''
     projectPart.save()
 
 print("importing {} --------------------------------------------".format('projectrun'))
@@ -512,7 +511,7 @@ for id, part_id, quantity, lotNumber, projectRun_id in cursor:
     projectRunPart.part        = part
     projectRunPart.projectRun  = projectRun
     projectRunPart.quantity    = quantity
-    projectRunPart.lotNumber   = lotNumber
+    projectRunPart.lotNumber   = lotNumber      if lotNumber    != None else ''
     projectRunPart.save()
 
 ###############################################################################
@@ -538,8 +537,8 @@ for id, part_id, unit_id, name, description, value, siPrefix_id, normalizedValue
     partParamter.value              =value
     partParamter.normalizedValue    =normalizedValue
     partParamter.siPrefix           =siPrefix,
-    partParamter.stringValue        =stringValue
-    partParamter.valueType          =valueType
+    partParamter.stringValue        =stringValue    if stringValue != None else ''
+    partParamter.valueType          =valueType      if stringValue != None else 'string'
     partParamter.unit               =unit,
 
     partParamter.part               =part,
@@ -576,8 +575,8 @@ for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, st
     metaPartParameterCriteria.operator         =operator,
     metaPartParameterCriteria.value            =value
     metaPartParameterCriteria.normalizedValue  =normalizedValue
-    metaPartParameterCriteria.stringValue      =stringValue
-    metaPartParameterCriteria.valueType        =valueType
+    metaPartParameterCriteria.stringValue      =stringValue    if stringValue != None else ''
+    metaPartParameterCriteria.valueType        =valueType      if stringValue != None else 'string'
     metaPartParameterCriteria.siPrefix         =siPrefix,
     metaPartParameterCriteria.save()
 

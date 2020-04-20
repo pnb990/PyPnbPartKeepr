@@ -1,6 +1,10 @@
 from django import forms
 from . import models
 
+###############################################################################
+# Category
+###############################################################################
+
 class CategoryForm(forms.ModelForm):
     pass 
 
@@ -31,6 +35,80 @@ class StorageLocationCategoryForm(CategoryForm):
                 'description',
                 )
 
+###############################################################################
+# Storage
+###############################################################################
+
+class StorageLocationForm(forms.ModelForm):
+    class Meta:
+        model = models.StorageLocation
+        fields = (
+                'name',
+                'category',
+                'image',
+                )
+
+###############################################################################
+# Footprint
+###############################################################################
+
+class FootprintForm(forms.ModelForm):
+    class Meta:
+        model = models.Footprint
+        fields = (
+                'name',
+                'description',
+                'category',
+                'image',
+                )
+
+###############################################################################
+# Company
+###############################################################################
+
+class CompanyForm(forms.ModelForm):
+    pass
+
+class DistributorForm(CompanyForm):
+    class Meta:
+        model = models.Distributor
+        fields = (
+                'name',
+                'address',
+                'url',
+                'phone',
+                'fax',
+                'email',
+                'comment',
+                'image',
+                'skuUrl',
+                'forReports',
+                )
+
+class ManufacturerForm(CompanyForm):
+    class Meta:
+        model = models.Manufacturer
+        fields = (
+                'name',
+                'address',
+                'url',
+                'phone',
+                'fax',
+                'email',
+                'comment',
+                'image',
+                )
+        
+###############################################################################
+# Unit
+###############################################################################
+
+# TODO Unit Form ? 
+
+###############################################################################
+# Part 
+###############################################################################
+
 class PartForm(forms.ModelForm):
     class Meta:
         model = models.Part
@@ -55,25 +133,92 @@ class PartForm(forms.ModelForm):
                 'metaPart',
                 )
 
+###############################################################################
+# Project
+###############################################################################
 
-class FootprintForm(forms.ModelForm):
+class ProjectForm(forms.ModelForm):
     class Meta:
-        model = models.Footprint
+        model = models.Project
         fields = (
-                'name',
+            'name',
+            'owner',
+            'description',
+            )
+
+class ProjectPartForm(forms.ModelForm): 
+    class Meta:
+        model = models.ProjectPart
+        fields = (
+            'part',
+            'quantity',
+            'project',
+            'remarks',
+            'overageType',
+            'overage',
+            'lotNumber',
+            'totalQuantity',
+            )
+
+class ProjectRunForm(forms.ModelForm):
+    class Meta:
+        model = models.ProjectRun
+        fields = (
+            'runDateTime',
+            'project',
+            'quantity',
+            )
+
+###############################################################################
+# Parameter
+###############################################################################
+
+# TODO Parameter Form ? 
+
+###############################################################################
+# Stock
+###############################################################################
+
+class StockEntryForm(forms.ModelForm):
+    class Meta:
+        model = models.StockEntry
+        fields = (
+                'owner',
+                'quantity',
+                'part',
+                'price',
+                'boughtAt',
+                'comment',
+                )
+
+###############################################################################
+# Attachment
+###############################################################################
+
+class AttachmentForm(forms.ModelForm):
+    pass
+
+class ProjectAttachmentForm(forms.ModelForm):
+    class Meta:
+        model = models.ProjectAttachment
+        fields = (
                 'description',
-                'category',
-                'image',
+                'content',
                 )
 
-class StorageLocationForm(forms.ModelForm):
+class PartAttachmentForm(forms.ModelForm):
     class Meta:
-        model = models.StorageLocation
+        model = models.PartAttachment
         fields = (
-                'name',
-                'category',
-                'image',
+                'description',
+                'content',
                 )
 
-
+class FootprintAttachmentForm(forms.ModelForm):
+    class Meta:
+        model = models.PartAttachment
+        fields = (
+                'description',
+                'content',
+                )
 

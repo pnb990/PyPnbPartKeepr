@@ -1,7 +1,7 @@
 {% load bootstrap4 %}
 
 {% if elem %}
-<a href={% url entity|add:"_detail" pk=elem.id %} >
+<a href={{ elem.get_absolute_url }} >
     <button class="btn btn-defaults">
         <span class="fas fa-link"></span>
     </button>

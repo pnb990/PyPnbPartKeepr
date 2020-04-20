@@ -17,9 +17,17 @@ def get_default_user_id():
     return u.id
 
 class ReverseUrlMixin(object):
+    def get_name_url(self,action='detail'):
+        return 'pnbpartkeepr.{}.{}'.format(self.__class__.__name__.lower(),action)
+
+    def get_name_update_url(self):
+        return self.get_absolute_url('update')
+
+    def get_name__delete_url(self):
+        return self.get_absolute_url('delete')
+
     def get_absolute_url(self,action='detail'):
-        urlName = 'pnbpartkeepr.{}.{}'.format(self.__class__.__name__.lower(),action)
-        return reverse(urlName, args=[str(self.id)])
+        return reverse(self.get_name_url(action), args=[str(self.id)])
 
     def get_absolute_update_url(self):
         return self.get_absolute_url('update')
@@ -38,7 +46,6 @@ class Category(ReverseUrlMixin,MPTTModel):
         abstract = True
 
     name = models.CharField(
-            blank=False,
             help_text='name',
             max_length=255
             )
@@ -51,6 +58,7 @@ class Category(ReverseUrlMixin,MPTTModel):
            )
     description = models.TextField(
             blank=True,
+            default='',
             help_text='Some details'
             )
     class MPTTMeta:
@@ -69,13 +77,20 @@ class Category(ReverseUrlMixin,MPTTModel):
 
 
 class PartCategory(Category):
-    pass
+    @staticmethod
+    def get_object_name():
+        return "part category"
 
 class FootprintCategory(Category):
-    pass
+    @staticmethod
+    def get_object_name():
+        return "part category"
 
 class StorageLocationCategory(Category):
-    pass
+    @staticmethod
+    def get_object_name():
+        return "part category"
+
 
 ###############################################################################
 # Storage
@@ -84,14 +99,13 @@ class StorageLocationCategory(Category):
 class StorageLocation(ReverseUrlMixin,models.Model):
     name = models.CharField(
             unique=True,
-            blank=False,
             help_text='name',
             max_length=255
             )
     image = models.ImageField(
             upload_to='stockLocation/images/%Y/%m/%d/', 
+            null=True,
             blank=True,
-            default='',
             help_text='Image'
             )
     category = TreeForeignKey(
@@ -99,6 +113,10 @@ class StorageLocation(ReverseUrlMixin,models.Model):
             on_delete=models.PROTECT, 
             help_text='Category'
             )
+
+    @staticmethod
+    def get_object_name():
+        return "storage location"
 
     def __str__(self):
         return self.category.path(name=self.name)
@@ -111,12 +129,12 @@ class StorageLocation(ReverseUrlMixin,models.Model):
 class Footprint(ReverseUrlMixin,models.Model):
     name = models.CharField(
             unique=True,
-            blank=False,
             help_text='name',
             max_length=255
             )
     description = models.TextField(
             blank=True,
+            default='',
             help_text='Some details'
             )
     category = TreeForeignKey(
@@ -126,10 +144,14 @@ class Footprint(ReverseUrlMixin,models.Model):
             )
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
+            null=True,
             blank=True,
-            default='',
             help_text='Image'
             )
+
+    @staticmethod
+    def get_object_name():
+        return "footprint"
 
     def __str__(self):
         return self.name
@@ -144,12 +166,12 @@ class Company(ReverseUrlMixin,models.Model):
 
     name = models.CharField(
             unique=True,
-            blank=False,
             help_text='name',
             max_length=255
             )
     address = models.TextField(
             blank=True,
+            default='',
             help_text='Postal address'
             )
     url = models.URLField(
@@ -158,31 +180,40 @@ class Company(ReverseUrlMixin,models.Model):
             )
     phone = PhoneField(
             blank=True,
+            default='',
             help_text='Contact phone number'
             )
     fax = PhoneField(
             blank=True,
+            default='',
             help_text='Contact fax number'
             )
     email = models.EmailField(
             blank=True,
+            default='',
             help_text='Contact fax number'
             )
     comment = models.TextField(
             blank=True,
+            default='',
             help_text='Comment'
             )
+
+    def __str__(self):
+        return self.name
+
 
 class Distributor(Company):
 
     image = models.ImageField(
             upload_to='distributor/images/%Y/%m/%d/',
+            null=True,
             blank=True,
-            default='',
             help_text='Image'
             )
     skuUrl = models.URLField(
             blank=True,
+            default='',
             help_text='SKU URL'
             )
     forReports = models.BooleanField(
@@ -191,13 +222,23 @@ class Distributor(Company):
             help_text='Use this one for pricing calculation'
             )
 
+    @staticmethod
+    def get_object_name():
+        return "distributor"
+
+
 class Manufacturer(Company):
     image = models.ImageField(
             upload_to='manufacturer/images/%Y/%m/%d/',
+            null=True,
             blank=True,
-            default='',
             help_text='Image'
             )
+
+    @staticmethod
+    def get_object_name():
+        return "manufacturer"
+
 
 ###############################################################################
 # Unit
@@ -226,6 +267,7 @@ class SiPrefix(ReverseUrlMixin,models.Model):
     """
     def calculateProduct(value):
         return value * self.base**self.exponent
+
 
 class Unit(ReverseUrlMixin,models.Model):
     name = models.CharField(
@@ -258,12 +300,12 @@ class PartMeasurementUnit(ReverseUrlMixin,models.Model):
 
 class Part(ReverseUrlMixin,models.Model):
     name = models.CharField(
-            blank=False,
             help_text='name',
             max_length=255
             )
     description = models.TextField(
             blank=True,
+            default='',
             help_text='Some details'
             )
     category = TreeForeignKey(
@@ -273,14 +315,15 @@ class Part(ReverseUrlMixin,models.Model):
             )
     image = models.ImageField(
             upload_to='footprint/images/%Y/%m/%d/', 
+            null=True,
             blank=True,
-            default='',
             help_text='Image'
             )
     footprint = models.ForeignKey(
             Footprint, 
             on_delete=models.PROTECT, 
             null=True,
+            blank=True,
             help_text='footprint'
             )
     storageLocation = models.ForeignKey(
@@ -290,6 +333,7 @@ class Part(ReverseUrlMixin,models.Model):
             )
     comment = models.TextField(
             blank=True,
+            default='',
             help_text='Some comments'
             )
 
@@ -305,8 +349,8 @@ class Part(ReverseUrlMixin,models.Model):
             )
     status = models.CharField(
             blank=True,
-            help_text='a status ... may be active/end of life/development ???',
             default='',
+            help_text='a status ... may be active/end of life/development ???',
             max_length=255
             )
     needsReview = models.BooleanField(
@@ -315,8 +359,8 @@ class Part(ReverseUrlMixin,models.Model):
             )
     partCondition = models.CharField(
             blank=True,
-            help_text='I don\' know...',
             default='',
+            help_text='I don\' know...',
             max_length=255
             )
     createDate = models.DateTimeField(
@@ -324,6 +368,7 @@ class Part(ReverseUrlMixin,models.Model):
             )
     internalPartNumber = models.CharField(
             blank=True,
+            default='',
             help_text='part number used in internal data base',
             max_length=255
             )
@@ -335,11 +380,13 @@ class Part(ReverseUrlMixin,models.Model):
             PartMeasurementUnit, 
             on_delete=models.CASCADE, 
             null=True,
+            blank=True,
             help_text=''
             )
 
     productionRemarks = models.CharField(
             blank=True,
+            default='',
             help_text='Remarks done by production',
             max_length=255
             )
@@ -348,13 +395,16 @@ class Part(ReverseUrlMixin,models.Model):
             help_text='is a meta part ?'
             )
 
-    def get_footprint_display(self):
-        return self.footprint.name
-
     def stockLevel(self):
         #TODO review to optimise this request with https://docs.djangoproject.com/fr/3.0/topics/db/aggregation/
         return sum([i.quantity for i in self.stockentry_set.all()])
 
+    @staticmethod
+    def get_object_name():
+        return "part"
+
+    def get_addattachment_url(self):
+        return reverse('pnbpartkeepr.partattachment.create', args=[str(self.id)])
 
 
 class PartDistributor(ReverseUrlMixin,models.Model):
@@ -368,11 +418,11 @@ class PartDistributor(ReverseUrlMixin,models.Model):
             on_delete=models.CASCADE, 
             help_text='Distributor'
             )
-    orderNumber = models.CharField(
-            unique=True,
-            null=True,
+    orderNumber = models.CharField( # not unique 2 distributor may have same part number
+            blank=True,
             help_text='name',
-            max_length=255
+            max_length=255,
+            default=''
             )
     packagingUnit = models.PositiveIntegerField(
             help_text='Part quantity per package'
@@ -381,22 +431,21 @@ class PartDistributor(ReverseUrlMixin,models.Model):
             max_digits=13,
             decimal_places=4,
             null=True,
+            blank=True,
             help_text='Price per part'
             )
     currency = models.CharField(
-            blank=False,
             help_text='Money system',
             max_length=3,
             choices=CURRENCY_LIST_ACRONYM
             )
-    sku = models.CharField(
-            unique=True,
-            null=True,
+    sku = models.CharField( # not unique 2 distributor may have same part number
+            blank=True,
+            default='',
             help_text='Stock keeping unit',
             max_length=255
             )
     forReports = models.BooleanField(
-            blank=False,
             default=True,
             help_text='Use this one for pricing calculation'
             )
@@ -412,9 +461,9 @@ class PartManufacturer(ReverseUrlMixin,models.Model):
             on_delete=models.CASCADE, 
             help_text='Manufacturer'
             )
-    partNumber = models.CharField(
-            unique=True,
-            null=True,
+    partNumber = models.CharField( # not unique 2 Manufacturer may have same part number
+            blank=True,
+            default='',
             help_text='name',
             max_length=255
             )
@@ -423,7 +472,6 @@ class PartManufacturer(ReverseUrlMixin,models.Model):
 ###############################################################################
 # Project
 ###############################################################################
-
 
 class Project(ReverseUrlMixin,models.Model):
 
@@ -436,15 +484,22 @@ class Project(ReverseUrlMixin,models.Model):
             settings.AUTH_USER_MODEL,
             related_name='+',
             null=True,
+            blank=True,
             on_delete=models.SET_NULL,
             default=get_default_user_id
             )
 
     description = models.CharField(
             blank=True,
+            default='',
             help_text='description',
             max_length=255
             )
+
+    @staticmethod
+    def get_object_name():
+        return "project"
+
 
 class ProjectPart(ReverseUrlMixin,models.Model): 
 
@@ -458,7 +513,6 @@ class ProjectPart(ReverseUrlMixin,models.Model):
 
     part = models.ForeignKey(
             Part, 
-            blank=False,
             on_delete=models.PROTECT, 
             help_text='part'
             )
@@ -475,12 +529,12 @@ class ProjectPart(ReverseUrlMixin,models.Model):
 
     remarks = models.CharField(
             blank=True,
+            default='',
             help_text='Remarks',
             max_length=255
             )
 
     overageType = models.CharField(
-            blank=False,
             help_text='The type of the value',
             max_length=10,
             choices=OVERAGE_TYPE_CHOICES
@@ -493,6 +547,7 @@ class ProjectPart(ReverseUrlMixin,models.Model):
 
     lotNumber = models.CharField(
             blank=True,
+            default='',
             help_text='the lot number',
             max_length=10
             )
@@ -521,6 +576,10 @@ class ProjectRun(ReverseUrlMixin,models.Model):
             help_text='The quantity project has been build',
             )
 
+    @staticmethod
+    def get_object_name():
+        return "project run"
+
 
 class ProjectRunPart(ReverseUrlMixin,models.Model):
 
@@ -542,6 +601,7 @@ class ProjectRunPart(ReverseUrlMixin,models.Model):
 
     lotNumber = models.CharField(
             blank=True,
+            default='',
             help_text='the lot number use in production',
             max_length=10
             )
@@ -578,13 +638,13 @@ class Parameter(ReverseUrlMixin,models.Model):
             )
 
     stringValue = models.CharField(
-            null=True,
+            blank=True,
+            default='',
             help_text='Value in case of string',
             max_length=255
             )
 
     valueType = models.CharField(
-            null=True,
             help_text='The type of the value',
             max_length=10,
             choices=TYPE_CHOICES
@@ -593,6 +653,7 @@ class Parameter(ReverseUrlMixin,models.Model):
     unit = models.ForeignKey(
             Unit,
             null=True,
+            blank=True,
             on_delete=models.CASCADE, 
             help_text="The unit for this type. May be null"
             )
@@ -653,13 +714,6 @@ class PartParameter(ReverseUrlMixin,models.Model):
 
 class MetaPartParameterCriteria(Parameter):
 
-    TYPE_NUMERIC    = 'numeric'
-    TYPE_STRING     = 'string'
-    TYPE_CHOICES = (
-        (TYPE_NUMERIC   , 'numeric' ),
-        (TYPE_STRING    , 'string'  ),
-    )
-    
     part = models.ForeignKey(
             Part, 
             on_delete=models.CASCADE, 
@@ -684,6 +738,7 @@ class StockEntry(ReverseUrlMixin,models.Model):
             settings.AUTH_USER_MODEL,
             related_name='+',
             null=True,
+            blank=True,
             on_delete=models.SET_NULL,
             default=get_default_user_id
             )
@@ -706,6 +761,7 @@ class StockEntry(ReverseUrlMixin,models.Model):
             )
     comment = models.TextField(
             blank=True,
+            default='',
             help_text='Comment'
             )
 
@@ -713,6 +769,7 @@ class StockEntry(ReverseUrlMixin,models.Model):
 ###############################################################################
 # Attachment
 ###############################################################################
+# TODO see if it is usefull or not  PolymorphicModel https://github.com/bconstantin/django_polymorphic
 class Attachment(ReverseUrlMixin,models.Model):
     class Meta:
         abstract = True
@@ -723,6 +780,7 @@ class Attachment(ReverseUrlMixin,models.Model):
             )
     description = models.TextField(
             blank=True,
+            default='',
             help_text='Some details'
             )
 
@@ -731,8 +789,6 @@ class Attachment(ReverseUrlMixin,models.Model):
 
 class ProjectAttachment(Attachment):
     content = models.FileField(upload_to='project/attachments/%Y/%m/%d/',
-            null=False,
-            blank=False,
             help_text='Project attachment file'
             )
 
@@ -745,8 +801,6 @@ class ProjectAttachment(Attachment):
 
 class PartAttachment(Attachment):
     content = models.FileField(upload_to='part/attachments/%Y/%m/%d/',
-            null=False,
-            blank=False,
             help_text='Part attachment file'
             )
 
@@ -758,8 +812,6 @@ class PartAttachment(Attachment):
 
 class FootprintAttachment(Attachment):
     content = models.FileField(upload_to='footprint/attachments/%Y/%m/%d/',
-            null=False,
-            blank=False,
             help_text='Footprint attachment file'
             )
 
