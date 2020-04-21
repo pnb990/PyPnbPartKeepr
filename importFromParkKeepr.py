@@ -397,7 +397,7 @@ for id, part_id, distributor_id, orderNumber, packagingUnit, price, sku, currenc
             currency=currency
             )
     if created:
-        print("    PartDistributor id {} name {} created".format(id,name))
+        print("    PartDistributor id {} orderNumber {} created".format(id,orderNumber))
 
     forReports = True
     if ignoreForReports:
@@ -427,7 +427,7 @@ for id, part_id, manufacturer_id, partNumber in oldDbCursor:
             manufacturer=manufacturer
             )
     if created:
-        print("    PartManufacturer id {} name {} created".format(id,name))
+        print("    PartManufacturer id {} partNumber {} created".format(id,partNumber))
 
     forReports = True
     if ignoreForReports:
@@ -476,7 +476,7 @@ for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber 
             quantity=quantity
             )
     if created:
-        print("    ProjectPart id {} name {} created".format(id,name))
+        print("    ProjectPart id {} created".format(id))
 
     projectPart.part       = part
     projectPart.project    = project
@@ -503,7 +503,7 @@ for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber 
             quantity=quantity
             )
     if created:
-        print("    ProjectRun id {} name {} created".format(id,name))
+        print("    ProjectRun id {} created".format(id))
 
     projectRun.runDateTime= runDateTimeUtc
     projectRun.project    = project
@@ -524,7 +524,7 @@ for id, part_id, quantity, lotNumber, projectRun_id in oldDbCursor:
             quantity=quantity
             )
     if created:
-        print("    ProjectRunPart id {} name {} created".format(id,name))
+        print("    ProjectRunPart id {} lotNumber {} created".format(id,lotNumber))
 
     projectRunPart.part        = part
     projectRunPart.projectRun  = projectRun
@@ -577,7 +577,7 @@ for id, part_id, unit_id, name, description, value, siPrefix_id, normalizedValue
 models_list.append(models.MetaPartParameterCriteria)
 print("importing {} --------------------------------------------".format('metapartparametercriteria'))
 oldDbCursor.execute("SELECT  `id`, `part_id`, `unit_id`, `partParameterName`, `operator`, `value`, `normalizedValue`, `stringValue`, `valueType`, `siPrefix_id` FROM `metapartparametercriteria` ")
-for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, stringValue, valueType, siPrefix_id  in oldDbCursor:
+for id, part_id, unit_id, partParameterName, operator, value, normalizedValue, stringValue, valueType, siPrefix_id  in oldDbCursor:
 
     part        = models.Part.objects.get(      id=part_id     )
     unit        = models.Unit.objects.get(      id=unit_id     )
@@ -587,11 +587,11 @@ for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, st
             id =id,
             )
     if created:
-        print("    MetaPartParameterCriteria id {} name {} created".format(id,name))
+        print("    MetaPartParameterCriteria id {} name {} created".format(id,partParameterName))
 
     metaPartParameterCriteria.part             =part
     metaPartParameterCriteria.unit             =unit,
-    metaPartParameterCriteria.name             =partParamterName,
+    metaPartParameterCriteria.name             =partParameterName,
     metaPartParameterCriteria.operator         =operator,
     metaPartParameterCriteria.value            =value
     metaPartParameterCriteria.normalizedValue  =normalizedValue
@@ -619,7 +619,7 @@ for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in ol
             quantity=quantity,
             )
     if created:
-        print("    StockEntry id {} name {} created".format(id,name))
+        print("    StockEntry id {} created".format(id))
 
     timezone = pytz.timezone("UTC")
     dateTimeUtc = timezone.localize(dateTime)
@@ -667,7 +667,7 @@ for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extensi
             )
 
     if created:
-        print("    ProjectAttachment id {} name {} created".format(id,name))
+        print("    ProjectAttachment id {} filename {} created".format(id,filename))
 
     setAttachment(
             projectAttachment,
@@ -696,7 +696,7 @@ for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,
             )
 
     if created:
-        print("    PartAttachment id {} name {} created".format(id,name))
+        print("    PartAttachment id {} filename {} created".format(id,filename))
 
     setAttachment(
             partAttachment,
@@ -725,7 +725,7 @@ for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  exten
             )
 
     if created:
-        print("    FootprintAttachment id {} name {} created".format(id,name))
+        print("    FootprintAttachment id {} filename {} created".format(id,filename))
 
     setAttachment(
             footprintAttachment,
