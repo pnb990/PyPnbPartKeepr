@@ -26,22 +26,22 @@ args = parser.parse_args()
 
 # connecting to old database
 import pymysql
-connection = pymysql.connect(
+oldDbConn = pymysql.connect(
         host=args.host,
         user=args.user,
         password=args.password,
         db=args.database
         )
-cursor = connection.cursor()
+oldDbCursor = oldDbConn.cursor()
 
 def get_user(user_id):
-    cursor2 = connection.cursor()
+    oldDbCursor2 = oldDbConn.cursor()
     user = None
     if user_id != None:
-        nbr = cursor2.execute("SELECT `id`, `username` FROM `partkeepruser` WHERE id={};".format(user_id))
+        nbr = oldDbCursor2.execute("SELECT `id`, `username` FROM `partkeepruser` WHERE id={};".format(user_id))
         if nbr != 1:
             print("Warning user_id {} is not unique !".format(user_id))
-        for id,username in cursor2:
+        for id,username in oldDbCursor2:
             if id == user_id:
                 user,created = User.objects.get_or_create(username=username)
                 if created:
@@ -57,11 +57,11 @@ def get_image_filename(basepath,tableName,column_id_name,image_id):
     image_id        : image id in old database
     """
 
-    cursor2 = connection.cursor()
+    oldDbCursor2 = oldDbConn.cursor()
     image       = None
     filename    = None
     if image_id != None:
-        nbr = cursor2.execute("SELECT `id`, `{0}`, `filename`, `originalname`, `mimetype`, `extension` FROM `{1}` WHERE {0}={2};".format(
+        nbr = oldDbCursor2.execute("SELECT `id`, `{0}`, `filename`, `originalname`, `mimetype`, `extension` FROM `{1}` WHERE {0}={2};".format(
             column_id_name,
             tableName,
             image_id
@@ -69,7 +69,7 @@ def get_image_filename(basepath,tableName,column_id_name,image_id):
             )
         if nbr > 1:
             print("Warning in table {} for column {}, {} is not unique !".format(tableName,column_id_name,image_id))
-        for id, column, filename, originalname, mimetype, extension in cursor2:
+        for id, column, filename, originalname, mimetype, extension in oldDbCursor2:
             if nbr > 1 :
                 print(id, column, filename, mimetype, extension)
             if column == image_id:
@@ -91,13 +91,16 @@ django.setup()
 from django.contrib.auth.models import User
 from PnbPartKeepr import models
 
+models_list = []
+
 ###############################################################################
 # User
 ###############################################################################
 
+#models_list.append(User)
 print("importing {} --------------------------------------------".format('partkeepruser'))
-cursor.execute("SELECT `username`, `email` FROM `partkeepruser`;")
-for username,email in cursor:
+oldDbCursor.execute("SELECT `username`, `email` FROM `partkeepruser`;")
+for username,email in oldDbCursor:
 
     user,created = User.objects.get_or_create(username=username)
     if created:
@@ -106,7 +109,7 @@ for username,email in cursor:
     user.username   = username
     user.email      = email
     user.save()
-    
+
 
 ###############################################################################
 # Category
@@ -117,9 +120,10 @@ for table,obj in [
         ('partcategory',models.PartCategory),
         ('storagelocationcategory',models.StorageLocationCategory)
         ]:
+    models_list.append(obj)
     print("importing {} --------------------------------------------".format(table))
-    cursor.execute("SELECT  `id`,  `parent_id`,  `lft`,  `rgt`,  `lvl`,  `root`,  `name`,  `description`,  `categoryPath` FROM `{}`;".format(table))
-    for id,parent_id,lft,rgt,lvl,root,name,description,categoryPath in cursor:
+    oldDbCursor.execute("SELECT  `id`,  `parent_id`,  `lft`,  `rgt`,  `lvl`,  `root`,  `name`,  `description`,  `categoryPath` FROM `{}`;".format(table))
+    for id,parent_id,lft,rgt,lvl,root,name,description,categoryPath in oldDbCursor:
         category,created = obj.objects.get_or_create(id=id)
         if created:
             print("    {} id {} name {} created".format(table,id,name))
@@ -136,9 +140,10 @@ for table,obj in [
 # StorageLocation
 ###############################################################################
 
+models_list.append(models.StorageLocationCategory)
 print("importing {} --------------------------------------------".format('storagelocation'))
-cursor.execute("SELECT  `id`,  `category_id`,  `name` FROM `storagelocation`;")
-for id,category_id,name in cursor:
+oldDbCursor.execute("SELECT  `id`,  `category_id`,  `name` FROM `storagelocation`;")
+for id,category_id,name in oldDbCursor:
     category = models.StorageLocationCategory.objects.get(id=category_id)
 
     filename,image = get_image_filename(
@@ -167,9 +172,10 @@ for id,category_id,name in cursor:
 # Footprint
 ###############################################################################
 
+models_list.append(models.FootprintCategory)
 print("importing {} --------------------------------------------".format('footprint'))
-cursor.execute("SELECT  `id`,  `category_id`,  `name`,  `description` FROM `footprint`;")
-for id,category_id,name,description in cursor:
+oldDbCursor.execute("SELECT  `id`,  `category_id`,  `name`,  `description` FROM `footprint`;")
+for id,category_id,name,description in oldDbCursor:
     if category_id == None:
         category_id = 1
     category = models.FootprintCategory.objects.get(id=category_id)
@@ -200,9 +206,10 @@ for id,category_id,name,description in cursor:
 # Company
 ###############################################################################
 
+models_list.append(models.Distributor)
 print("importing {} --------------------------------------------".format('distributor'))
-cursor.execute("SELECT  `id`,  `name`,  `address`,  `url`,  `phone`,  `fax`,  `email`,  `comment`,  `skuurl`,  `enabledForReports` FROM `distributor` ")
-for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in cursor:
+oldDbCursor.execute("SELECT  `id`,  `name`,  `address`,  `url`,  `phone`,  `fax`,  `email`,  `comment`,  `skuurl`,  `enabledForReports` FROM `distributor` ")
+for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in oldDbCursor:
     distributor,created = models.Distributor.objects.get_or_create(id=id)
     if created:
         print("    Distributor id {} name {} created".format(id,name))
@@ -225,9 +232,10 @@ for id,name,address,url,phone,fax,email,comment,skuurl,enabledForReports in curs
 #            )
     distributor.save()
 
+models_list.append(models.Manufacturer)
 print("importing {} --------------------------------------------".format('manufacturer'))
-cursor.execute("SELECT  `id`,  `name`,  `address`,  `url`,  `phone`,  `fax`,  `email`,  `comment` FROM `manufacturer` ")
-for id,name,address,url,phone,fax,email,comment in cursor:
+oldDbCursor.execute("SELECT  `id`,  `name`,  `address`,  `url`,  `phone`,  `fax`,  `email`,  `comment` FROM `manufacturer` ")
+for id,name,address,url,phone,fax,email,comment in oldDbCursor:
 
     filename,image = get_image_filename(
             'images/iclogo',
@@ -259,9 +267,10 @@ for id,name,address,url,phone,fax,email,comment in cursor:
 # Unit
 ###############################################################################
 
+models_list.append(models.SiPrefix)
 print("importing {} --------------------------------------------".format('siPrefix'))
-cursor.execute("SELECT  `id`,  `prefix`,  `symbol`,  `exponent`,  `base` FROM `siprefix` ")
-for id,prefix,symbol,exponent,base in cursor:
+oldDbCursor.execute("SELECT  `id`,  `prefix`,  `symbol`,  `exponent`,  `base` FROM `siprefix` ")
+for id,prefix,symbol,exponent,base in oldDbCursor:
     siprefix,created = models.SiPrefix.objects.get_or_create(
             id=id,
             exponent=exponent,
@@ -275,9 +284,10 @@ for id,prefix,symbol,exponent,base in cursor:
     siprefix.base       = base
     siprefix.save()
 
+models_list.append(models.Unit)
 print("importing {} --------------------------------------------".format('unit'))
-cursor.execute("SELECT  `id`,  `name`,  `symbol`  FROM `unit` ")
-for id,name,symbol in cursor:
+oldDbCursor.execute("SELECT  `id`,  `name`,  `symbol`  FROM `unit` ")
+for id,name,symbol in oldDbCursor:
     unit,created = models.Unit.objects.get_or_create(id=id)
     if created:
         print("    Unit id {} name {} created".format(id,name))
@@ -285,17 +295,18 @@ for id,name,symbol in cursor:
     siprefix.symbol     = symbol
     siprefix.save()
 
-print("importing {} --------------------------------------------".format('unit/siPrefix link'))
-cursor.execute("SELECT  `unit_id`,  `siprefix_id`  FROM `unitsiprefixes` ")
-for unit_id,siprefix_id in cursor:
+print("link {} --------------------------------------------".format('unit/siPrefix link'))
+oldDbCursor.execute("SELECT  `unit_id`,  `siprefix_id`  FROM `unitsiprefixes` ")
+for unit_id,siprefix_id in oldDbCursor:
     unit = models.Unit.objects.get(     id=unit_id      )
     siprefix = models.SiPrefix.objects.get( id=siprefix_id  )
     unit.prefixes.add(siprefix)
     unit.save()
     
+models_list.append(models.PartMeasurementUnit)
 print("importing {} --------------------------------------------".format('partunit'))
-cursor.execute("SELECT  `id`, `name`, `shortName`, `is_default`   FROM `partunit` ")
-for id,name,shortName,is_default in cursor:
+oldDbCursor.execute("SELECT  `id`, `name`, `shortName`, `is_default`   FROM `partunit` ")
+for id,name,shortName,is_default in oldDbCursor:
     partUnit,created = models.PartMeasurementUnit.objects.get_or_create(id=id)
     if created:
         print("    PartMeasurementUnit id {} name {} created".format(id,name))
@@ -307,9 +318,10 @@ for id,name,shortName,is_default in cursor:
 # Part 
 ###############################################################################
 
+models_list.append(models.PartCategory)
 print("importing {} --------------------------------------------".format('part'))
-cursor.execute("SELECT  `id`,  `category_id`,  `footprint_id`,  `name`,  `description`,  `comment`,  `stockLevel`,  `minStockLevel`,  `averagePrice`,  `status`,  `needsReview`,  `partCondition`,  `createDate`,  `internalPartNumber`,  `removals`,  `lowStock`,  `partUnit_id`,  `storageLocation_id`,  `productionRemarks`,  `metaPart` FROM `part` ;")
-for id, category_id, footprint_id, name, description, comment, stockLevel, minStockLevel, averagePrice, status, needsReview, partCondition, createDate, internalPartNumber, removals, lowStock, partUnit_id, storageLocation_id, productionRemarks, metaPart in cursor:
+oldDbCursor.execute("SELECT  `id`,  `category_id`,  `footprint_id`,  `name`,  `description`,  `comment`,  `stockLevel`,  `minStockLevel`,  `averagePrice`,  `status`,  `needsReview`,  `partCondition`,  `createDate`,  `internalPartNumber`,  `removals`,  `lowStock`,  `partUnit_id`,  `storageLocation_id`,  `productionRemarks`,  `metaPart` FROM `part` ;")
+for id, category_id, footprint_id, name, description, comment, stockLevel, minStockLevel, averagePrice, status, needsReview, partCondition, createDate, internalPartNumber, removals, lowStock, partUnit_id, storageLocation_id, productionRemarks, metaPart in oldDbCursor:
 
     category        = models.PartCategory.objects.get(          id=category_id          )
     if footprint_id != None:
@@ -366,9 +378,10 @@ for id, category_id, footprint_id, name, description, comment, stockLevel, minSt
 
     part.save()
 
+models_list.append(models.PartDistributor)
 print("importing {} --------------------------------------------".format('partdistributor'))
-cursor.execute("SELECT  `id`, `part_id`, `distributor_id`, `orderNumber`, `packagingUnit`, `price`, `sku`, `currency`, `ignoreForReports`   FROM `partdistributor` ")
-for id, part_id, distributor_id, orderNumber, packagingUnit, price, sku, currency, ignoreForReports in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `distributor_id`, `orderNumber`, `packagingUnit`, `price`, `sku`, `currency`, `ignoreForReports`   FROM `partdistributor` ")
+for id, part_id, distributor_id, orderNumber, packagingUnit, price, sku, currency, ignoreForReports in oldDbCursor:
 
     part        = models.Part.objects.get(          id=part_id          )
     distributor = models.Distributor.objects.get(   id=distributor_id   )
@@ -400,9 +413,10 @@ for id, part_id, distributor_id, orderNumber, packagingUnit, price, sku, currenc
     partDistributor.forReports      = forReports
     partDistributor.save()
 
+models_list.append(models.PartManufacturer)
 print("importing {} --------------------------------------------".format('partmanufacturer'))
-cursor.execute("SELECT  `id`, `part_id`, `manufacturer_id`, `partNumber` FROM `partmanufacturer` ")
-for id, part_id, manufacturer_id, partNumber in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `manufacturer_id`, `partNumber` FROM `partmanufacturer` ")
+for id, part_id, manufacturer_id, partNumber in oldDbCursor:
 
     part            = models.Part.objects.get(          id=part_id          )
     manufacturer    = models.Manufacturer.objects.get(  id=manufacturer_id  )
@@ -428,9 +442,10 @@ for id, part_id, manufacturer_id, partNumber in cursor:
 # Project
 ###############################################################################
 
+models_list.append(models.Project)
 print("importing {} --------------------------------------------".format('project'))
-cursor.execute("SELECT  `id`, `user_id`, `name`, `description` FROM `project` ")
-for id, user_id, name, description in cursor:
+oldDbCursor.execute("SELECT  `id`, `user_id`, `name`, `description` FROM `project` ")
+for id, user_id, name, description in oldDbCursor:
 
     user = get_user(user_id)
 
@@ -446,9 +461,10 @@ for id, user_id, name, description in cursor:
     project.description = description   if description  != None else ''
     project.save()
 
+models_list.append(models.ProjectPart)
 print("importing {} --------------------------------------------".format('projectpart'))
-cursor.execute("SELECT  `id`, `part_id`, `project_id`, `quantity`, `remarks`, `overageType`, `overage`, `lotNumber` FROM `projectpart` ")
-for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `project_id`, `quantity`, `remarks`, `overageType`, `overage`, `lotNumber` FROM `projectpart` ")
+for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber in oldDbCursor:
 
     part    = models.Part.objects.get(      id=part_id          )
     project = models.Project.objects.get(   id=project_id  )
@@ -471,9 +487,10 @@ for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber 
     projectPart.lotNumber  = lotNumber      if lotNumber    != None else ''
     projectPart.save()
 
+models_list.append(models.ProjectRun)
 print("importing {} --------------------------------------------".format('projectrun'))
-cursor.execute("SELECT  `id`, `runDateTime`, `project_id`, `quantity` FROM `projectrun` ")
-for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber in cursor:
+oldDbCursor.execute("SELECT  `id`, `runDateTime`, `project_id`, `quantity` FROM `projectrun` ")
+for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber in oldDbCursor:
 
     project = models.Project.objects.get(   id=project_id  )
 
@@ -493,9 +510,10 @@ for id, part_id, project_id, quantity, remarks, overageType, overage, lotNumber 
     projectRun.quantity   = quantity
     projectRun.save()
 
+models_list.append(models.ProjectRunPart)
 print("importing {} --------------------------------------------".format('projectrunpart'))
-cursor.execute("SELECT  `id`, `part_id`, `quantity`, `lotNumber`, `projectRun_id` FROM `projectrunpart` ")
-for id, part_id, quantity, lotNumber, projectRun_id in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `quantity`, `lotNumber`, `projectRun_id` FROM `projectrunpart` ")
+for id, part_id, quantity, lotNumber, projectRun_id in oldDbCursor:
 
     part    = models.Part.objects.get(      id=part_id     )
     project = models.Project.objects.get(   id=project_id  )
@@ -518,9 +536,10 @@ for id, part_id, quantity, lotNumber, projectRun_id in cursor:
 # Parameter
 ###############################################################################
 
+models_list.append(models.PartParameter)
 print("importing {} --------------------------------------------".format('partparameter'))
-cursor.execute("SELECT  `id`, `part_id`, `unit_id`, `name`, `description`, `value`, `siPrefix_id`, `normalizedValue`, `maximumValue`, `normalizedMaxValue`, `minimumValue`, `normalizedMinValue`, `stringValue`, `valueType`, `minSiPrefix_id`, `maxSiPrefix_id`, `description` FROM `partparameter` ")
-for id, part_id, unit_id, name, description, value, siPrefix_id, normalizedValue, maximumValue, normalizedMaxValue, minimumValue, normalizedMinValue, stringValue, valueType, minSiPrefix_id, maxSiPrefix_id in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `unit_id`, `name`, `description`, `value`, `siPrefix_id`, `normalizedValue`, `maximumValue`, `normalizedMaxValue`, `minimumValue`, `normalizedMinValue`, `stringValue`, `valueType`, `minSiPrefix_id`, `maxSiPrefix_id`, `description` FROM `partparameter` ")
+for id, part_id, unit_id, name, description, value, siPrefix_id, normalizedValue, maximumValue, normalizedMaxValue, minimumValue, normalizedMinValue, stringValue, valueType, minSiPrefix_id, maxSiPrefix_id in oldDbCursor:
 
     part        = models.Part.objects.get(      id=part_id     )
     unit        = models.Unit.objects.get(      id=unit_id     )
@@ -555,9 +574,10 @@ for id, part_id, unit_id, name, description, value, siPrefix_id, normalizedValue
 
     partParamter.save()
 
+models_list.append(models.MetaPartParameterCriteria)
 print("importing {} --------------------------------------------".format('metapartparametercriteria'))
-cursor.execute("SELECT  `id`, `part_id`, `unit_id`, `partParameterName`, `operator`, `value`, `normalizedValue`, `stringValue`, `valueType`, `siPrefix_id` FROM `metapartparametercriteria` ")
-for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, stringValue, valueType, siPrefix_id  in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `unit_id`, `partParameterName`, `operator`, `value`, `normalizedValue`, `stringValue`, `valueType`, `siPrefix_id` FROM `metapartparametercriteria` ")
+for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, stringValue, valueType, siPrefix_id  in oldDbCursor:
 
     part        = models.Part.objects.get(      id=part_id     )
     unit        = models.Unit.objects.get(      id=unit_id     )
@@ -584,9 +604,10 @@ for id, part_id, unit_id, partParamterName, operator, value, normalizedValue, st
 # Stock
 ###############################################################################
 
+models_list.append(models.StockEntry)
 print("importing {} --------------------------------------------".format('stockentry'))
-cursor.execute("SELECT  `id`, `part_id`, `user_id`, `stockLevel`, `price`, `dateTime`, `correction`, `comment`  FROM `stockentry` ")
-for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in cursor:
+oldDbCursor.execute("SELECT  `id`, `part_id`, `user_id`, `stockLevel`, `price`, `dateTime`, `correction`, `comment`  FROM `stockentry` ")
+for id, part_id, user_id, stockLevel, price, dateTime, correction, comment in oldDbCursor:
 
     part = models.Part.objects.get( id=part_id )
     user = get_user(user_id)
@@ -633,9 +654,10 @@ def setAttachment(attachment, basepath, filename,  originalname,  mimetype,  ext
     attachment.content  = None
     attachment.content.save(originalname,open(filePath,'rb'))
 
+models_list.append(models.ProjectAttachment)
 print("importing {} --------------------------------------------".format('projectattachment'))
-cursor.execute("SELECT  `id`,  `project_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `projectattachment` ")
-for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+oldDbCursor.execute("SELECT  `id`,  `project_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `projectattachment` ")
+for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in oldDbCursor:
 
     project = models.Project.objects.get( id=project_id )
 
@@ -661,11 +683,10 @@ for id,  project_id,  type,  filename,  originalname,  mimetype,  size,  extensi
     projectAttachment.project = project
     projectAttachment.save()
 
-
-
+models_list.append(models.PartAttachment)
 print("importing {} --------------------------------------------".format('partattachment'))
-cursor.execute("SELECT  `id`,  `part_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `partattachment` ")
-for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+oldDbCursor.execute("SELECT  `id`,  `part_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `partattachment` ")
+for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in oldDbCursor:
 
     part = models.Part.objects.get( id=part_id )
 
@@ -691,9 +712,10 @@ for id,  part_id,  type,  filename,  originalname,  mimetype,  size,  extension,
     partAttachment.part = part
     partAttachment.save()
 
+models_list.append(models.FootprintAttachment)
 print("importing {} --------------------------------------------".format('footprintattachment'))
-cursor.execute("SELECT  `id`,  `footprint_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `footprintattachment` ")
-for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in cursor:
+oldDbCursor.execute("SELECT  `id`,  `footprint_id`,  `type`,  `filename`,  `originalname`,  `mimetype`,  `size`,  `extension`,  `description`,  `created` FROM `footprintattachment` ")
+for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  extension,  description,  createAt in oldDbCursor:
 
     footprint = models.Footprint.objects.get( id=footprint_id )
 
@@ -720,8 +742,22 @@ for id,  footprint_id,  type,  filename,  originalname,  mimetype,  size,  exten
     footprintAttachment.save()
 
 
+from io import StringIO
 
-#TODO Copy image old to new place ...
-#Use python magic to reconise files...
+os.environ['DJANGO_COLORS'] = 'nocolor'
+
+from django.core.management import call_command
+from django.apps import apps
+from django.db import connection
+
+commands = StringIO()
+djangoCursor = connection.cursor()
+
+for app in apps.get_app_configs():
+    label = app.label
+    print('get sequence SQL for ',label)
+    call_command('sqlsequencereset', label, stdout=commands)
+
+djangoCursor.execute(commands.getvalue())
 
 
