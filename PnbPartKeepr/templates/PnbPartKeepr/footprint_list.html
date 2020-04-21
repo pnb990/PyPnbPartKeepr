@@ -32,13 +32,13 @@
     </tr>
 
     {% for f in object_list %}
-    <tr onclick="document.location='{{ f.get_absolute_url }}';" 
+    <tr onclick="document.location='{{ f.get_absolute_url }}';"
         class="pnbpartkeepr-elem-list"
         >
         <td>{{ f.id }}</td>
         <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f %}</td>
         <td>{{ f.name }}</td>
-        <td>{{ f.description|truncatechars:40 }}</td> 
+        <td>{{ f.description|truncatechars:40 }}</td>
         <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category %}</td>
         <td>{% include "PnbPartKeepr/cell_action.html"  with elem=f %}</td>
     </tr>

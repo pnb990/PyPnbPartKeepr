@@ -216,7 +216,7 @@ class PartAttachmentForm(forms.ModelForm):
 
 class FootprintAttachmentForm(forms.ModelForm):
     class Meta:
-        model = models.PartAttachment
+        model = models.FootprintAttachment
         fields = (
                 'description',
                 'content',

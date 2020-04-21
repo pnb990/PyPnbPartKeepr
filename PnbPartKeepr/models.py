@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from phone_field import PhoneField
 from mptt.models import MPTTModel, TreeForeignKey
-from .Currency import CURRENCY_LIST_ACRONYM 
+from .Currency import CURRENCY_LIST_ACRONYM
 
 def get_default_user_id():
     u,created = User.objects.get_or_create(username="nobody")
@@ -31,7 +31,7 @@ class ReverseUrlMixin(object):
 
     def get_absolute_update_url(self):
         return self.get_absolute_url('update')
-    
+
     def get_absolute_delete_url(self):
         return self.get_absolute_url('delete')
 
@@ -103,14 +103,14 @@ class StorageLocation(ReverseUrlMixin,models.Model):
             max_length=255
             )
     image = models.ImageField(
-            upload_to='stockLocation/images/%Y/%m/%d/', 
+            upload_to='stockLocation/images/%Y/%m/%d/',
             null=True,
             blank=True,
             help_text='Image'
             )
     category = TreeForeignKey(
-            StorageLocationCategory, 
-            on_delete=models.PROTECT, 
+            StorageLocationCategory,
+            on_delete=models.PROTECT,
             help_text='Category'
             )
 
@@ -138,12 +138,12 @@ class Footprint(ReverseUrlMixin,models.Model):
             help_text='Some details'
             )
     category = TreeForeignKey(
-            FootprintCategory, 
-            on_delete=models.PROTECT, 
+            FootprintCategory,
+            on_delete=models.PROTECT,
             help_text='Category'
             )
     image = models.ImageField(
-            upload_to='footprint/images/%Y/%m/%d/', 
+            upload_to='footprint/images/%Y/%m/%d/',
             null=True,
             blank=True,
             help_text='Image'
@@ -155,6 +155,10 @@ class Footprint(ReverseUrlMixin,models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_addattachment_url(self):
+        return reverse('pnbpartkeepr.footprintattachment.create', args=[str(self.id)])
+
 
 ###############################################################################
 # Company
@@ -295,7 +299,7 @@ class PartMeasurementUnit(ReverseUrlMixin,models.Model):
 
 
 ###############################################################################
-# Part 
+# Part
 ###############################################################################
 
 class Part(ReverseUrlMixin,models.Model):
@@ -309,26 +313,26 @@ class Part(ReverseUrlMixin,models.Model):
             help_text='Some details'
             )
     category = TreeForeignKey(
-            PartCategory, 
-            on_delete=models.PROTECT, 
+            PartCategory,
+            on_delete=models.PROTECT,
             help_text='Category'
             )
     image = models.ImageField(
-            upload_to='footprint/images/%Y/%m/%d/', 
+            upload_to='footprint/images/%Y/%m/%d/',
             null=True,
             blank=True,
             help_text='Image'
             )
     footprint = models.ForeignKey(
-            Footprint, 
-            on_delete=models.PROTECT, 
+            Footprint,
+            on_delete=models.PROTECT,
             null=True,
             blank=True,
             help_text='footprint'
             )
     storageLocation = models.ForeignKey(
-            StorageLocation, 
-            on_delete=models.PROTECT, 
+            StorageLocation,
+            on_delete=models.PROTECT,
             help_text='Storage location'
             )
     comment = models.TextField(
@@ -378,8 +382,8 @@ class Part(ReverseUrlMixin,models.Model):
             help_text='Need to be removed ?'
             )
     partUnit = models.ForeignKey(
-            PartMeasurementUnit, 
-            on_delete=models.CASCADE, 
+            PartMeasurementUnit,
+            on_delete=models.CASCADE,
             null=True,
             blank=True,
             help_text=''
@@ -409,19 +413,16 @@ class Part(ReverseUrlMixin,models.Model):
     def get_object_name():
         return "part"
 
-    def get_addattachment_url(self):
-        return reverse('pnbpartkeepr.partattachment.create', args=[str(self.id)])
-
 
 class PartDistributor(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.CASCADE, 
+            Part,
+            on_delete=models.CASCADE,
             help_text='part'
             )
     distributor = models.ForeignKey(
-            Distributor, 
-            on_delete=models.CASCADE, 
+            Distributor,
+            on_delete=models.CASCADE,
             help_text='Distributor'
             )
     orderNumber = models.CharField( # not unique 2 distributor may have same part number
@@ -458,13 +459,13 @@ class PartDistributor(ReverseUrlMixin,models.Model):
 
 class PartManufacturer(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.CASCADE, 
+            Part,
+            on_delete=models.CASCADE,
             help_text='part'
             )
     manufacturer = models.ForeignKey(
-            Manufacturer, 
-            on_delete=models.CASCADE, 
+            Manufacturer,
+            on_delete=models.CASCADE,
             help_text='Manufacturer'
             )
     partNumber = models.CharField( # not unique 2 Manufacturer may have same part number
@@ -506,8 +507,11 @@ class Project(ReverseUrlMixin,models.Model):
     def get_object_name():
         return "project"
 
+    def get_addattachment_url(self):
+        return reverse('pnbpartkeepr.projectattachment.create', args=[str(self.id)])
 
-class ProjectPart(ReverseUrlMixin,models.Model): 
+
+class ProjectPart(ReverseUrlMixin,models.Model):
 
     # TODO check utility PNB
     OVERAGE_TYPE_ABSOLUTE = "absolute";
@@ -518,18 +522,18 @@ class ProjectPart(ReverseUrlMixin,models.Model):
             ]
 
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.PROTECT, 
+            Part,
+            on_delete=models.PROTECT,
             help_text='part'
             )
 
     quantity = models.PositiveIntegerField(
             help_text='Part quantity inside'
             )
-            
+
     project = models.ForeignKey(
-            Project, 
-            on_delete=models.CASCADE, 
+            Project,
+            on_delete=models.CASCADE,
             help_text='project'
             )
 
@@ -572,8 +576,8 @@ class ProjectRun(ReverseUrlMixin,models.Model):
             )
 
     project = models.ForeignKey(
-            Project, 
-            on_delete=models.CASCADE, 
+            Project,
+            on_delete=models.CASCADE,
             help_text='project'
             )
 
@@ -590,14 +594,14 @@ class ProjectRun(ReverseUrlMixin,models.Model):
 class ProjectRunPart(ReverseUrlMixin,models.Model):
 
     projectRun = models.ForeignKey(
-            ProjectRun, 
-            on_delete=models.CASCADE, 
+            ProjectRun,
+            on_delete=models.CASCADE,
             help_text='project run'
             )
 
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.PROTECT, 
+            Part,
+            on_delete=models.PROTECT,
             help_text='the part used in a production run'
             )
 
@@ -626,7 +630,7 @@ class Parameter(ReverseUrlMixin,models.Model):
         (TYPE_NUMERIC   , 'numeric' ),
         (TYPE_STRING    , 'string'  ),
     )
-    
+
     value   = models.FloatField(
             help_text='value'
             )
@@ -660,7 +664,7 @@ class Parameter(ReverseUrlMixin,models.Model):
             Unit,
             null=True,
             blank=True,
-            on_delete=models.CASCADE, 
+            on_delete=models.CASCADE,
             help_text="The unit for this type. May be null"
             )
 
@@ -669,8 +673,8 @@ class Parameter(ReverseUrlMixin,models.Model):
 
 class PartParameter(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.CASCADE, 
+            Part,
+            on_delete=models.CASCADE,
             help_text='parameter criteria ???'
             )
 
@@ -721,8 +725,8 @@ class PartParameter(ReverseUrlMixin,models.Model):
 class MetaPartParameterCriteria(Parameter):
 
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.CASCADE, 
+            Part,
+            on_delete=models.CASCADE,
             help_text='parameter criteria ???'
             )
     name = models.CharField(
@@ -752,8 +756,8 @@ class StockEntry(ReverseUrlMixin,models.Model):
             help_text='Part quantity inside'
             )
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.PROTECT, 
+            Part,
+            on_delete=models.PROTECT,
             help_text='part'
             )
     price = models.DecimalField(
@@ -803,11 +807,18 @@ class ProjectAttachment(Attachment):
             )
 
     project = models.ForeignKey(
-            Project, 
-            on_delete=models.CASCADE, 
+            Project,
+            on_delete=models.CASCADE,
             help_text='project'
             )
-    
+
+    def __str__(self):
+        return "{} file of project {}".format(self.filename(),self.project)
+
+    @staticmethod
+    def get_object_name():
+        return "project attachment"
+
     def get_success_url(self):
         return self.project.get_absolute_url()
 
@@ -818,10 +829,17 @@ class PartAttachment(Attachment):
             )
 
     part = models.ForeignKey(
-            Part, 
-            on_delete=models.CASCADE, 
+            Part,
+            on_delete=models.CASCADE,
             help_text='footprint'
             )
+
+    def __str__(self):
+        return "'{}' file of part '{}'".format(self.filename(),self.part)
+
+    @staticmethod
+    def get_object_name():
+        return "part attachment"
 
     def get_success_url(self):
         return self.part.get_absolute_url()
@@ -833,12 +851,19 @@ class FootprintAttachment(Attachment):
             )
 
     footprint = models.ForeignKey(
-            Footprint, 
-            on_delete=models.CASCADE, 
+            Footprint,
+            on_delete=models.CASCADE,
             help_text='footprint'
             )
 
     def get_success_url(self):
         return self.footprint.get_absolute_url()
+
+    def __str__(self):
+        return "'{}' file of footprint '{}'".format(self.filename(),self.footprint)
+
+    @staticmethod
+    def get_object_name():
+        return "footprint attachment"
 
 

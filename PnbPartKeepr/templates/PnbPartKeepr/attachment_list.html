@@ -5,11 +5,17 @@
 {% load humanize %}
 {% load mptt_tags %}
 
-<ul>
+<table class="table">
     {% for f in file_list %}
-    <li><a href="{{ f.content.url }}">{{ f.filename }}</a></li>
+    <tr>
+        <td><a href="{{ f.content.url }}">{{ f.filename }}</a></td>
+        <td>{{ f.description|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=f %}</td>
+    </tr>
     {% empty %}
-    {% trans "No attachment" %}
+    <tr>
+        <td>{% trans "No attachment" %}</td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
