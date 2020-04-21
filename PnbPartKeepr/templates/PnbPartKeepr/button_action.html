@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 
 <div class="d-flex justify-content-around">
-{% if not object.get_name_url  in request.resolver_match.view_name %}
+{% if object.get_name_url not in request.resolver_match.view_name %}
 <a href={{ object.get_absolute_url }} >
     <button class="btn btn-primary">
         <span class="fas fa-eye" ></span>
@@ -11,7 +11,7 @@
 </a>
 {% endif %}
 
-{% if not object.get_name_update_url  in request.resolver_match.view_name %}
+{% if object.get_name_update_url not in request.resolver_match.view_name %}
 <a href={{ object.get_absolute_update_url }} >
     <button class="btn btn-warning">
         <span class="fas fa-edit"></span>
@@ -29,7 +29,7 @@
 </a>
 {% endif %}
 
-{% if not object.get_name_delete_url  in request.resolver_match.view_name %}
+{% if object.get_name_delete_url not in request.resolver_match.view_name %}
 <a href={{ object.get_absolute_delete_url }} >
     <button class="btn btn-danger">
         <span class="fas fa-trash" ></span>

@@ -58,7 +58,6 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(context)
         return context
 
 
@@ -79,19 +78,29 @@ class DeleteView(LoginRequiredMixin,generic.DeleteView):
                 raise PermissionDenied("At least one sub category_tree in it")
         return obj
 
+    def get_success_url(self):
+        if hasattr(self.object,'get_success_url'):
+            return self.object.get_success_url()
+        return super().get_success_url()
+
+
+
+
+
+
 class CreateView(LoginRequiredMixin,generic.CreateView):
     template_name = 'PnbPartKeepr/update_form.html'
 
     def form_valid(self, form):
-        pk = self.kwargs.get('pk',None)
-        if pk != None:
+        attached_id = self.kwargs.get('attached_id',None)
+        if attached_id != None:
             instance = form.save(commit=False)
             if isinstance(instance,models.ProjectAttachment):
-                instance.project = models.Project.objects.get(id=pk)
+                instance.project = models.Project.objects.get(id=attached_id)
             elif isinstance(instance,models.PartAttachment):
-                instance.part = models.Part.objects.get(id=pk)
+                instance.part = models.Part.objects.get(id=attached_id)
             elif isinstance(instance,models.FootprintAttachment):
-                instance.footprint = models.Footprint.objects.get(id=pk)
+                instance.footprint = models.Footprint.objects.get(id=attached_id)
             else:
                 raise ValueError("This instance is not linked to an other!")
         return super().form_valid(form)
@@ -109,7 +118,7 @@ class ListView(LoginRequiredMixin,generic.ListView):
         return super().get_queryset()
 
 #
-#        track_id    = self.get_id('track') 
+#        track_id    = self.get_id('track')
 #        owner_id    = self.get_id('owner')
 #        vehicle_id  = self.get_id('vehicle')
 #
@@ -130,7 +139,7 @@ class ListView(LoginRequiredMixin,generic.ListView):
 #        page_kwarg = self.page_kwarg
 #        page = self.kwargs.get(page_kwarg) or self.request.GET.get(page_kwarg) or None
 #        if page == None:
-#            try: 
+#            try:
 #                self.kwargs[self.page_kwarg] = self.request.session[page_key]
 #            except:
 #                pass
@@ -139,7 +148,7 @@ class ListView(LoginRequiredMixin,generic.ListView):
 #
 #        self.request.session[page_key] = context['page_obj'].number
 #
-#        track_id = self.get_id('track') 
+#        track_id = self.get_id('track')
 #        owner_id = self.get_id('owner')
 #        vehicle_id = self.get_id('vehicle')
 #

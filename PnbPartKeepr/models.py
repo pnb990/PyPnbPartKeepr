@@ -21,10 +21,10 @@ class ReverseUrlMixin(object):
         return 'pnbpartkeepr.{}.{}'.format(self.__class__.__name__.lower(),action)
 
     def get_name_update_url(self):
-        return self.get_absolute_url('update')
+        return self.get_name_url('update')
 
-    def get_name__delete_url(self):
-        return self.get_absolute_url('delete')
+    def get_name_delete_url(self):
+        return self.get_name_url('delete')
 
     def get_absolute_url(self,action='detail'):
         return reverse(self.get_name_url(action), args=[str(self.id)])
@@ -345,6 +345,7 @@ class Part(ReverseUrlMixin,models.Model):
             max_digits=13,
             decimal_places=4,
             null=True,
+            blank=True,
             help_text='General average part\'s price'
             )
     status = models.CharField(
@@ -398,6 +399,11 @@ class Part(ReverseUrlMixin,models.Model):
     def stockLevel(self):
         #TODO review to optimise this request with https://docs.djangoproject.com/fr/3.0/topics/db/aggregation/
         return sum([i.quantity for i in self.stockentry_set.all()])
+
+    def __str__(self):
+        if self.footprint:
+            return "{} / {}".format(self.name,self.footprint.name)
+        return self.name
 
     @staticmethod
     def get_object_name():
@@ -775,7 +781,7 @@ class Attachment(ReverseUrlMixin,models.Model):
         abstract = True
 
     uploadedAt = models.DateTimeField(
-            auto_now_add=True,
+            auto_now = True,
             help_text='Upload date of filename',
             )
     description = models.TextField(
@@ -783,6 +789,10 @@ class Attachment(ReverseUrlMixin,models.Model):
             default='',
             help_text='Some details'
             )
+
+    def save(self, *args, **kwargs):
+        #TODO find a way to update update time if self.content has changed.
+        super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def filename(self):
         return os.path.basename(self.content.name)
@@ -797,6 +807,9 @@ class ProjectAttachment(Attachment):
             on_delete=models.CASCADE, 
             help_text='project'
             )
+    
+    def get_success_url(self):
+        return self.project.get_absolute_url()
 
 
 class PartAttachment(Attachment):
@@ -810,6 +823,10 @@ class PartAttachment(Attachment):
             help_text='footprint'
             )
 
+    def get_success_url(self):
+        return self.part.get_absolute_url()
+
+
 class FootprintAttachment(Attachment):
     content = models.FileField(upload_to='footprint/attachments/%Y/%m/%d/',
             help_text='Footprint attachment file'
@@ -820,5 +837,8 @@ class FootprintAttachment(Attachment):
             on_delete=models.CASCADE, 
             help_text='footprint'
             )
+
+    def get_success_url(self):
+        return self.footprint.get_absolute_url()
 
 

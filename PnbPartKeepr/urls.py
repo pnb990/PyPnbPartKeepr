@@ -13,6 +13,10 @@ def crud(className, category=False):
                 views.DetailView.as_view(model=model),
                 name='pnbpartkeepr.'+name+'.detail'
                 ),
+            path(name+'/update/<int:pk>',
+                views.UpdateView.as_view(model=model, form_class=form ),
+                name='pnbpartkeepr.'+name+'.update'
+                ),
             path(name+'/delete/<int:pk>',
                 views.DeleteView.as_view(
                     model=model, 
@@ -24,7 +28,7 @@ def crud(className, category=False):
 
     if issubclass(model,models.Attachment):
         urls += [
-                path(name+'/create/<int:pk>',
+                path(name+'/create/<int:attached_id>',
                     views.CreateView.as_view(model=model, form_class=form ),
                     name='pnbpartkeepr.'+name+'.create'
                     ),
@@ -38,10 +42,6 @@ def crud(className, category=False):
                 path(name+'/create',
                     views.CreateView.as_view(model=model, form_class=form ),
                     name='pnbpartkeepr.'+name+'.create'
-                    ),
-                path(name+'/update/<int:pk>',
-                    views.UpdateView.as_view(model=model, form_class=form ),
-                    name='pnbpartkeepr.'+name+'.update'
                     ),
                 ]
 
