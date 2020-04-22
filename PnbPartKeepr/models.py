@@ -159,6 +159,13 @@ class Footprint(ReverseUrlMixin,models.Model):
     def get_addattachment_url(self):
         return reverse('pnbpartkeepr.footprintattachment.create', args=[str(self.id)])
 
+    @staticmethod
+    def queryset(queryset,get):
+        q = get.get('q',None)
+        if q :
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
 
 ###############################################################################
 # Company
@@ -412,6 +419,14 @@ class Part(ReverseUrlMixin,models.Model):
     @staticmethod
     def get_object_name():
         return "part"
+
+    @staticmethod
+    def queryset(queryset,get):
+        q = get.get('q',None)
+        if q :
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
 
 
 class PartDistributor(ReverseUrlMixin,models.Model):

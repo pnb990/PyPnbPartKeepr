@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block page-content %}
+{% include "PnbPartKeepr/search.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -43,7 +44,7 @@
         <td>{% include "PnbPartKeepr/cell_action.html"  with elem=f %}</td>
     </tr>
     {% empty %}
-    {% trans "No footprint" %}
+    {% include "PnbPartKeepr/empty_list.html" with label="No footprint" %}
     {% endfor %}
 </table>
 {% endblock %}

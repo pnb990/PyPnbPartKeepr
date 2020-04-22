@@ -84,10 +84,6 @@ class DeleteView(LoginRequiredMixin,generic.DeleteView):
         return super().get_success_url()
 
 
-
-
-
-
 class CreateView(LoginRequiredMixin,generic.CreateView):
     template_name = 'PnbPartKeepr/update_form.html'
 
@@ -113,9 +109,15 @@ class ListView(LoginRequiredMixin,generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        queryset = super().get_queryset()
+        print(self.request.GET.get('q',None))
+        if len(self.request.GET) != 0 and hasattr(self.model,'queryset'):
+            queryset = self.model.queryset(queryset,self.request.GET)
+
         if issubclass(self.model,models.Category):
-            return self.model.objects.filter(parent_id=self.kwargs.get('pk',None))
-        return super().get_queryset()
+            queryset = queryset.filter(parent_id=self.kwargs.get('pk',None))
+
+        return queryset
 
 #
 #        track_id    = self.get_id('track')
