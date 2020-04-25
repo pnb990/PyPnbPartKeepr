@@ -62,6 +62,8 @@ urlpatterns = [
     path( 'test/part_category/<int:pk>/', views.move_category ),
     ]
 
+urlpatterns += crud( 'Distributor'              )
+urlpatterns += crud( 'Manufacturer'             )
 
 urlpatterns += crud( 'Project'                  )
 urlpatterns += crud( 'ProjectAttachment'        )

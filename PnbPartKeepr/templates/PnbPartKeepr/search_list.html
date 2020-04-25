@@ -9,6 +9,10 @@
         type="text" 
         name="{{name}}" 
         placeholder="{% blocktrans %}a {{name}}...{% endblocktrans %}"
+        {% if name in request.GET %}
+        value="{{request.GET.name}}"
+        {%endif%}
         />
+       {{request.GET.name}}
     </div>
 </form>
