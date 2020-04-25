@@ -35,6 +35,16 @@ class ReverseUrlMixin(object):
     def get_absolute_delete_url(self):
         return self.get_absolute_url('delete')
 
+class SearchMixin(object):
+    SearchFields = []
+
+    @classmethod
+    def queryset(cls,queryset,get):
+        for field in cls.SearchFields:
+            if field in get:
+                kwargs = { field+"__icontains": get[field] }
+                queryset = queryset.filter(**kwargs)
+        return queryset
 
 
 ###############################################################################
@@ -126,7 +136,9 @@ class StorageLocation(ReverseUrlMixin,models.Model):
 # Footprint
 ###############################################################################
 
-class Footprint(ReverseUrlMixin,models.Model):
+class Footprint(ReverseUrlMixin,SearchMixin,models.Model):
+    SearchFields = ['name']
+
     name = models.CharField(
             unique=True,
             help_text='name',
@@ -158,13 +170,6 @@ class Footprint(ReverseUrlMixin,models.Model):
 
     def get_addattachment_url(self):
         return reverse('pnbpartkeepr.footprintattachment.create', args=[str(self.id)])
-
-    @staticmethod
-    def queryset(queryset,get):
-        q = get.get('q',None)
-        if q :
-            queryset = queryset.filter(name__icontains=q)
-        return queryset
 
 
 ###############################################################################
@@ -309,7 +314,9 @@ class PartMeasurementUnit(ReverseUrlMixin,models.Model):
 # Part
 ###############################################################################
 
-class Part(ReverseUrlMixin,models.Model):
+class Part(ReverseUrlMixin,SearchMixin,models.Model):
+    SearchFields = ['name']
+
     name = models.CharField(
             help_text='name',
             max_length=255
@@ -419,14 +426,6 @@ class Part(ReverseUrlMixin,models.Model):
     @staticmethod
     def get_object_name():
         return "part"
-
-    @staticmethod
-    def queryset(queryset,get):
-        q = get.get('q',None)
-        if q :
-            queryset = queryset.filter(name__icontains=q)
-        return queryset
-
 
 
 class PartDistributor(ReverseUrlMixin,models.Model):

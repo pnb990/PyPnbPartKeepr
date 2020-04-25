@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<form class="form-inline" type="get" action="list" >
+    <div class="form-group" >
+        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
+        <input 
+        id="{{name}}" 
+        class="form-control" 
+        type="text" 
+        name="{{name}}" 
+        placeholder="{% blocktrans %}a {{name}}...{% endblocktrans %}"
+        />
+    </div>
+</form>

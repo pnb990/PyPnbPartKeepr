@@ -119,21 +119,6 @@ class ListView(LoginRequiredMixin,generic.ListView):
 
         return queryset
 
-#
-#        track_id    = self.get_id('track')
-#        owner_id    = self.get_id('owner')
-#        vehicle_id  = self.get_id('vehicle')
-#
-#        objects = self.model.objects
-#        if owner_id :
-#            objects = objects.filter(owner_id=int(owner_id))
-#        if track_id :
-#            objects = objects.filter(track_id=int(track_id))
-#        if vehicle_id :
-#            objects = objects.filter(vehicle_id=int(vehicle_id))
-#
-#        return objects.all()
-
 
 #    def get_context_data(self, **kwargs):
 #        page_key = "page_%s"%(self.model._meta.model_name)

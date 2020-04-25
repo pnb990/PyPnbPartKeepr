@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block page-content %}
-{% include "PnbPartKeepr/search.html" %}
+{% include "PnbPartKeepr/search_list.html" with name="name"%}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
