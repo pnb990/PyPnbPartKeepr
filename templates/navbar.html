@@ -23,9 +23,10 @@
                 {% if user.is_anonymous %}
                 {% include "navbar_item.html" with routeName="login" label="login" %}
                 {% else %}
-                {% include "navbar_item_list_and_category.html" with routeName="pnbpartkeepr.part"              label="parts" %}
-                {% include "navbar_item_list_and_category.html" with routeName="pnbpartkeepr.footprint"         label="footprints" %}
-                {% include "navbar_item_list_and_category.html" with routeName="pnbpartkeepr.storagelocation"   label="storages location" %}
+                {% include "navbar_item.html" with routeName="pnbpartkeepr.part.list" label="Parts" %}
+                {% include "navbar_item.html" with routeName="pnbpartkeepr.footprint.list" label="Footprints" %}
+                {% include "navbar_item.html" with routeName="pnbpartkeepr.storagelocation.list" label="Storage locations" %}
+                {% include "navbar_item_categories_list.html" %}
                 {% include "navbar_item.html" with routeName="logout" label="logout" %}
                 {% endif %}
                 {% include "navbar_item.html" with routeName="about" label="about" %}

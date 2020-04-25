@@ -1,0 +1,28 @@
+{% load i18n %}
+
+{% comment %}
+set active = (app.request.get('_route') matches '/^'~routeName~'.*/') %}
+{% endcomment %}
+
+{% if "category" in request.resolver_match.view_name %}
+<li class="nav-item dropdown active" >
+    <a class="nav-link dropdown-toggle active" href="#" data-toggle="dropdown">
+{% else %}
+<li class="nav-item dropdown" >
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+{% endif %}
+    {% trans "Categories" %}
+    </a>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="{% url "pnbpartkeepr.partcategory.list" %}" >
+            {% trans "Parts" %}
+        </a>
+            <a class="dropdown-item" href="{% url "pnbpartkeepr.footprintcategory.list" %}" >
+                {% trans "Footprints" %}
+            </a>
+                <a class="dropdown-item" href="{% url "pnbpartkeepr.storagelocationcategory.list" %}" >
+                    {% trans "Storage" %}
+                </a>
+    </div>
+</li>
+
