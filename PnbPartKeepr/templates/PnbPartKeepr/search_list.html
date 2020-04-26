@@ -2,6 +2,7 @@
 
 <form class="form-inline" type="get" action="list" >
     <div class="form-group" >
+        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
         <input 
         id="{{name}}" 
         class="form-control" 
@@ -12,6 +13,5 @@
         value="{{value}}"
         {%endif%}
         />
-        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
     </div>
 </form>

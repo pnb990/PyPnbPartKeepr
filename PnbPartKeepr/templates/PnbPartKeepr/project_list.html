@@ -15,17 +15,20 @@
 <div class="d-flex justify-content-around pnbpartkeepr-search-bar">
     <div class="pnbpartkeepr-search-item">
         <div class="pnbpartkeepr-search-title">
-            {% trans "Footprints" %}
+            {% trans "Projects" %}
         </div>
     </div>
     <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
+            {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        {% include "PnbPartKeepr/search_list.html" with name="footprint"    value=request.GET.footprint%}
     </div>
     <div class="pnbpartkeepr-search-item">
         {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
     </div>
     <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.footprint.create" %}" >
+        <a href="{% url "pnbpartkeepr.project.create" %}">
             <button class="btn btn-primary">
                 <span class="fas fa-plus"></span>
                 {% trans 'Add a New one' %}
@@ -36,26 +39,25 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
-        <th scope="col">{% trans "Description"      %}</th>
-        <th scope="col">{% trans "Category"         %}</th>
+        <th scope="col">{% trans "Owner"            %}</th>
+        <th scope="col">{% trans "Desciption"       %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
-
-    {% for f in object_list %}
-    <tr onclick="document.location='{{ f.get_absolute_url }}';"
+    {% for p in object_list %}
+    {% comment %}
+    {% endcomment %}
+    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
         class="pnbpartkeepr-elem-list"
         >
-        <td>{{ f.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f %}</td>
-        <td>{{ f.name }}</td>
-        <td>{{ f.description|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"  with elem=f %}</td>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.owner }}</td>
+        <td>{{ p.description|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
     </tr>
     {% empty %}
-    {% include "PnbPartKeepr/empty_list.html" with label="No footprint" %}
+    {% include "PnbPartKeepr/empty_list.html" with label="No part" %}
     {% endfor %}
 </table>
 {% endblock %}

@@ -17,10 +17,10 @@
 
 {% block page-content %}
 <form action="" method="post" enctype="multipart/form-data">
-    {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+    {% buttons submit='OK' reset="Reset" %}{% endbuttons %}
     {% csrf_token %}
     {% bootstrap_form form %}
-    {% buttons submit='OK' reset="Cancel" %}{% endbuttons %}
+    {% buttons submit='OK' reset="Reset" %}{% endbuttons %}
 </form>
 {% endblock %}
 

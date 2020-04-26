@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'phone_field',
     'bootstrap4',
     'PnbPartKeepr',
     'mptt',

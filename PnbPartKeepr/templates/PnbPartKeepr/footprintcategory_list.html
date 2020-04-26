@@ -10,18 +10,30 @@
 {% endcomment %}
 
 {% block page-header %}
-<div class="d-flex justify-content-between">
-    {% trans "Footprint Categories list" %}
-    <a href="{% url "pnbpartkeepr.footprint.create" %}">
-        <button class="btn btn-primary">
-            <span class="fas fa-plus"></span>
-            {% trans 'Add a New one' %}
-        </button>
-    </a>
-</div>
 {% endblock %}
 
 {% block page-content %}
+<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
+    <div class="pnbpartkeepr-search-item">
+        <div class="pnbpartkeepr-search-title">
+            {% trans "Footprint Categories list" %}
+        </div>
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        <a href="{% url "pnbpartkeepr.footprintcategory.create" %}">
+            <button class="btn btn-primary">
+                <span class="fas fa-plus"></span>
+                {% trans 'Add a New one' %}
+            </button>
+        </a>
+    </div>
+</div>
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
