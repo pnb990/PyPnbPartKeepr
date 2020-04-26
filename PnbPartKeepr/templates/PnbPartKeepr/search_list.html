@@ -2,17 +2,16 @@
 
 <form class="form-inline" type="get" action="list" >
     <div class="form-group" >
-        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
         <input 
         id="{{name}}" 
         class="form-control" 
         type="text" 
         name="{{name}}" 
         placeholder="{% blocktrans %}a {{name}}...{% endblocktrans %}"
-        {% if name in request.GET %}
-        value="{{request.GET.name}}"
+        {% if value %}
+        value="{{value}}"
         {%endif%}
         />
-       {{request.GET.name}}
+        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
     </div>
 </form>

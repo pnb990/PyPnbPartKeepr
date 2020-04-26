@@ -21,9 +21,9 @@
 {% endblock %}
 
 {% block page-content %}
-{% include "PnbPartKeepr/search_list.html" with name="name"%}
-{% include "PnbPartKeepr/search_list.html" with name="footprint"%}
-{% include "PnbPartKeepr/search_list.html" with name="description"%}
+{% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
+{% include "PnbPartKeepr/search_list.html" with name="footprint"    value=request.GET.footprint%}
+{% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
