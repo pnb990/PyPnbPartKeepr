@@ -9,49 +9,50 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Part" %} {{part.id}}{% endblock %}
+{% block page-header %}{% trans "Part" %} {{object.id}}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
         <tr>
             <th>{% trans "Name"            %}</th>
-            <td>{{ part.name }}</td>
+            <td>{{ object.name }}</td>
         </tr>
         <tr>
             <th>{% trans "Footprint"       %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=part.footprint %}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.footprint %}</td>
         </tr>
         <tr>
             <th>{% trans "Created"         %}</th>
-            <td>{{ part.createDate|naturaltime }}</td>
+            <td>{{ object.createDate|naturaltime }}</td>
         </tr>
         <tr>
             <th>{% trans "Average price"    %}</th>
-            <td>{{ part.averagePrice       }}</td>
+            <td>{{ object.averagePrice       }}</td>
         </tr>
         <tr>
             <th>{% trans "Stock"%} {% trans "level"       %}</th>
-            <td>{{ part.stockLevel     }}</td>
+            <td>{{ object.stockLevel     }}</td>
         </tr>
         <tr>
             <th>{% trans "Stock"%} {% trans "Minimum"     %}</th>
-            <td>{{ part.minStockLevel  }}</td>
+            <td>{{ object.minStockLevel  }}</td>
         </tr>
         <tr>
             <th>{% trans "Stock location"   %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=part.storageLocation %}</td>
+            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.storageLocation %}</td>
         </tr>
         <tr>
             <th>{% trans "Category"         %}</th>
-            <td>{% include "PnbPartKeepr/cell_name.html" with elem=part.category %}</td>
+            <td>{% include "PnbPartKeepr/cell_name.html" with elem=object.category %}</td>
         </tr>
+        <tr>
             <th>{% trans "Description" %}</th>
-            <td>{{ part.description    }}</td>
+            <td>{{ object.description    }}</td>
         </tr>
         <tr>
             <th>{% trans "Comment"     %}</th>
-            <td>{{ part.comment        }}</td>
+            <td>{{ object.comment        }}</td>
         </tr>
     </table>
 </div>
@@ -59,14 +60,14 @@
     <table class="table">
         <tr>
             <td>
-                {% if part.image %}
-                <img src="{{ part.image.url }}"/>
+                {% if object.image %}
+                <img src="{{ object.image.url }}"/>
                 {% else %}
                 <span class="fas fa-image" />
                 {% endif %}
             </td>
             <td>
-                {% include "PnbPartKeepr/attachment_list.html" with file_list=part.partattachment_set.all %}
+                {% include "PnbPartKeepr/attachment_list.html" with file_list=object.partattachment_set.all %}
             </td>
         </tr>
     </table>

@@ -106,7 +106,9 @@ class StorageLocationCategory(Category):
 # Storage
 ###############################################################################
 
-class StorageLocation(ReverseUrlMixin,models.Model):
+class StorageLocation(ReverseUrlMixin,SearchMixin,models.Model):
+    SearchFields = ['name']
+
     name = models.CharField(
             unique=True,
             help_text='name',
@@ -427,6 +429,9 @@ class Part(ReverseUrlMixin,SearchMixin,models.Model):
     def get_object_name():
         return "part"
 
+    def get_addattachment_url(self):
+        return reverse('pnbpartkeepr.partattachment.create', args=[str(self.id)])
+
 
 class PartDistributor(ReverseUrlMixin,models.Model):
     part = models.ForeignKey(
@@ -494,7 +499,8 @@ class PartManufacturer(ReverseUrlMixin,models.Model):
 # Project
 ###############################################################################
 
-class Project(ReverseUrlMixin,models.Model):
+class Project(ReverseUrlMixin,SearchMixin,models.Model):
+    SearchFields = ['name','description']
 
     name = models.CharField(
             help_text='name',

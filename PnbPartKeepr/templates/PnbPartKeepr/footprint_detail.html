@@ -28,7 +28,9 @@
 <div>
     <table class="table">
         <tr>
-            <td>{% include "PnbPartKeepr/detail_img.html" with elem=object %}</td>
+            <td>
+                {% include "PnbPartKeepr/detail_img.html" with elem=object %}
+            </td>
             <td>
                 {% include "PnbPartKeepr/attachment_list.html" with file_list=object.footprintattachment_set.all %}
             </td>

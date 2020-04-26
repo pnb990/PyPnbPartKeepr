@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+{% load mptt_tags %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}{% trans "Project" %} {{object.id}}{% endblock %}
+
+{% block page-content %}
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Name"            %}</th>
+            <td>{{ object.name }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Owner" %}</th>
+            <td>{{ object.comment|default:"NoBody"  }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Description" %}</th>
+            <td>{{ object.description|default:"No Comment" }}</td>
+        </tr>
+    </table>
+</div>
+<div class="d-flex justify-content-around">
+    <div>
+        TODO add project RUN
+    </div>
+    <div>
+        {% include "PnbPartKeepr/attachment_list.html" with file_list=object.projectattachment_set.all %}
+    </div>
+</div>
+{% include "PnbPartKeepr/button_action.html" %}
+{% endblock %}
+

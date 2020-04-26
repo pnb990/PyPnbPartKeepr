@@ -10,27 +10,23 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Storage location" %} {{ storageLocation.id }}{% endblock %}
+{% block page-header %}{% trans "Storage location" %} {{ object.id }}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
         <tr>
             <th>{% trans "Name"             %}</th>
-            <td>{{ storagelocation.name }}</td>
+            <td>{{ object.name }}</td>
         </tr>
         <tr>
             <th>{% trans "Category"                 %}</th>
-            <td>{{ storagelocation.category.path   }}</td>
+            <td>{{ object.category.path   }}</td>
         </tr>
     </table>
 </div>
 <div>
-    <table class="table">
-        <tr>
-            <td>{% include "PnbPartKeepr/detail_img.html" with elem=storagelocation %}</td>
-        </tr>
-    </table>
+    <td>{% include "PnbPartKeepr/detail_img.html" with elem=object %}</td>
 </div>
 {% include "PnbPartKeepr/button_action.html" %}
 {% endblock %}
