@@ -10,15 +10,11 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Storage location" %} {{ object.id }}{% endblock %}
+{% block page-header %}{% trans "Storage location" %} {{object.name|default:"No Name"}}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
-        <tr>
-            <th>{% trans "Name"             %}</th>
-            <td>{{ object.name }}</td>
-        </tr>
         <tr>
             <th>{% trans "Category"                 %}</th>
             <td>{{ object.category.path   }}</td>

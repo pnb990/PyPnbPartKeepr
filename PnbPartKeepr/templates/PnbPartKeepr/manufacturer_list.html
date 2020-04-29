@@ -22,10 +22,16 @@
             {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
     </div>
     <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="footprint"    value=request.GET.footprint%}
+        {% include "PnbPartKeepr/search_list.html" with name="address"      value=request.GET.address%}
     </div>
     <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
+        {% include "PnbPartKeepr/search_list.html" with name="email"        value=request.GET.email%}
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        {% include "PnbPartKeepr/search_list.html" with name="phone"        value=request.GET.phone%}
+    </div>
+    <div class="pnbpartkeepr-search-item">
+        {% include "PnbPartKeepr/search_list.html" with name="fax"          value=request.GET.fax%}
     </div>
     <div class="pnbpartkeepr-search-item">
         <a href="{% url "pnbpartkeepr.manufacturer.create" %}">
@@ -39,9 +45,14 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
+        <th scope="col">{% trans "Logo"             %}</th>
         <th scope="col">{% trans "Name"             %}</th>
-        <th scope="col">{% trans "Owner"            %}</th>
-        <th scope="col">{% trans "Desciption"       %}</th>
+        <th scope="col">{% trans "Web Site"         %}</th>
+        <th scope="col">{% trans "phone"            %}</th>
+        <th scope="col">{% trans "fax"              %}</th>
+        <th scope="col">{% trans "email"            %}</th>
+        <th scope="col">{% trans "address"          %}</th>
+        <th scope="col">{% trans "comment"          %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
     {% for p in object_list %}
@@ -51,9 +62,18 @@
         class="pnbpartkeepr-elem-list"
         >
         <td>{{ p.id }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.owner }}</td>
-        <td>{{ p.description|truncatechars:40 }}</td>
+        <td>
+            {% include "PnbPartKeepr/cell_img.html"    with elem=p %}
+        </td>
+        <td>{{ p.name|default:"No name" }}</td>
+        <td>
+            {% include "PnbPartKeepr/cell_url.html"        with elem=p %}
+        </td>
+        <td>{{ p.phone|default:"No Phone" }}</td>
+        <td>{{ p.fax|default:"No fax" }}</td>
+        <td>{{ p.email|default:"No email" }}</td>
+        <td>{{ p.address|default:"No address"|truncatechars:30 }}</td>
+        <td>{{ p.comment|default:"No comment"|truncatechars:40 }}</td>
         <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
     </tr>
     {% empty %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+{% load mptt_tags %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}{% trans "Distributor" %} {{object.name|default:"No Name"}}{% endblock %}
+
+{% block page-content %}
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Address" %}</th>
+            <td>{{ object.address|default:"No Address" }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Link" %}</th>
+            <td>
+                {% if object.url %}
+                <a href="{{ object.url }}" >
+                    <button class="btn btn-defaults">
+                        {{ object.url }}
+                        <span class="fas fa-link"></span>
+                    </button>
+                </a>
+                {% else %}
+                {% trans "No link" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{% trans "skuUrl" %}</th>
+            <td>{{ object.skuUrl }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Phone" %}</th>
+            <td>
+                {% if object.phone %}
+                <a href="tel:{{ object.phone }}" >
+                    <button class="btn btn-defaults">
+                        {{ object.phone }}
+                        <span class="fas fa-phone"></span>
+                    </button>
+                </a>
+                {% else %}
+                {% trans "No phone" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{% trans "fax" %}</th>
+            <td>
+                {% if object.fax %}
+                <a href="fax:{{ object.fax }}" >
+                    <button class="btn btn-defaults">
+                        {{ object.fax }}
+                        <span class="fas fa-fax"></span>
+                    </button>
+                </a>
+                {% else %}
+                {% trans "No fax" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{% trans "email" %}</th>
+            <td>
+                {% if object.email %}
+                <a href="mailto:{{ object.email }}" >
+                    <button class="btn btn-defaults">
+                        {{ object.email }}
+                        <span class="fas fa-envelope"></span>
+                    </button>
+                </a>
+                {% else %}
+                {% trans "No email" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{% trans "used for report" %}</th>
+            <td>{{ object.forReports|yesno }}</td>
+        </tr>
+    </table>
+</div>
+<div class="d-flex justify-content-around">
+    <div>
+        {% if object.image %}
+        <img src="{{ object.image.url }}"/>
+        {% else %}
+        <span class="fas fa-image" />
+        {% endif %}
+    </div>
+    <div>
+        <div>{% trans "comment" %}</div>
+        <div>{{ object.comment|default:"No comment" }}</div>
+    </div>
+</div>
+{% include "PnbPartKeepr/button_action.html" %}
+{% endblock %}
+

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+{% load mptt_tags %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}{% trans "Project run" %} {{object.name|default:"No Name"}}{% endblock %}
+
+{% block page-content %}
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Date" %}</th>
+            <td>{{ object.runDateTime|naturaltime  }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Project" %}</th>
+            <td>{{ object.project }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Quantity" %}</th>
+            <td>{{ object.quantity }}</td>
+        </tr>
+    </table>
+</div>
+{% include "PnbPartKeepr/button_action.html" %}
+{% endblock %}
+

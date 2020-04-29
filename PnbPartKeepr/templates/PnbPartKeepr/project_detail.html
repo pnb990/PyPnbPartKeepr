@@ -9,18 +9,14 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Project" %} {{object.id}}{% endblock %}
+{% block page-header %}{% trans "Project" %} {{object.name|default:"No Name"}}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
         <tr>
-            <th>{% trans "Name"            %}</th>
-            <td>{{ object.name }}</td>
-        </tr>
-        <tr>
             <th>{% trans "Owner" %}</th>
-            <td>{{ object.comment|default:"NoBody"  }}</td>
+            <td>{{ object.owner|default:"NoBody"  }}</td>
         </tr>
         <tr>
             <th>{% trans "Description" %}</th>
@@ -29,12 +25,8 @@
     </table>
 </div>
 <div class="d-flex justify-content-around">
-    <div>
-        TODO add project RUN
-    </div>
-    <div>
-        {% include "PnbPartKeepr/attachment_list.html" with file_list=object.projectattachment_set.all %}
-    </div>
+    {% include "PnbPartKeepr/object_set_list.html" with name="project run" object_list=object.projectrun_set.all %}
+    {% include "PnbPartKeepr/attachment_list.html" with object_list=object.projectattachment_set.all %}
 </div>
 {% include "PnbPartKeepr/button_action.html" %}
 {% endblock %}

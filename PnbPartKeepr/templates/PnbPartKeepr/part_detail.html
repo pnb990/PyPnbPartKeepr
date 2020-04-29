@@ -9,15 +9,11 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Part" %} {{object.id}}{% endblock %}
+{% block page-header %}{% trans "Part" %} {{object.name|default:"No Name"}}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
-        <tr>
-            <th>{% trans "Name"            %}</th>
-            <td>{{ object.name }}</td>
-        </tr>
         <tr>
             <th>{% trans "Footprint"       %}</th>
             <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.footprint %}</td>
@@ -67,7 +63,7 @@
                 {% endif %}
             </td>
             <td>
-                {% include "PnbPartKeepr/attachment_list.html" with file_list=object.partattachment_set.all %}
+                {% include "PnbPartKeepr/attachment_list.html" with object_list=object.partattachment_set.all %}
             </td>
         </tr>
     </table>

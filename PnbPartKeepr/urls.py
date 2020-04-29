@@ -65,6 +65,8 @@ urlpatterns = [
 urlpatterns += crud( 'Distributor'              )
 urlpatterns += crud( 'Manufacturer'             )
 
+urlpatterns += crud( 'ProjectRun'               )
+
 urlpatterns += crud( 'Project'                  )
 urlpatterns += crud( 'ProjectAttachment'        )
 

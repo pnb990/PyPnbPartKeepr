@@ -1,0 +1,12 @@
+{% load bootstrap4 %}
+
+{% if elem.url %}
+<a href={{ elem.url }} >
+    <button class="btn btn-defaults">
+        <span class="fas fa-link"></span>
+    </button>
+</a>
+
+{% else %}
+No link
+{% endif %}
