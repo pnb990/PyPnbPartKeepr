@@ -17,8 +17,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
 
 
-DB_NAME = os.getenv('DB_NAME',      'partkeepradmindb'   )
-DB_USER = os.getenv('DB_USERNAME',  'PartKeeprPsqlUser' )
+DB_NAME = os.getenv('DB_NAME',      'partkeeprpsqldb'   )
+DB_USER = os.getenv('DB_USERNAME',  'partkeeprpsqluser' )
 DB_PASS = os.getenv('DB_USERPASS',  'PartKeeprPsqlPass' )
 DB_HOST = os.getenv('DB_HOSTNAME',  '127.0.0.1'     )
 DB_PORT = os.getenv('DB_HOSTPORT',  '5432'          )
@@ -40,6 +40,17 @@ EMAIL_USE_SSL       = (os.environ.get('EMAIL_SSL','False') == 'True')
 # The SECRET_KEY is provided via an environment variable in OpenShift
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY',
         'CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).')
+
+#see later for https
+HTTPS_ENABLED = (os.environ.get('HTTPS','False') == 'True')
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS  =HTTPS_ENABLED
+SECURE_HSTS_PRELOAD             =HTTPS_ENABLED
+SECURE_HSTS_SECONDS             =3600
+SECURE_SSL_REDIRECT             =HTTPS_ENABLED
+SESSION_COOKIE_SECURE           =HTTPS_ENABLED
+CSRF_COOKIE_SECURE              =HTTPS_ENABLED
+SECURE_REFERRER_POLICY          ='same-origin'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!

@@ -2,54 +2,32 @@
 New Django Version From scratch of PartKeepr
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for?
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## Installation on Debian like distribution.
 
 
-## General Setup
-
-### minimal needed package for Debian
+### installing needed package
 ```
-sudo aptitude install python-pip python-dev python-virtualenv
+sudo apt-get install python-pip python-dev python-virtualenv postgresql libpq-dev postgresql-client
 ```
 
-### Create virtual environment for this application
+### Clone repo
+```
+git clone -b production https://github.com/pnb990/PyPnbPartKeepr.git
+```
 
-In root of PyPnbPartKeepr:
+### create virtual environment for this application
+
+Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
+
+So in top folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
 ```
 virtualenv -p /usr/bin/python3 venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r PyPnbPartKeepr/requirements.txt
+pip install -r PyPnbPartKeepr/requirements-mysql.txt
 ```
-
-### Using MYSQL (not tested imported from older project)
-
-
-Install client
-```
-sudo aptitude install libmysqlclient-dev
-```
-
-Create user with password and database and give right
-  ( note database name end username are always in lower case )
-
-```
-CREATE USER PartKeeprAdminUser;
-ALTER USER PartKeeprAdminUser WITH ENCRYPTED PASSWORD 'PartKeeprAdminPass';
-CREATE DATABASE partkeepradmindb OWNER PartKeeprAdminUser;
-```
-
 
 ### PostgreSql Database configuration
-
-Install dependency
-
-```
-sudo aptitude install postgresql postgresql-client libpq-dev
-```
 
 Add password to postgres user for administration of this
 
@@ -58,37 +36,27 @@ sudo passwd postgres
 ```
 
 Connecting to postgres
-
 ```
-sudo -i -u postgres
-```
-
-Access to postgres:
-
-```
-psql
+su postgres -c psql
 ```
 
-
-### Environment configuration
-
-For easy debug create a file in ~/django_set_env.sh and fill correctly fields:
-
+Create Database owner partkeeprpsqluser with PartKeeprPsqlPass passwords.
 ```
-#!/bin/sh
+CREATE ROLE partkeeprpsqluser PASSWORD 'PartKeeprPsqlPass' LOGIN;
+```
+it is recommanded to change it but set corresponding environment variable DB_USERNAME and DB_USERPASS
+or update PyPnbPartKeepr/settings.
 
-export EMAIL_HOST='smtp.gmail.com'
-export EMAIL_PORT='465'
-export EMAIL_USER='xxxx@xxxx.com'
-export EMAIL_PASS='xxxxxxxxxxxxx'
-export EMAIL_SSL='True'
-export EMAIL_TLS='False'
+Then create database partkeeprpsqldb
+```
+CREATE DATABASE partkeeprpsqldb OWNER 'partkeeprpsqluser';
+```
+You may change database name but set corresponding environment variable DB_USERNAME and DB_USERPASS
+or update PyPnbPartKeepr/settings.
 
-DEBUG=True
-DEBUG_TOOLBAR=True
-DEBUG_NO_CACHES=True
-#ALLOWED_HOSTS=['MyPnbPartKeepr.com']
-
+Exit psql client
+```
+exit
 ```
 
 ### Some use full command for debug
@@ -130,5 +98,26 @@ see help with python importFromParkKeepr -h
 exemple:
 ```
 ./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
+```
+
+
+### Environment configuration
+
+For easy debug create a file in ~/django_set_env.sh and fill correctly fields:
+
+#!/bin/sh
+
+export EMAIL_HOST='smtp.gmail.com'
+export EMAIL_PORT='465'
+export EMAIL_USER='xxxx@xxxx.com'
+export EMAIL_PASS='xxxxxxxxxxxxx'
+export EMAIL_SSL='True'
+export EMAIL_TLS='False'
+
+DEBUG=True
+DEBUG_TOOLBAR=True
+DEBUG_NO_CACHES=True
+#ALLOWED_HOSTS=['MyPnbPartKeepr.com']
+
 ```
 
