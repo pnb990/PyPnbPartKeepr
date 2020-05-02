@@ -239,7 +239,7 @@ for id,name,address,url,phone,fax,email,comment in oldDbCursor:
 
     filename,image = get_image_filename(
             'images/iclogo',
-            'ManufacturerIClogo',
+            'ManufacturerICLogo',
             'manufacturer_id',
             id
             )
@@ -268,8 +268,8 @@ for id,name,address,url,phone,fax,email,comment in oldDbCursor:
 ###############################################################################
 
 models_list.append(models.SiPrefix)
-print("importing {} --------------------------------------------".format('siPrefix'))
-oldDbCursor.execute("SELECT  `id`,  `prefix`,  `symbol`,  `exponent`,  `base` FROM `siPrefix` ")
+print("importing {} --------------------------------------------".format('SiPrefix'))
+oldDbCursor.execute("SELECT  `id`,  `prefix`,  `symbol`,  `exponent`,  `base` FROM `SiPrefix` ")
 for id,prefix,symbol,exponent,base in oldDbCursor:
     siprefix,created = models.SiPrefix.objects.get_or_create(
             id=id,
