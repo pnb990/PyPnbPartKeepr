@@ -61,8 +61,8 @@ EMAIL_HOST          = cfg.EMAIL_HOST
 EMAIL_PORT          = cfg.EMAIL_PORT
 EMAIL_HOST_USER     = cfg.EMAIL_USER
 EMAIL_HOST_PASSWORD = cfg.EMAIL_PASS
-EMAIL_USE_TLS       = cfg.EMAIL_TLS
-EMAIL_USE_SSL       = cfg.EMAIL_SSL
+EMAIL_USE_TLS       = cfg.EMAIL_USE_TLS
+EMAIL_USE_SSL       = cfg.EMAIL_USE_SSL
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
