@@ -15,18 +15,6 @@ sudo apt-get install python-pip python-dev python-virtualenv postgresql libpq-de
 git clone -b production https://github.com/pnb990/PyPnbPartKeepr.git
 ```
 
-### create virtual environment for this application
-
-Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
-
-So in top folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
-```
-virtualenv -p /usr/bin/python3 venv
-source venv/bin/activate
-pip install -r PyPnbPartKeepr/requirements.txt
-pip install -r PyPnbPartKeepr/requirements-mysql.txt
-```
-
 ### PostgreSql Database configuration
 
 Add password to postgres user for administration of this
@@ -59,6 +47,50 @@ Exit psql client
 exit
 ```
 
+### create virtual environment for this application
+
+Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
+
+So in top folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
+```
+virtualenv -p /usr/bin/python3 venv
+source venv/bin/activate
+cd PyPnbPartKeepr
+pip install -r requirements.txt
+pip install -r requirements-mysql.txt
+```
+
+### create table and admin user
+
+# don't forget if not done yet
+```
+source venv/bin/activate
+cd PyPnbPartKeepr
+```
+
+Update database schema
+```
+python manage.py migrate
+```
+
+Create administrator
+```
+python manage.py createsuperuser
+```
+
+### importing old PartKeepr data
+
+To import old database and file use importFromParkKeepr script.
+
+See help with python importFromParkKeepr -h 
+
+exemple:
+```
+./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
+```
+
+
+
 ### Some use full command for debug
 
 Before using Django commande don't forget to source django_set_env.sh
@@ -88,18 +120,6 @@ For debug start :
 ```
 ./debug_server.sh
 ```
-
-### importing old PartKeepr data
-
-To import old database and file use importFromParkKeepr script.
-
-see help with python importFromParkKeepr -h 
-
-exemple:
-```
-./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
-```
-
 
 ### Environment configuration
 
