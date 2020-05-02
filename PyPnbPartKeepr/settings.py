@@ -11,38 +11,81 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
 
+class Cfg(object):
+    def __init__(self,pathList):
+        self.cfg = {
+                'DB_NAME'           : 'partkeeprpsqldb',
+                'DB_USER'           : 'partkeeprpsqluser',
+                'DB_PASS'           : 'PartKeeprPsqlPass',
+                'DB_HOST'           : '127.0.0.1',
+                'DB_PORT'           : '5432',
+                'EMAIL_HOST'        : 'localhost',
+                'EMAIL_PORT'        : 25,
+                'EMAIL_USER'        : None,
+                'EMAIL_PASS'        : None,
+                'EMAIL_USE_TLS'     : False,
+                'EMAIL_USE_SSL'     : False,
+                'SECRET_KEY'        : 'CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).',
+                'HTTPS_ENABLED'     : False,
+                'DEBUG'             : False,
+                'DEBUG_TOOLBAR'     : False,
+                'DEBUG_NO_CACHES'   : False,
+                'ALLOWED_HOSTS'     : [],
+                }
+        for filename in pathList:
+            if os.path.isfile(filename):
+                self.cfg.update(json.loads(filename))
 
-DB_NAME = os.getenv('DB_NAME',      'partkeeprpsqldb'   )
-DB_USER = os.getenv('DB_USERNAME',  'partkeeprpsqluser' )
-DB_PASS = os.getenv('DB_USERPASS',  'PartKeeprPsqlPass' )
-DB_HOST = os.getenv('DB_HOSTNAME',  '127.0.0.1'     )
-DB_PORT = os.getenv('DB_HOSTPORT',  '5432'          )
+    def __getattr__(self,name):
+        if name in os.environ:
+            return os.environ[name]
+        return self.cfg[name]
 
 
-EMAIL_HOST          = os.environ.get('EMAIL_HOST','localhost')
-EMAIL_PORT          = os.environ.get('EMAIL_PORT',25)
-EMAIL_HOST_USER     = os.environ.get('EMAIL_USER',None)
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS',None)
-EMAIL_USE_TLS       = (os.environ.get('EMAIL_TLS','False') == 'True')
-EMAIL_USE_SSL       = (os.environ.get('EMAIL_SSL','False') == 'True')
+cfg = Cfg([ os.path.join(BASE_DIR,'PyPnbPartKeepr.conf'), '/etc/PyPnbPartKeepr.conf' ])
 
 
+DB_NAME = cfg.DB_NAME
+DB_USER = cfg.DB_USER
+DB_PASS = cfg.DB_PASS
+DB_HOST = cfg.DB_HOST
+DB_PORT = cfg.DB_PORT
+
+EMAIL_HOST          = cfg.EMAIL_HOST
+EMAIL_PORT          = cfg.EMAIL_PORT
+EMAIL_HOST_USER     = cfg.EMAIL_USER
+EMAIL_HOST_PASSWORD = cfg.EMAIL_PASS
+EMAIL_USE_TLS       = cfg.EMAIL_TLS
+EMAIL_USE_SSL       = cfg.EMAIL_SSL
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # The SECRET_KEY is provided via an environment variable in OpenShift
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY',
-        'CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).')
+SECRET_KEY          = cfg.SECRET_KEY
 
 #see later for https
-HTTPS_ENABLED = (os.environ.get('HTTPS','False') == 'True')
+HTTPS_ENABLED       = cfg.HTTPS_ENABLED
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG               = cfg.DEBUG
+DEBUG_TOOLBAR       = cfg.DEBUG_TOOLBAR
+DEBUG_NO_CACHES     = cfg.DEBUG_NO_CACHES
+
+ALLOWED_HOSTS       = cfg.ALLOWED_HOSTS
+
+
+
+
+
+
 
 SECURE_HSTS_INCLUDE_SUBDOMAINS  =HTTPS_ENABLED
 SECURE_HSTS_PRELOAD             =HTTPS_ENABLED
@@ -52,13 +95,6 @@ SESSION_COOKIE_SECURE           =HTTPS_ENABLED
 CSRF_COOKIE_SECURE              =HTTPS_ENABLED
 SECURE_REFERRER_POLICY          ='same-origin'
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG           = (os.environ.get('DEBUG',          'False') == 'True')
-DEBUG_TOOLBAR   = (os.environ.get('DEBUG_TOOLBAR',  'False') == 'True')
-DEBUG_NO_CACHES = (os.environ.get('DEBUG_NO_CACHES','False') == 'True')
-
-ALLOWED_HOSTS   = os.environ.get('ALLOWED_HOSTS',[])
 
 # Application definition
 
