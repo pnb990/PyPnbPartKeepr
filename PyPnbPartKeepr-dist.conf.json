@@ -21,7 +21,8 @@
     "DEBUG_TOOLBAR"     : false,
     "DEBUG_NO_CACHES"   : false,
 
-    "ALLOWED_HOSTS"     : []
+    "ALLOWED_HOSTS"     : [],
+    "ROOT_URL"          : ""
 }
 
 
