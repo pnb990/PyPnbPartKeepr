@@ -87,13 +87,29 @@ python manage.py createsuperuser
 
 To import old database and file use importFromParkKeepr script.
 
-See help with python importFromParkKeepr -h 
+See help with python importFromParkKeepr -h
 
 exemple:
 ```
 ./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
 ```
 
+### Apache configuration
+
+
+```
+Define PY_PNB_PARTKEEPR_PATH /path/to/cloned/folder
+
+WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
+WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
+WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr>
+<Files wsgi.py>
+Require all granted
+</Files>
+</Directory>
+```
 
 
 ### Some use full command for debug
