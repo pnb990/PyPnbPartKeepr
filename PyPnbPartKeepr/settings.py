@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import json
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +32,7 @@ class Cfg(object):
                 'EMAIL_PASS'        : None,
                 'EMAIL_USE_TLS'     : False,
                 'EMAIL_USE_SSL'     : False,
-                'SECRET_KEY'        : 'CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).',
+                'SECRET_KEY'        : 'CHANGE_ME!!!!',
                 'HTTPS_ENABLED'     : False,
                 'DEBUG'             : False,
                 'DEBUG_TOOLBAR'     : False,
@@ -40,15 +41,27 @@ class Cfg(object):
                 }
         for filename in pathList:
             if os.path.isfile(filename):
-                self.cfg.update(json.loads(filename))
+                try:
+                    print("Load:",filename)
+                    self.cfg.update(json.load(open(filename)))
+                except json.decoder.JSONDecodeError as e:
+                    print("*"*80)
+                    print("* filename",filename,e)
+                    print("*"*80)
+                    sys.exit(1)
+        self.verbose = set() if self.cfg['DEBUG'] else None
 
     def __getattr__(self,name):
         if name in os.environ:
             return os.environ[name]
+        val = self.cfg[name]
+        if self.verbose != None and name not in self.verbose:
+            print("cfg",name,'=',val)
+            self.verbose.add(name)
         return self.cfg[name]
 
 
-cfg = Cfg([ os.path.join(BASE_DIR,'PyPnbPartKeepr.conf'), '/etc/PyPnbPartKeepr.conf' ])
+cfg = Cfg([ os.path.join(BASE_DIR,'PyPnbPartKeepr.conf.json'), '/etc/PyPnbPartKeepr.conf.json' ])
 
 
 DB_NAME = cfg.DB_NAME

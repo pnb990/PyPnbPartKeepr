@@ -68,6 +68,11 @@ source venv/bin/activate
 cd PyPnbPartKeepr
 ```
 
+copy PyPnbPartKeepr-dist.conf.json in PyPnbPartKeepr.conf.json or /etc/PyPnbPartKeepr.conf.json and update value.
+```
+copy PyPnbPartKeepr-dist.conf.json PyPnbPartKeepr.conf.json
+```
+
 Update database schema
 ```
 python manage.py migrate
