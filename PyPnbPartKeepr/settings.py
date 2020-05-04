@@ -38,7 +38,7 @@ class Cfg(object):
                 'DEBUG_TOOLBAR'     : False,
                 'DEBUG_NO_CACHES'   : False,
                 'ALLOWED_HOSTS'     : [],
-                'ROOT_URL'          : '',
+                'ROOT_URL'          : './',
                 }
         for filename in pathList:
             if os.path.isfile(filename):
@@ -256,8 +256,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-STATIC_URL          = cfg.ROOT_URL+'/static/'
-MEDIA_URL           = cfg.ROOT_URL+'/media/'
+STATIC_URL          = cfg.ROOT_URL+'static/'
+MEDIA_URL           = cfg.ROOT_URL+'media/'
 
 LOGIN_URL           = 'login'
 LOGIN_REDIRECT_URL  = 'home'

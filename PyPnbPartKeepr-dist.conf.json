@@ -22,7 +22,7 @@
     "DEBUG_NO_CACHES"   : false,
 
     "ALLOWED_HOSTS"     : [],
-    "ROOT_URL"          : ""
+    "ROOT_URL"          : "./"
 }
 
 
