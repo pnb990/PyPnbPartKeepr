@@ -83,6 +83,12 @@ Create administrator
 python manage.py createsuperuser
 ```
 
+each time you change static files need to do this:
+```
+python manage.py collectstatic
+```
+
+
 ### importing old PartKeepr data
 
 To import old database and file use importFromParkKeepr script.
@@ -124,15 +130,28 @@ Require all granted
 </Directory>
 ```
 
-#### Apache Deamon
+#### Apache Daemon more responsive
 
-#### mode 1 but I cannot redirect /static and /media ....
 ```
 Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
 
+WSGIDaemonProcess example.com python-home=${PY_PNB_PARTKEEPR_PATH}/../venv python-path=${PY_PNB_PARTKEEPR_PATH}
+WSGIProcessGroup example.com
+
 WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
-WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
-WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
+#WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
+#WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
+
+Alias /media/  ${PY_PNB_PARTKEEPR_PATH}/media/
+Alias /static/ ${PY_PNB_PARTKEEPR_PATH}/staticfiles/
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/staticfiles>
+Require all granted
+</Directory>
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/media>
+Require all granted
+</Directory>
 
 <Directory ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr>
 <Files wsgi.py>
@@ -160,11 +179,6 @@ Create super user
 
 ```
 ./manage.py createsuperuser
-```
-
-each time you change static files need to do this:
-```
-python manage.py collectstatic
 ```
 
 For debug start :
