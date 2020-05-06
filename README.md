@@ -102,6 +102,12 @@ exemple:
 
 ### Apache configuration
 
+First in addition to allow reading, you need to allow writing in media folder:
+```
+setfacl -R -m u:www-data:rwX media
+setfacl -R -m d:u:www-data:rwX media
+```
+
 #### mode 1 not best one
 Put folowing in file /etc/apache2/sites-available/PyPnbPartKeepr.conf
 then a2en PyPnbPartKeepr
