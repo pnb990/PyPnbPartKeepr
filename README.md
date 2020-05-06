@@ -96,9 +96,39 @@ exemple:
 
 ### Apache configuration
 
-
+#### mode 1 not best one
+Put folowing in file /etc/apache2/sites-available/PyPnbPartKeepr.conf
+then a2en PyPnbPartKeepr
 ```
-Define PY_PNB_PARTKEEPR_PATH /path/to/cloned/folder
+Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
+
+WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
+WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
+WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
+
+Alias /media/  ${PY_PNB_PARTKEEPR_PATH}/media/
+Alias /static/ ${PY_PNB_PARTKEEPR_PATH}/staticfiles/
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/staticfiles>
+Require all granted
+</Directory>
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/media>
+Require all granted
+</Directory>
+
+<Directory ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr>
+<Files wsgi.py>
+Require all granted
+</Files>
+</Directory>
+```
+
+#### Apache Deamon
+
+#### mode 1 but I cannot redirect /static and /media ....
+```
+Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
 
 WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
 WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
@@ -132,7 +162,7 @@ Create super user
 ./manage.py createsuperuser
 ```
 
-If you use static files
+each time you change static files need to do this:
 ```
 python manage.py collectstatic
 ```
