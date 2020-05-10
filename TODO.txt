@@ -1,3 +1,4 @@
 * Merge all xxxxAttachment_detail.html 
 * storage location: Add a button for see all entry
 * Show image if full on click
+* Allow search with selected category

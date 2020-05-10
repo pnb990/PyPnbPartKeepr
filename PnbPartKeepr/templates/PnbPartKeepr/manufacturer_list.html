@@ -12,36 +12,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Projects" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-            {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="address"      value=request.GET.address%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="email"        value=request.GET.email%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="phone"        value=request.GET.phone%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="fax"          value=request.GET.fax%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.manufacturer.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -55,26 +26,21 @@
         <th scope="col">{% trans "comment"          %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
-    {% for p in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
+
+    {% for e in object_list %}
+    <tr onclick="document.location='{{ e.get_absolute_url }}';"
+        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
         >
-        <td>{{ p.id }}</td>
-        <td>
-            {% include "PnbPartKeepr/cell_img.html"    with elem=p %}
-        </td>
-        <td>{{ p.name|default:"No name" }}</td>
-        <td>
-            {% include "PnbPartKeepr/cell_url.html"        with elem=p %}
-        </td>
-        <td>{{ p.phone|default:"No Phone" }}</td>
-        <td>{{ p.fax|default:"No fax" }}</td>
-        <td>{{ p.email|default:"No email" }}</td>
-        <td>{{ p.address|default:"No address"|truncatechars:30 }}</td>
-        <td>{{ p.comment|default:"No comment"|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
+        <td>{{ e.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
+        <td>{{ e.name|default:"No name" }}</td>
+        <td>{% include "PnbPartKeepr/cell_url.html" with elem=e %}</td>
+        <td>{{ e.phone|default:"No Phone" }}</td>
+        <td>{{ e.fax|default:"No fax" }}</td>
+        <td>{{ e.email|default:"No email" }}</td>
+        <td>{{ e.address|default:"No address"|truncatechars:30 }}</td>
+        <td>{{ e.comment|default:"No comment"|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No part" %}
@@ -82,3 +48,11 @@
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.manufacturer.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}

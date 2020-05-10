@@ -59,7 +59,13 @@ urlpatterns = [
         #
         # Test
         #
-    path( 'test/part_category/<int:pk>/', views.move_category ),
+    path( 'test/part_category/list/', views.PartCategoryListView ),
+    path( 'test/part_category/move/<int:pk>/', views.move_category ),
+    path( 'test/part_category/detail/<int:pk>/', 
+          views.DeleteView.as_view(model=models.PartCategory, 
+                           template_name="PnbPartKeepr/test/show_part_category.html" 
+                           )
+        ),
     ]
 
 urlpatterns += crud( 'Distributor'              )

@@ -40,9 +40,17 @@ class SearchMixin(object):
 
     @classmethod
     def queryset(cls,queryset,get):
-        for field in cls.SearchFields:
-            if field in get:
-                kwargs = { field+"__icontains": get[field] }
+        for name,val in get.items():
+            if not val:
+                continue
+            if name.endswith('_id'):
+                name = name[:-3]
+                if name in cls.SearchFields:
+                    kwargs = { name +"__id": val }
+                    queryset = queryset.filter(**kwargs)
+            elif name in cls.SearchFields:
+                kwargs = { cls.SearchFields[name]: val }
+                print(kwargs)
                 queryset = queryset.filter(**kwargs)
         return queryset
 
@@ -54,6 +62,12 @@ class SearchMixin(object):
 class Category(ReverseUrlMixin,MPTTModel):
     class Meta:
         abstract = True
+        ordering = ['name']
+
+    SearchFields = {
+        'name'          : 'name__icontains',
+        'description'   : 'description__icontains',
+    }
 
     name = models.CharField(
             help_text='name',
@@ -85,21 +99,31 @@ class Category(ReverseUrlMixin,MPTTModel):
             s = s+sep+name
         return s
 
-
 class PartCategory(Category):
+
     @staticmethod
     def get_object_name():
         return "part category"
+
+    def get_part_nbr(self):
+        return Part.objects.filter(category=self.id).count()
 
 class FootprintCategory(Category):
+
     @staticmethod
     def get_object_name():
         return "part category"
+
+    def get_footprint_nbr(self):
+        return Footprint.objects.filter(category=self.id).count()
 
 class StorageLocationCategory(Category):
     @staticmethod
     def get_object_name():
         return "part category"
+
+    def get_storageLocation_nbr(self):
+        return StorageLocation.objects.filter(category=self.id).count()
 
 
 ###############################################################################
@@ -107,7 +131,13 @@ class StorageLocationCategory(Category):
 ###############################################################################
 
 class StorageLocation(ReverseUrlMixin,SearchMixin,models.Model):
-    SearchFields = ['name']
+    class Meta:
+        ordering = ['name']
+
+    SearchFields = {
+        'name'  :'name__icontains',
+        'category'      : 'category__name__icontains',
+    }
 
     name = models.CharField(
             unique=True,
@@ -139,7 +169,14 @@ class StorageLocation(ReverseUrlMixin,SearchMixin,models.Model):
 ###############################################################################
 
 class Footprint(ReverseUrlMixin,SearchMixin,models.Model):
-    SearchFields = ['name']
+    class Meta:
+        ordering = ['name']
+
+    SearchFields = {
+        'name'          : 'name__icontains',
+        'description'   : 'description__icontains',
+        'category'      : 'category__name__icontains',
+    }
 
     name = models.CharField(
             unique=True,
@@ -181,6 +218,7 @@ class Footprint(ReverseUrlMixin,SearchMixin,models.Model):
 class Company(ReverseUrlMixin,models.Model):
     class Meta:
         abstract = True
+        ordering = ['name']
 
     name = models.CharField(
             unique=True,
@@ -280,7 +318,7 @@ class SiPrefix(ReverseUrlMixin,models.Model):
 
     """
     Calculates the product for a given value.
-    @param $value float The value to calculate the product
+    @param $ value float The value to calculate the product
     @return float The resulting value
     """
     def calculateProduct(value):
@@ -317,7 +355,16 @@ class PartMeasurementUnit(ReverseUrlMixin,models.Model):
 ###############################################################################
 
 class Part(ReverseUrlMixin,SearchMixin,models.Model):
-    SearchFields = ['name']
+    class Meta:
+        ordering = ['name']
+
+    SearchFields = {
+        'name'          : 'name__icontains',
+        'footprint'     : 'footprint__name__icontains',
+        'description'   : 'description__icontains',
+        'SockLoc'       : 'storageLocation__name__icontains',
+        'category'      : 'category__name__icontains',
+    }
 
     name = models.CharField(
             help_text='name',
@@ -500,7 +547,10 @@ class PartManufacturer(ReverseUrlMixin,models.Model):
 ###############################################################################
 
 class Project(ReverseUrlMixin,SearchMixin,models.Model):
-    SearchFields = ['name','description']
+    SearchFields = {
+        'name'          : 'name__icontains',
+        'description'   : 'description__icontains',
+    }
 
     name = models.CharField(
             help_text='name',
@@ -764,6 +814,9 @@ class MetaPartParameterCriteria(Parameter):
 ###############################################################################
 
 class StockEntry(ReverseUrlMixin,models.Model):
+    class Meta:
+        ordering = ['id']
+
     owner = models.ForeignKey(
             settings.AUTH_USER_MODEL,
             related_name='+',
@@ -822,6 +875,9 @@ class Attachment(ReverseUrlMixin,models.Model):
         return os.path.basename(self.content.name)
 
 class ProjectAttachment(Attachment):
+    class Meta:
+        ordering = ['content']
+
     content = models.FileField(upload_to='project/attachments/%Y/%m/%d/',
             help_text='Project attachment file'
             )
@@ -844,6 +900,9 @@ class ProjectAttachment(Attachment):
 
 
 class PartAttachment(Attachment):
+    class Meta:
+        ordering = ['content']
+
     content = models.FileField(upload_to='part/attachments/%Y/%m/%d/',
             help_text='Part attachment file'
             )
@@ -866,6 +925,9 @@ class PartAttachment(Attachment):
 
 
 class FootprintAttachment(Attachment):
+    class Meta:
+        ordering = ['content']
+
     content = models.FileField(upload_to='footprint/attachments/%Y/%m/%d/',
             help_text='Footprint attachment file'
             )

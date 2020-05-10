@@ -1,17 +1,26 @@
 {% load i18n %}
 
-<form class="form-inline" type="get" action="list" >
+{% if search_fields %}
+<form class="form-inline d-flex justify-content-around pnbpartkeepr-search-bar" type="get" action="list" >
+    {% for search in search_fields %}
     <div class="form-group" >
-        <label for="{{name}}">{% trans "Search by "|add:name %}</label>
+        <label for="{{search.name}}">
+            {% trans search.name %}
+        </label>
         <input 
-        id="{{name}}" 
+        id="{{search.name}}" 
         class="form-control" 
         type="text" 
-        name="{{name}}" 
-        placeholder="{% blocktrans %}a {{name}}...{% endblocktrans %}"
-        {% if value %}
-        value="{{value}}"
-        {%endif%}
+        name="{{search.name}}" 
+        placeholder="{% trans search.name %}..."
+        {% if search.val %}
+            value="{{search.val}}"
+        {% endif %}
         />
     </div>
+    {% endfor %}
+    <button type="submit" value="Submit" class="btn btn-primary">
+        <span class="fas fa-search"></span>
+    </button>
 </form>
+{% endif %}

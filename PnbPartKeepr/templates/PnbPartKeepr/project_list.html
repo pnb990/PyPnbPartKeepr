@@ -12,27 +12,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Projects" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-            {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.project.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -41,17 +21,16 @@
         <th scope="col">{% trans "Desciption"       %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
-    {% for p in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
+
+    {% for e in object_list %}
+    <tr onclick="document.location='{{ e.get_absolute_url }}';"
+        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
         >
-        <td>{{ p.id }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.owner }}</td>
-        <td>{{ p.description|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
+        <td>{{ e.id }}</td>
+        <td>{{ e.name|default:"No name" }}</td>
+        <td>{{ e.owner|default:"No body" }}</td>
+        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No Project" %}
@@ -59,3 +38,11 @@
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.project.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}

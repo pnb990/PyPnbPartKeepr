@@ -13,51 +13,46 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Storage location Categories list" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.storagelocationcategory.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
         <th scope="col">{% trans "Name"             %}</th>
-        <th scope="col">{% trans "Parent"           %}</th>
+        <th scope="col">{% trans "SubCategory"      %}</th>
+        <th scope="col">{% trans "storagelocations" %}</th>
         <th scope="col">{% trans "Description"      %}</th>
+        <th scope="col">{% trans "Parent"           %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
-    {% for slc in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ slc.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
+    {% for e in object_list %}
+    <tr class="pnbpartkeepr-elem-list" 
         >
-        <td>{{ slc.id }}</td>
-        <td>{{ slc.name }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=slc.parent %}</td>
-        <td>{{ slc.description }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=slc %}</td>
+        <td>{{ e.id }}</td>
+        <td class="pnbpartkeepr-elem-list-link"
+        onclick="document.location='{% url "pnbpartkeepr.storagelocationcategory.detail" pk=e.id %}';" 
+        >{{ e.name|default:"No name" }}</td>
+        <td class="pnbpartkeepr-elem-list-link"
+        onclick="document.location='{% url "pnbpartkeepr.storagelocationcategory.list" pk=e.id %}';" 
+        >{{ e.get_descendant_count }}</td>
+        <td class="pnbpartkeepr-elem-list-link"
+        onclick="document.location='{% url "pnbpartkeepr.storagelocation.list" %}?category_id={{ e.id }}';" 
+        >{{ e.get_storageLocation_nbr }}</td>
+        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.parent %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
-    {% trans "No Part" %}
+    {% include "PnbPartKeepr/empty_list.html" with label="No storage location category" %}
     {% endfor %}
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.storagelocationcategory.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}

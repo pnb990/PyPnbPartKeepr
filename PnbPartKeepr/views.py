@@ -18,7 +18,10 @@ from . import models
 
 #TODO remove for MPTT teste
 def PartCategoryListView(request):
-    return render(request,"show_part_category.html",{'category':models.PartCategory.objects.all()})
+    return render(request,
+                  "PnbPartKeepr/test/list_part_category.html",
+                  {'category':models.PartCategory.objects.filter(parent_id=1)}
+                  )
 
 #TODO remove for MPTT teste
 def move_category(request, pk):
@@ -34,7 +37,7 @@ def move_category(request, pk):
     else:
         form = MoveNodeForm(category)
 
-    return render(request,'PnbPartKeepr/footprint_form.html', {
+    return render(request,'PnbPartKeepr/test/footprint_form.html', {
         'form': form,
         'category': category,
         'category_tree': models.PartCategory.objects.all(),
@@ -54,7 +57,6 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 #            context['showed'] = file_types_showed(context['object_list'])
 
 #        return context
-    pass
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,7 +112,6 @@ class ListView(LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        print(self.request.GET.get('q',None))
         if len(self.request.GET) != 0 and hasattr(self.model,'queryset'):
             queryset = self.model.queryset(queryset,self.request.GET)
 
@@ -120,7 +121,7 @@ class ListView(LoginRequiredMixin,generic.ListView):
         return queryset
 
 
-#    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
 #        page_key = "page_%s"%(self.model._meta.model_name)
 #
 #        page_kwarg = self.page_kwarg
@@ -131,7 +132,16 @@ class ListView(LoginRequiredMixin,generic.ListView):
 #            except:
 #                pass
 #
-#        context = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+
+        context['search_fields'] = []
+        for name in getattr(self.model,'SearchFields',{}).keys():
+            context['search_fields'].append({
+                "name":name,
+                "val":self.request.GET.get(name,'')
+            })
+        print(context)
+
 #
 #        self.request.session[page_key] = context['page_obj'].number
 #
@@ -157,5 +167,5 @@ class ListView(LoginRequiredMixin,generic.ListView):
 #        context['vehicle_list'] = vehicle_list.all()
 #        context['compare_list'] = get_compare_list(self)
 #
-#        return context
+        return context
 

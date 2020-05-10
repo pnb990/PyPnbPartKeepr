@@ -12,27 +12,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Footprints" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.footprint.create" %}" >
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -43,16 +23,16 @@
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
-    {% for f in object_list %}
-    <tr onclick="document.location='{{ f.get_absolute_url }}';"
-        class="pnbpartkeepr-elem-list"
+    {% for e in object_list %}
+    <tr onclick="document.location='{{ e.get_absolute_url }}';"
+        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
         >
-        <td>{{ f.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=f %}</td>
-        <td>{{ f.name }}</td>
-        <td>{{ f.description|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=f.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"  with elem=f %}</td>
+        <td>{{ e.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
+        <td>{{ e.name }}</td>
+        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.category %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No footprint" %}
@@ -60,3 +40,11 @@
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.footprint.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}

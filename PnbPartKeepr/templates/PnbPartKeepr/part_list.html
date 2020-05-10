@@ -12,37 +12,14 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Parts" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-            {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="footprint"    value=request.GET.footprint%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        {% include "PnbPartKeepr/search_list.html" with name="description"  value=request.GET.description%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.part.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
         <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Footprint"        %}</th>
-        <th scope="col">{% trans "Desciption"       %}</th>
+        <th scope="col">{% trans "Description"      %}</th>
         <th scope="col">{% trans "Stock level"      %}</th>
         <th scope="col">{% trans "Min Stock level"  %}</th>
         <th scope="col">{% trans "Stock location"   %}</th>
@@ -50,23 +27,22 @@
         <th scope="col">{% trans "Created"          %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
-    {% for p in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
+
+    {% for e in object_list %}
+    <tr onclick="document.location='{{ e.get_absolute_url }}';"
+        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
         >
-        <td>{{ p.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html" with elem=p %}</td>
-        <td>{{ p.name }}</td>
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.footprint %}</td>
-        <td>{{ p.description|truncatechars:40 }}</td>
-        <td>{{ p.stockLevel }}</td>
-        <td>{{ p.minStockLevel  }}</td>
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=p.storageLocation %}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"     with elem=p.category %}</td>
-        <td>{{ p.createDate|naturaltime }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
+        <td>{{ e.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
+        <td>{{ e.name|default:"No name" }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.footprint %}</td>
+        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
+        <td>{{ e.stockLevel }}</td>
+        <td>{{ e.minStockLevel  }}</td>
+        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.storageLocation %}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.category %}</td>
+        <td>{{ e.createDate|naturaltime }}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No part" %}
@@ -74,3 +50,11 @@
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.part.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}

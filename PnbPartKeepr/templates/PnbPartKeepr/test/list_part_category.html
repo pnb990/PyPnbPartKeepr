@@ -1,0 +1,23 @@
+{% load mptt_tags %}
+
+{% for i in category %}
+    {{i}}</br>
+    {% for c in i.get_children %}
+        *{{c}}</br>
+    {% endfor %}
+{% endfor %}
+<ul>
+    {% recursetree category %}
+        <li>
+            {{ node.name }}
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
+{% comment %}
+{% endcomment %}
+

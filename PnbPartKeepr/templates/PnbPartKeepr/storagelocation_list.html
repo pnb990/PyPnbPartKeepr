@@ -12,24 +12,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Storage location" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-            {% include "PnbPartKeepr/search_list.html" with name="name"         value=request.GET.name%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.storagelocation.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -39,21 +22,27 @@
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
-    {% for sl in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ sl.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
+    {% for e in object_list %}
+    <tr onclick="document.location='{{ e.get_absolute_url }}';"
+        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
         >
-        <td>{{ sl.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html"     with elem=sl %}</td>
-        <td>{{ sl.name }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html"    with elem=sl.category %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"  with elem=sl %}</td>
+        <td>{{ e.id }}</td>
+        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
+        <td>{{ e.name|default:"No name" }}</td>
+        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.category %}</td>
+        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}
-    {% trans "No Storage location" %}
+    {% include "PnbPartKeepr/empty_list.html" with label="No Storage location" %}
     {% endfor %}
 </table>
 {% endblock %}
 
+{% block page-footer %}
+<a href="{% url "pnbpartkeepr.storagelocation.create" %}">
+    <button class="btn btn-primary">
+        <span class="fas fa-plus"></span>
+        {% trans 'Add a New one' %}
+    </button>
+</a>
+{% endblock %}
