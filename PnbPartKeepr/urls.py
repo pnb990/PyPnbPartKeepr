@@ -45,7 +45,8 @@ def crud(className, category=False):
                     ),
                 ]
 
-    if issubclass(model,models.Category):
+    if ( issubclass(model,models.Category   )   or
+         issubclass(model,models.StockEntry )   ):
         urls += [
                 path(name+'/list/<int:pk>',
                     views.ListView.as_view(model=model),
@@ -86,5 +87,7 @@ urlpatterns += crud( 'FootprintAttachment'      )
 
 urlpatterns += crud( 'StorageLocation'          )
 urlpatterns += crud( 'StorageLocationCategory'  )
+
+urlpatterns += crud( 'StockEntry'               )
 
 

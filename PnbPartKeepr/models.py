@@ -837,6 +837,7 @@ class StockEntry(ReverseUrlMixin,models.Model):
             max_digits=13,
             decimal_places=4,
             null=True,
+            blank=True,
             help_text='Bought stock price per part'
             )
     boughtAt = models.DateTimeField(

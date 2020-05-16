@@ -29,19 +29,32 @@
     </tr>
 
     {% for e in object_list %}
-    <tr onclick="document.location='{{ e.get_absolute_url }}';"
-        class="pnbpartkeepr-elem-list pnbpartkeepr-elem-list-link"
+    <tr class="pnbpartkeepr-elem-list"
         >
         <td>{{ e.id }}</td>
+
         <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
-        <td>{{ e.name|default:"No name" }}</td>
+
+        <td class="pnbpartkeepr-elem-list-link"
+        onclick="document.location='{% url "pnbpartkeepr.part.detail" pk=e.id %}';" 
+        >{{ e.name|default:"No name" }}</td>
+
         <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.footprint %}</td>
+
         <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
-        <td>{{ e.stockLevel }}</td>
+
+        <td class="pnbpartkeepr-elem-list-link"
+        onclick="document.location='{% url "pnbpartkeepr.stockentry.list" pk=e.id %}';" 
+        >{{ e.stockLevel }}</td>
+
         <td>{{ e.minStockLevel  }}</td>
+
         <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.storageLocation %}</td>
+
         <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.category %}</td>
+
         <td>{{ e.createDate|naturaltime }}</td>
+
         <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
     </tr>
     {% empty %}

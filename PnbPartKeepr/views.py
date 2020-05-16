@@ -118,6 +118,9 @@ class ListView(LoginRequiredMixin,generic.ListView):
         if issubclass(self.model,models.Category):
             queryset = queryset.filter(parent_id=self.kwargs.get('pk',None))
 
+        if issubclass(self.model,models.StockEntry):
+            queryset = queryset.filter(part_id=self.kwargs.get('pk',None))
+
         return queryset
 
 
