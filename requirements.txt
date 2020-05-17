@@ -3,6 +3,7 @@ django-bootstrap4
 django-cleanup
 django-jsonify
 django-dbbackup
+django-money
 django-debug-toolbar
 django-phone-field
 django-mptt

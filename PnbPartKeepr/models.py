@@ -8,6 +8,7 @@ from django.urls import reverse
 
 from phone_field import PhoneField
 from mptt.models import MPTTModel, TreeForeignKey
+from djmoney.models.fields import MoneyField
 from .Currency import CURRENCY_LIST_ACRONYM
 
 def get_default_user_id():
@@ -408,11 +409,12 @@ class Part(ReverseUrlMixin,SearchMixin,models.Model):
             help_text='Number minimum of part in stock allowed'
             )
 
-    averagePrice = models.DecimalField(
+    averagePrice = MoneyField(
             max_digits=13,
             decimal_places=4,
             null=True,
             blank=True,
+            default_currency='USD',
             help_text='General average part\'s price'
             )
     status = models.CharField(
@@ -500,11 +502,12 @@ class PartDistributor(ReverseUrlMixin,models.Model):
     packagingUnit = models.PositiveIntegerField(
             help_text='Part quantity per package'
             )
-    price = models.DecimalField(
+    price = MoneyField(
             max_digits=13,
             decimal_places=4,
             null=True,
             blank=True,
+            default_currency='USD',
             help_text='Price per part'
             )
     currency = models.CharField(
@@ -833,11 +836,12 @@ class StockEntry(ReverseUrlMixin,models.Model):
             on_delete=models.PROTECT,
             help_text='part'
             )
-    price = models.DecimalField(
+    price = MoneyField(
             max_digits=13,
             decimal_places=4,
             null=True,
             blank=True,
+            default_currency='USD',
             help_text='Bought stock price per part'
             )
     boughtAt = models.DateTimeField(

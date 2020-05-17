@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'phone_field',
+    'djmoney',
     'bootstrap4',
     'PnbPartKeepr',
     'mptt',
