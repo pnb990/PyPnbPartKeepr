@@ -2,3 +2,10 @@
 * storage location: Add a button for see all entry
 * Show image if full on click
 * Allow search with selected category
+* automatically reduce image
+
+* Part defails => LINK to stock entry
+* New stock entry hide and fill, fields : owner and part id
+* add link to storage location in part list
+* StockEntry modification view => title 
+
