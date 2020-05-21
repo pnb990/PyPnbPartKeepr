@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<td>
+    {% if elem.address %}
+        <a href="https://www.google.fr/maps/place/{{elem.address|urlencode}}">
+            {{ elem.address|truncatechars:30 }}
+        </a>
+    {% else %}
+        {% trans "No address" %}
+    {% endif %}
+</td>
+
+

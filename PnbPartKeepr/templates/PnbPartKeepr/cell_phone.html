@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<td>
+    {% if number %}
+        <a href="phone:{{number|urlencode}}">
+            {{ number }}
+        </a>
+    {% else %}
+        {% trans "No number" %}
+    {% endif %}
+</td>
+

@@ -1,0 +1,12 @@
+{% load bootstrap4 %}
+{% load humanize %}
+
+<td data-toggle="tooltip" 
+    data-placement="top" 
+    title="{{ user.first_name }} {{ user.last_name }}"
+    >
+    <a href={{ user.get_absolute_url }} >
+        {{ user|default:"No body" }}
+    </a>
+</td>
+

@@ -3,7 +3,6 @@
 {% load bootstrap4 %}
 
 {% load static %}
-{% load humanize %}
 
 {% comment %}
 {% endcomment %}
@@ -16,7 +15,6 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Image"            %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Footprint"        %}</th>
         <th scope="col">{% trans "Description"      %}</th>
@@ -29,33 +27,17 @@
     </tr>
 
     {% for e in object_list %}
-    <tr class="pnbpartkeepr-elem-list"
-        >
+    <tr class="pnbpartkeepr-elem-list" >
         <td>{{ e.id }}</td>
-
-        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
-
-        <td class="pnbpartkeepr-elem-list-link"
-        onclick="document.location='{% url "pnbpartkeepr.part.detail" pk=e.id %}';" 
-        >{{ e.name|default:"No name" }}</td>
-
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.footprint %}</td>
-
-        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
-
-        <td class="pnbpartkeepr-elem-list-link"
-        onclick="document.location='{% url "pnbpartkeepr.stockentry.list" pk=e.id %}';" 
-        >{{ e.stockLevel }}</td>
-
+        {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e %}
+        {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e.footprint %}
+        {% include "PnbPartKeepr/cell_description.html"     with elem=e %}
+        {% include "PnbPartKeepr/cell_stockLevel.html"      with elem=e %}
         <td>{{ e.minStockLevel  }}</td>
-
-        <td>{% include "PnbPartKeepr/cell_img_name.html" with elem=e.storageLocation %}</td>
-
-        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.category %}</td>
-
-        <td>{{ e.createDate|naturaltime }}</td>
-
-        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
+        {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e.storageLocation %}
+        {% include "PnbPartKeepr/cell_name_link.html"       with elem=e.category %}
+        {% include "PnbPartKeepr/cell_date.html"            with eDate=e.createDate %}
+        {% include "PnbPartKeepr/cell_action.html"          with elem=e %}
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No part" %}

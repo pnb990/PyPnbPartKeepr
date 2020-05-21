@@ -1,0 +1,10 @@
+{% load i18n %}
+
+<td class="pnbpartkeepr-elem-list-link"
+    onclick="document.location='{% url request.resolver_match.view_name pk=elem.id %}';" 
+    >
+    <a href={% url request.resolver_match.view_name pk=elem.id %} >
+        {{ elem.get_descendant_count }}
+    </a>
+</td>
+

@@ -1,12 +1,12 @@
 {% load bootstrap4 %}
 
+<td>
 {% if elem.url %}
 <a href={{ elem.url }} >
-    <button class="btn btn-defaults">
-        <span class="fas fa-link"></span>
-    </button>
+    {{ elem.url|truncatechars:30 }}
 </a>
-
 {% else %}
 No link
 {% endif %}
+</td>
+

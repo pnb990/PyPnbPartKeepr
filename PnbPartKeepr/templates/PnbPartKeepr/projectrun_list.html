@@ -12,24 +12,7 @@
 {% endblock %}
 
 {% block page-content %}
-<div class="d-flex justify-content-around pnbpartkeepr-search-bar">
-    <div class="pnbpartkeepr-search-item">
-        <div class="pnbpartkeepr-search-title">
-            {% trans "Project Run" %}
-        </div>
-    </div>
-    <div class="pnbpartkeepr-search-item">
-            {% include "PnbPartKeepr/search_list.html" with name="project"         value=request.GET.project_set%}
-    </div>
-    <div class="pnbpartkeepr-search-item">
-        <a href="{% url "pnbpartkeepr.projectrun.create" %}">
-            <button class="btn btn-primary">
-                <span class="fas fa-plus"></span>
-                {% trans 'Add a New one' %}
-            </button>
-        </a>
-    </div>
-</div>
+{% include "PnbPartKeepr/search_list.html" %}
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
@@ -38,17 +21,13 @@
         <th scope="col">{% trans "Quantity"         %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
-    {% for p in object_list %}
-    {% comment %}
-    {% endcomment %}
-    <tr onclick="document.location='{{ p.get_absolute_url }}';" 
-        class="pnbpartkeepr-elem-list"
-        >
-        <td>{{ p.id }}</td>
-        <td>{{ p.runDateTime|naturaltime }}</td>
-        <td>{% include "PnbPartKeepr/cell_name_link.html"   with elem=p.project %}</td>
-        <td>{{ p.quantity }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html"   with elem=p %}</td>
+    {% for e in object_list %}
+    <tr class="pnbpartkeepr-elem-list" >
+        <td>{{ e.id }}</td>
+        {% include "PnbPartKeepr/cell_date.html"        with eDate=e.runDateTime %}
+        {% include "PnbPartKeepr/cell_name_link.html"   with elem=e %}
+        <td>{{ e.quantity }}</td>
+        {% include "PnbPartKeepr/cell_action.html"      with elem=e %}
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No run" %}

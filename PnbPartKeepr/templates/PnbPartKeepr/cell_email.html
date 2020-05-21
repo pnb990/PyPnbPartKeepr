@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<td>
+    {% if elem.email %}
+    <a href="mailto:{{ elem.email|urlencode }}">
+        {{ elem.email }}
+    </a>
+    {% else %}
+        {% trans "No email" %}
+    {% endif %}
+</td>
+

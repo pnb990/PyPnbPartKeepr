@@ -1,0 +1,12 @@
+{% load bootstrap4 %}
+{% load humanize %}
+
+<td class="pnbpartkeepr-elem-list-link"
+    onclick="document.location='{% url "pnbpartkeepr.stockentry.list" pk=elem.id %}';" 
+    >
+    <a href={% url "pnbpartkeepr.stockentry.list" pk=elem.id %} >
+        {{ elem.stockLevel }}
+    </a>
+</td>
+
+

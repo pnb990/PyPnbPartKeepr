@@ -1,3 +1,18 @@
+{% load i18n %}
+
+{% comment %}
 {% include 'PnbPartKeepr/cell_name.html' %}
 {% include 'PnbPartKeepr/cell_link.html' %}
+{% endcomment %}
+
+{% if elem %}
+    <td class="pnbpartkeepr-elem-list-link"
+     onclick="document.location='{{ elem.get_absolute_url }}';" >
+        <a href={{ elem.get_absolute_url }} >
+            {{ elem.name }}
+        </a>
+    </td>
+{% else %}
+    <td>{% trans "No name" %}</td>
+{% endif %}
 

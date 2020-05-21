@@ -1,0 +1,9 @@
+
+<td class="pnbpartkeepr-elem-list-link"
+    onclick="document.location='{% url urlName %}?category_id={{ elem.id }}';" 
+    >
+    <a href='{% url urlName %}?category_id={{ elem.id }}' >
+        {{ elem.get_nbr }}
+    </a>
+</td>
+

@@ -16,7 +16,6 @@
 <table class="table">
     <tr>
         <th scope="col">{% trans "Id"               %}</th>
-        <th scope="col">{% trans "Logo"             %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Web site"         %}</th>
         <th scope="col">{% trans "For report"       %}</th>
@@ -29,20 +28,17 @@
     </tr>
 
     {% for e in object_list %}
-    <tr onclick="document.location='{{ e.get_absolute_url }}';"
-        class="pnbpartkeepr-elem-list"
-        >
+    <tr class="pnbpartkeepr-elem-list" >
         <td>{{ e.id }}</td>
-        <td>{% include "PnbPartKeepr/cell_img.html" with elem=e %}</td>
-        <td>{{ e.name|default:"No name" }}</td>
-        <td>{% include "PnbPartKeepr/cell_url.html" with elem=e %}</td>
+        {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e %}
+        {% include "PnbPartKeepr/cell_url.html"             with elem=e %}
         <td>{{ e.forReports|yesno }}</td>
-        <td>{{ e.phone|default:"No Phone" }}</td>
-        <td>{{ e.fax|default:"No fax" }}</td>
-        <td>{{ e.email|default:"No email" }}</td>
-        <td>{{ e.address|default:"No address"|truncatechars:30 }}</td>
-        <td>{{ e.comment|default:"No comment"|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
+        {% include "PnbPartKeepr/cell_phone.html"           with elem=e.phone %}
+        {% include "PnbPartKeepr/cell_phone.html"           with elem=e.fax %}
+        {% include "PnbPartKeepr/cell_email.html"           with elem=e %}
+        {% include "PnbPartKeepr/cell_address.html"         with elem=e %}
+        {% include "PnbPartKeepr/cell_comment.html"         with elem=e %}
+        {% include "PnbPartKeepr/cell_action.html"          with elem=e %}
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No distributor" %}

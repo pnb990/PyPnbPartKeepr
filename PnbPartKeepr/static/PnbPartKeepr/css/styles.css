@@ -15,6 +15,16 @@
     background:#00bc8c;
 }
 
+.pnbpartkeepr-elem-list
+{
+    font-size:12px;
+}
+
+.pnbpartkeepr-elem-list td,span
+{
+    vertical-align: middle;
+}
+
 .pnbpartkeepr-elem-list-icon
 {
     padding: 0px;
@@ -24,7 +34,7 @@
 
 .pnbpartkeepr-elem-list-link:hover
 {
-    background:#00efb2
+    background:#00efb2;
 }
 
 .pnbpartkeepr-elem-icon
@@ -43,19 +53,6 @@
 {
     color:white;
 }
-
-/*
-ul
-{
-    color:white;
-    background:#00bc8c;
-}
-
-li .nav-item
-{
-    color:white;
-}
-*/
 
 li .active
 {

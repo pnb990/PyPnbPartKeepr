@@ -100,30 +100,30 @@ class Category(ReverseUrlMixin,MPTTModel):
             s = s+sep+name
         return s
 
-class PartCategory(Category):
 
+class PartCategory(Category):
     @staticmethod
     def get_object_name():
         return "part category"
 
-    def get_part_nbr(self):
+    def get_nbr(self):
         return Part.objects.filter(category=self.id).count()
 
 class FootprintCategory(Category):
 
     @staticmethod
     def get_object_name():
-        return "part category"
+        return "footprint category"
 
-    def get_footprint_nbr(self):
+    def get_nbr(self):
         return Footprint.objects.filter(category=self.id).count()
 
 class StorageLocationCategory(Category):
     @staticmethod
     def get_object_name():
-        return "part category"
+        return "storage location category"
 
-    def get_storageLocation_nbr(self):
+    def get_nbr(self):
         return StorageLocation.objects.filter(category=self.id).count()
 
 

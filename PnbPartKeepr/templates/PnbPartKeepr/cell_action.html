@@ -1,5 +1,6 @@
 {% load bootstrap4 %}
 
+<td>
 {% if not elem.get_name_url  in request.resolver_match.view_name %}
 <a href={{ elem.get_absolute_url }} >
     <button class="btn btn-primary">
@@ -23,5 +24,6 @@
     </button>
 </a>
 {% endif %}
+</td>
 
 

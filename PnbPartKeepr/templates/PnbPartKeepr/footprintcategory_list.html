@@ -29,18 +29,12 @@
     <tr class="pnbpartkeepr-elem-list" 
         >
         <td>{{ e.id }}</td>
-        <td class="pnbpartkeepr-elem-list-link"
-        onclick="document.location='{% url "pnbpartkeepr.footprintcategory.detail" pk=e.id %}';" 
-        >{{ e.name|default:"No name" }}</td>
-        <td class="pnbpartkeepr-elem-list-link"
-        onclick="document.location='{% url "pnbpartkeepr.footprintcategory.list" pk=e.id %}';" 
-        >{{ e.get_descendant_count }}</td>
-        <td class="pnbpartkeepr-elem-list-link"
-        onclick="document.location='{% url "pnbpartkeepr.footprint.list" %}?category_id={{ e.id }}';" 
-        >{{ e.get_footprint_nbr }}</td>
-        <td>{{ e.description|default:"No description"|truncatechars:40 }}</td>
-        <td>{% include "PnbPartKeepr/cell_name.html" with elem=e.parent %}</td>
-        <td>{% include "PnbPartKeepr/cell_action.html" with elem=e %}</td>
+        {% include "PnbPartKeepr/cell_name_link.html"               with elem=e %}
+        {% include "PnbPartKeepr/cell_descendant_link.html"         with elem=e %}
+        {% include "PnbPartKeepr/cell_category_content_link.html"   with elem=e urlName="pnbpartkeepr.footprint.list" %}
+        {% include "PnbPartKeepr/cell_description.html"             with elem=e %}
+        {% include "PnbPartKeepr/cell_name_link.html"               with elem=e.parent %}
+        {% include "PnbPartKeepr/cell_action.html"                  with elem=e %}
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No footprint category" %}
