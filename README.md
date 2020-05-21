@@ -7,7 +7,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### installing needed package
 ```
-sudo apt-get install python-pip python-dev python-virtualenv postgresql libpq-dev postgresql-client
+sudo apt-get install python3-pip python3-dev python3-virtualenv virtualenv postgresql libpq-dev postgresql-client
 ```
 
 ### Clone repo
