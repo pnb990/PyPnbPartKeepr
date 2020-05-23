@@ -760,4 +760,7 @@ for app in apps.get_app_configs():
 
 djangoCursor.execute(commands.getvalue())
 
+models.PartCategory.objects.rebuild()
+models.FootprintCategory.objects.rebuild()
+models.StorageLocationCategory.objects.rebuild()
 

@@ -19,19 +19,8 @@
             <td>{{ object.address|default:"No Address" }}</td>
         </tr>
         <tr>
-            <th>{% trans "Link" %}</th>
-            <td>
-                {% if object.url %}
-                <a href="{{ object.url }}" >
-                    <button class="btn btn-defaults">
-                        {{ object.url }}
-                        <span class="fas fa-link"></span>
-                    </button>
-                </a>
-                {% else %}
-                {% trans "No link" %}
-                {% endif %}
-            </td>
+            <th>{% trans "Web Site" %}</th>
+            {% include "PnbPartKeepr/cell_url.html" with elem=object %}
         </tr>
         <tr>
             <th>{% trans "skuUrl" %}</th>
@@ -39,48 +28,15 @@
         </tr>
         <tr>
             <th>{% trans "Phone" %}</th>
-            <td>
-                {% if object.phone %}
-                <a href="tel:{{ object.phone }}" >
-                    <button class="btn btn-defaults">
-                        {{ object.phone }}
-                        <span class="fas fa-phone"></span>
-                    </button>
-                </a>
-                {% else %}
-                {% trans "No phone" %}
-                {% endif %}
-            </td>
+            {% include "PnbPartKeepr/cell_phone.html" with number=object.phone icon="phone" %}
         </tr>
         <tr>
             <th>{% trans "fax" %}</th>
-            <td>
-                {% if object.fax %}
-                <a href="fax:{{ object.fax }}" >
-                    <button class="btn btn-defaults">
-                        {{ object.fax }}
-                        <span class="fas fa-fax"></span>
-                    </button>
-                </a>
-                {% else %}
-                {% trans "No fax" %}
-                {% endif %}
-            </td>
+            {% include "PnbPartKeepr/cell_phone.html" with number=object.fax icon="fax" %}
         </tr>
         <tr>
             <th>{% trans "email" %}</th>
-            <td>
-                {% if object.email %}
-                <a href="mailto:{{ object.email }}" >
-                    <button class="btn btn-defaults">
-                        {{ object.email }}
-                        <span class="fas fa-envelope"></span>
-                    </button>
-                </a>
-                {% else %}
-                {% trans "No email" %}
-                {% endif %}
-            </td>
+            {% include "PnbPartKeepr/cell_email.html" with elem=object %}
         </tr>
         <tr>
             <th>{% trans "used for report" %}</th>
@@ -93,7 +49,7 @@
         {% if object.image %}
         <img src="{{ object.image.url }}"/>
         {% else %}
-        <span class="fas fa-image" />
+        <span class="fas fa-image fa-10x" />
         {% endif %}
     </div>
     <div>

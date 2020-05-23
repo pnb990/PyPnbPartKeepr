@@ -16,17 +16,31 @@
     <table class="table">
         <tr>
             <th>{% trans "Owner" %}</th>
-            <td>{{ object.owner|default:"NoBody"  }}</td>
+            {% include "PnbPartKeepr/cell_user.html"            with user=object.owner %}
         </tr>
         <tr>
             <th>{% trans "Description" %}</th>
-            <td>{{ object.description|default:"No Comment" }}</td>
+            {% include "PnbPartKeepr/cell_description.html"         with elem=object %}
         </tr>
     </table>
 </div>
 <div class="d-flex justify-content-around">
-    {% include "PnbPartKeepr/object_set_list.html" with name="project run" object_list=object.projectrun_set.all %}
-    {% include "PnbPartKeepr/attachment_list.html" with object_list=object.projectattachment_set.all %}
+    <div>
+        <div>
+            <h2>{% trans "project run" %}</h2>
+        </div>
+        {% for projectrun in object.projectrun_set.all %}
+        <div>
+            {{ projectrun }}
+            {% include "PnbPartKeepr/cell_link.html" with elem=projectrun %}
+        </div>
+        {% empty %}
+            {% trans "Nothing" %}
+        {% endfor %}
+    </div>
+    <div>
+        {% include "PnbPartKeepr/attachment_list.html" with object_list=object.projectattachment_set.all %}
+    </div>
 </div>
 {% include "PnbPartKeepr/button_action.html" %}
 {% endblock %}

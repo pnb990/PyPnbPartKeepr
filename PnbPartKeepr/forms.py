@@ -185,7 +185,6 @@ class StockEntryForm(forms.ModelForm):
         fields = (
                 'owner',
                 'quantity',
-                'part',
                 'price',
                 'boughtAt',
                 'comment',

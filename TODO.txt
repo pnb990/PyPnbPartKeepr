@@ -1,11 +1,4 @@
-* Merge all xxxxAttachment_detail.html 
 * storage location: Add a button for see all entry
-* Show image if full on click
 * Allow search with selected category
-* automatically reduce image
-
-* Part defails => LINK to stock entry
-* New stock entry hide and fill, fields : owner and part id
-* add link to storage location in part list
-* StockEntry modification view => title 
-
+* automatically reduce image when it is uploaded.
+* storage location detail template

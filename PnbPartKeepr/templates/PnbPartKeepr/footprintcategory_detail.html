@@ -10,34 +10,18 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Footprint" %} {{ footprint.id }}{% endblock %}
+{% block page-header %}{% trans "Footprint" %} {{ object.id }}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
         <tr>
             <th>{% trans "Name"             %}</th>
-            <td>{{ footprint.name }}</td>
+            <td>{{ object.name }}</td>
         </tr>
         <tr>
             <th>{% trans "Category"         %}</th>
-            <td>{{ footprint.category.path  }}</td>
-        </tr>
-    </table>
-</div>
-<div>
-    <table class="table">
-        <tr>
-            <td>{% include "PnbPartKeepr/detail_img.html" with elem=footprint %}</td>
-            <td>
-                <ul>
-                    {% for f in footprint.footprintattachment_set.all %}
-                    <li><a href="{{ f.content.url }}">{{ f.filename }}</a></li>
-                    {% empty %}
-                    {% trans "No attachment" %}
-                    {% endfor %}
-                </ul>
-            </td>
+            <td>{{ object.category.path  }}</td>
         </tr>
     </table>
 </div>

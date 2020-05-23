@@ -1,7 +1,7 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-<td class="pnbpartkeepr-elem-list-link"
+<td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
     onclick="document.location='{% url "pnbpartkeepr.stockentry.list" pk=elem.id %}';" 
     >
     <a href={% url "pnbpartkeepr.stockentry.list" pk=elem.id %} >

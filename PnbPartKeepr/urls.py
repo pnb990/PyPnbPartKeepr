@@ -26,7 +26,8 @@ def crud(className, category=False):
                 ),
             ]
 
-    if issubclass(model,models.Attachment):
+    if ( issubclass(model,models.Attachment) or
+         issubclass(model,models.StockEntry) ):
         urls += [
                 path(name+'/create/<int:attached_id>',
                     views.CreateView.as_view(model=model, form_class=form ),

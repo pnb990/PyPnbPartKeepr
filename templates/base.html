@@ -20,7 +20,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 
         <link href="{% static "PnbPartKeepr/css/styles.css" %}" rel="stylesheet" type="text/css" />
-        <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css" />
+        <!-- <link href="{% static "css/styles.css" %}" rel="stylesheet" type="text/css" /> -->
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -71,5 +71,6 @@
         {% block tail %}{% endblock %}
 
         {% bootstrap_javascript jquery='full' %}
+        <script src="{% static "PnbPartKeepr/js/base.js" %}" ></script>
     </body>
 </html>

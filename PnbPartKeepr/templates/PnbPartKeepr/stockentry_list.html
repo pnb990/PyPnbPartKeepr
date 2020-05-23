@@ -19,9 +19,9 @@
         <th scope="col">{% trans "Part"             %}</th>
         <th scope="col">{% trans "Quantity"         %}</th>
         <th scope="col">{% trans "Price"            %}</th>
+        <th scope="col">{% trans "comment"          %}</th>
         <th scope="col">{% trans "Bought"           %}</th>
         <th scope="col">{% trans "Owner"            %}</th>
-        <th scope="col">{% trans "comment"          %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
@@ -30,7 +30,7 @@
         <td>{{ e.id }}</td>
         {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e.part %}
         <td>{{ e.quantity }}</td>
-        <td>{{ e.price|default:"--" }}<span class="fas fa-euro-sign"></span></td>
+        {% include "PnbPartKeepr/cell_price.html"           with price=e.price %}
         {% include "PnbPartKeepr/cell_comment.html"         with elem=e %}
         {% include "PnbPartKeepr/cell_date.html"            with eDate=e.boughtAt %}
         {% include "PnbPartKeepr/cell_user.html"            with user=e.owner %}
@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block page-footer %}
-<a href="{% url "pnbpartkeepr.stockentry.create" %}">
+<a href="{% url "pnbpartkeepr.stockentry.create" attached_id=request.resolver_match.kwargs.pk %}">
     <button class="btn btn-primary">
         <span class="fas fa-plus"></span>
         {% trans 'Add a New one' %}

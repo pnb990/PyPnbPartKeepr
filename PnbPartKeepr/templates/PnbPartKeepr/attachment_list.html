@@ -16,7 +16,21 @@
                 {{ f.filename }}
             </a>
         </span>
-        {% include "PnbPartKeepr/cell_link.html" with elem=f %}
+        <a href={{ f.get_absolute_url }} >
+            <button class="btn btn-primary">
+                <span class="fas fa-eye" ></span>
+            </button>
+        </a>
+        <a href={{ f.get_absolute_update_url }} >
+            <button class="btn btn-warning">
+                <span class="fas fa-edit"></span>
+            </button>
+        </a>
+        <a href={{ f.get_absolute_delete_url }} >
+            <button class="btn btn-danger">
+                <span class="fas fa-trash" ></span>
+            </button>
+        </a>
     </div>
 {% empty %}
     {% trans "No attachment" %}

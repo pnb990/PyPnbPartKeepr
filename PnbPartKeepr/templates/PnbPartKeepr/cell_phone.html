@@ -2,7 +2,10 @@
 
 <td>
     {% if number %}
-        <a href="phone:{{number|urlencode}}">
+        <a href="tel:{{number}}">
+            {% if icon %}
+                <span class="fas fa-{{icon}}"></span>
+            {% endif %}
             {{ number }}
         </a>
     {% else %}

@@ -89,18 +89,25 @@ class DeleteView(LoginRequiredMixin,generic.DeleteView):
 class CreateView(LoginRequiredMixin,generic.CreateView):
     template_name = 'PnbPartKeepr/update_form.html'
 
+    def get_initial(self):
+        ret = super().get_initial()
+        ret['owner'] = self.request.user.pk
+        return ret
+
     def form_valid(self, form):
         attached_id = self.kwargs.get('attached_id',None)
         if attached_id != None:
             instance = form.save(commit=False)
             if isinstance(instance,models.ProjectAttachment):
                 instance.project = models.Project.objects.get(id=attached_id)
-            elif isinstance(instance,models.PartAttachment):
+            elif ( isinstance(instance,models.PartAttachment) or
+                   isinstance(instance,models.StockEntry)     ) :
                 instance.part = models.Part.objects.get(id=attached_id)
             elif isinstance(instance,models.FootprintAttachment):
                 instance.footprint = models.Footprint.objects.get(id=attached_id)
             else:
                 raise ValueError("This instance is not linked to an other!")
+
         return super().form_valid(form)
 
 
@@ -143,7 +150,6 @@ class ListView(LoginRequiredMixin,generic.ListView):
                 "name":name,
                 "val":self.request.GET.get(name,'')
             })
-        print(context)
 
 #
 #        self.request.session[page_key] = context['page_obj'].number

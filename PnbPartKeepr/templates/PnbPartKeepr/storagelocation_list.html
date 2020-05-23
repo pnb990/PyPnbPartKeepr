@@ -18,15 +18,17 @@
         <th scope="col">{% trans "Id"               %}</th>
         <th scope="col">{% trans "Name"             %}</th>
         <th scope="col">{% trans "Category"         %}</th>
+        <th scope="col">{% trans "Parts"            %}</th>
         <th scope="col">{% trans "Action"           %}</th>
     </tr>
 
     {% for e in object_list %}
     <tr class="pnbpartkeepr-elem-list" >
         <td>{{ e.id }}</td>
-        {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e %}
-        {% include "PnbPartKeepr/cell_name_link.html"       with elem=e.category %}
-        {% include "PnbPartKeepr/cell_action.html"          with elem=e %}
+        {% include "PnbPartKeepr/cell_img_name_link.html"                   with elem=e %}
+        {% include "PnbPartKeepr/cell_name_link.html"                       with elem=e.category %}
+        {% include "PnbPartKeepr/cell_storagelocation_content_link.html"    with elem=e %}
+        {% include "PnbPartKeepr/cell_action.html"                          with elem=e %}
     </tr>
     {% empty %}
     {% include "PnbPartKeepr/empty_list.html" with label="No Storage location" %}

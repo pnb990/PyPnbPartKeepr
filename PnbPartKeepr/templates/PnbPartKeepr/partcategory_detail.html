@@ -8,25 +8,25 @@
 {% comment %}
 {% endcomment %}
 
-{% block page-header %}{% trans "Part Category" %} {{partcategory.id}}{% endblock %}
+{% block page-header %}{% trans "Part Category" %} {{object.id}}{% endblock %}
 
 {% block page-content %}
 <div>
     <table class="table">
         <tr>
             <th>{% trans "Name"             %}</th>
-            <td>{{ partcategory.name        }}</td>
+            <td>{{ object.name        }}</td>
         </tr>
         <tr>
             <th>{% trans "Parent"           %}</th>
-            <td>{{ partcategory.parent      }}</td>
+            <td>{{ object.parent      }}</td>
         </tr>
         <tr>
             <th>{% trans "Description"      %}</th>
-            <td>{{ partcategory.description }}</td>
+            <td>{{ object.description }}</td>
         </tr>
     </table>
 </div>
-{% include "PnbPartKeepr/button_action.html" with elem=partcategory %}
+{% include "PnbPartKeepr/button_action.html" with elem=object %}
 {% endblock %}
 

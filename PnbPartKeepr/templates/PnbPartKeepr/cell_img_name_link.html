@@ -1,17 +1,21 @@
 {% load i18n %}
 
 {% if elem %}
-    <td class="pnbpartkeepr-elem-list-link"
+    <td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
      onclick="document.location='{{ elem.get_absolute_url }}';" >
+        <span class="pnbpartkeepr-cell-img">
+        {% if elem.image %}
+        <a href={{ elem.image.url }} >
+            <img 
+            src="{{ elem.image.url }}" 
+            alt="element image" 
+            />
+        </a>
+        {% else %}
+            <span class="fas fa-image fa-3x" ></span>
+        {% endif %}
+        </span>
         <a href={{ elem.get_absolute_url }} >
-            {% if elem.image %}
-                <img class="pnbpartkeepr-elem-list-icon"
-                     src="{{ elem.image.url }}"
-                     alt="element image"
-                     />
-            {% else %}
-                <span class="fas fa-image fa-3x" ></span>
-            {% endif %}
             {{ elem.name }}
         </a>
     </td>

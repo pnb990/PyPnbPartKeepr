@@ -33,8 +33,8 @@
         {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=e %}
         {% include "PnbPartKeepr/cell_url.html"             with elem=e %}
         <td>{{ e.forReports|yesno }}</td>
-        {% include "PnbPartKeepr/cell_phone.html"           with elem=e.phone %}
-        {% include "PnbPartKeepr/cell_phone.html"           with elem=e.fax %}
+        {% include "PnbPartKeepr/cell_phone.html"           with number=e.phone icon="phone" %}
+        {% include "PnbPartKeepr/cell_phone.html"           with number=e.fax icon="fax" %}
         {% include "PnbPartKeepr/cell_email.html"           with elem=e %}
         {% include "PnbPartKeepr/cell_address.html"         with elem=e %}
         {% include "PnbPartKeepr/cell_comment.html"         with elem=e %}

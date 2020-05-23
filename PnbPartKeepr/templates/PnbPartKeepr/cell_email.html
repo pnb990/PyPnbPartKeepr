@@ -2,7 +2,8 @@
 
 <td>
     {% if elem.email %}
-    <a href="mailto:{{ elem.email|urlencode }}">
+    <a href="mailto:{{ elem.email }}">
+        <span class="fas fa-envelope"></span>
         {{ elem.email }}
     </a>
     {% else %}

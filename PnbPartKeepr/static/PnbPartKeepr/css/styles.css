@@ -25,14 +25,19 @@
     vertical-align: middle;
 }
 
-.pnbpartkeepr-elem-list-icon
+.pnbpartkeepr-cell-img
+{
+    min-width:100px;
+}
+
+.pnbpartkeepr-cell-img img
 {
     padding: 0px;
     max-height: 40px;
     max-width:100px;
 }
 
-.pnbpartkeepr-elem-list-link:hover
+.pnbpartkeepr-cell-link:hover
 {
     background:#00efb2;
 }

@@ -45,6 +45,7 @@ class SearchMixin(object):
             if not val:
                 continue
             if name.endswith('_id'):
+                print(name)
                 name = name[:-3]
                 if name in cls.SearchFields:
                     kwargs = { name +"__id": val }
@@ -106,8 +107,12 @@ class PartCategory(Category):
     def get_object_name():
         return "part category"
 
-    def get_nbr(self):
-        return Part.objects.filter(category=self.id).count()
+    def get_object_nbr(self):
+        return self.part_set.count()
+
+    @staticmethod
+    def get_object_url_name():
+        return "pnbpartkeepr.part.list"
 
 class FootprintCategory(Category):
 
@@ -115,17 +120,24 @@ class FootprintCategory(Category):
     def get_object_name():
         return "footprint category"
 
-    def get_nbr(self):
-        return Footprint.objects.filter(category=self.id).count()
+    def get_object_nbr(self):
+        return self.footprint_set.count()
+
+    @staticmethod
+    def get_object_url_name():
+        return "pnbpartkeepr.footprint.list"
 
 class StorageLocationCategory(Category):
     @staticmethod
     def get_object_name():
         return "storage location category"
 
-    def get_nbr(self):
-        return StorageLocation.objects.filter(category=self.id).count()
+    def get_object_nbr(self):
+        return self.storageLocation_set.count()
 
+    @staticmethod
+    def get_object_url_name():
+        return "pnbpartkeepr.storagelocation.list"
 
 ###############################################################################
 # Storage
@@ -360,11 +372,11 @@ class Part(ReverseUrlMixin,SearchMixin,models.Model):
         ordering = ['name']
 
     SearchFields = {
-        'name'          : 'name__icontains',
-        'footprint'     : 'footprint__name__icontains',
-        'description'   : 'description__icontains',
-        'SockLoc'       : 'storageLocation__name__icontains',
-        'category'      : 'category__name__icontains',
+        'name'              : 'name__icontains',
+        'footprint'         : 'footprint__name__icontains',
+        'description'       : 'description__icontains',
+        'storageLocation'   : 'storageLocation__name__icontains',
+        'category'          : 'category__name__icontains',
     }
 
     name = models.CharField(
@@ -852,6 +864,13 @@ class StockEntry(ReverseUrlMixin,models.Model):
             default='',
             help_text='Comment'
             )
+
+    @staticmethod
+    def get_object_name():
+        return "strock entry"
+
+    def __str__(self):
+        return "stock entry of {}".format(self.part)
 
 
 ###############################################################################

@@ -16,7 +16,7 @@
     <table class="table">
         <tr>
             <th>{% trans "part"    %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.part %}</td>
+            {% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.part %}
         </tr>
         <tr>
             <th>{% trans "Quantity" %}</th>
@@ -24,15 +24,15 @@
         </tr>
         <tr>
             <th>{% trans "Price" %}</th>
-            <td>{{ object.price }}</td>
+            {% include "PnbPartKeepr/cell_price.html" with price=object.price %}
         </tr>
         <tr>
             <th>{% trans "Bought" %}</th>
-            <td>{{ object.boughtAt|naturaltime }}</td>
+            {% include "PnbPartKeepr/cell_date.html" with eDate=object.boughtAt %}
         </tr>
         <tr>
             <th>{% trans "owner"       %}</th>
-            <td>{{ owner }}</td>
+            {% include "PnbPartKeepr/cell_user.html" with user=object.owner %}
         </tr>
         <tr>
             <th>{% trans "Comment" %}</th>

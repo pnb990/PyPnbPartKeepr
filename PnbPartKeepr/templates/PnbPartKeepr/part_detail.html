@@ -16,31 +16,31 @@
     <table class="table">
         <tr>
             <th>{% trans "Footprint"       %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.footprint %}</td>
+            {% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.footprint %}
         </tr>
         <tr>
             <th>{% trans "Created"         %}</th>
-            <td>{{ object.createDate|naturaltime }}</td>
+            {% include "PnbPartKeepr/cell_date.html" with eDate=object.createDate %}
         </tr>
         <tr>
             <th>{% trans "Average price"    %}</th>
-            <td>{{ object.averagePrice       }}</td>
+            {% include "PnbPartKeepr/cell_price.html" with price=object.averagePrice %}
         </tr>
         <tr>
-            <th>{% trans "Stock"%} {% trans "level"       %}</th>
-            <td>{{ object.stockLevel     }}</td>
+            <th>{% trans "Stock"%} {% trans "level" %}</th>
+            {% include "PnbPartKeepr/cell_stockLevel.html" with elem=object %}
         </tr>
         <tr>
-            <th>{% trans "Stock"%} {% trans "Minimum"     %}</th>
-            <td>{{ object.minStockLevel  }}</td>
+            <th>{% trans "Stock"%} {% trans "Minimum" %}</th>
+            <td>{{ object.minStockLevel }}</td>
         </tr>
         <tr>
             <th>{% trans "Stock location"   %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.storageLocation %}</td>
+            {% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.storageLocation %}
         </tr>
         <tr>
             <th>{% trans "Category"         %}</th>
-            <td>{% include "PnbPartKeepr/cell_name.html" with elem=object.category %}</td>
+            {% include "PnbPartKeepr/cell_name_link.html" with elem=object.category %}
         </tr>
         <tr>
             <th>{% trans "Description" %}</th>
@@ -59,7 +59,7 @@
                 {% if object.image %}
                 <img src="{{ object.image.url }}"/>
                 {% else %}
-                <span class="fas fa-image" />
+                <span class="fas fa-image fa-10x" />
                 {% endif %}
             </td>
             <td>

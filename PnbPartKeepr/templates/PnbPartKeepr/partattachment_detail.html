@@ -14,20 +14,20 @@
 <div>
     <table class="table">
         <tr>
-            <th>{% trans "Filename"            %}</th>
+            <th>{% trans "Filename" %}</th>
             <td>{{ object.content.name }}</td>
         </tr>
         <tr>
-            <th>{% trans "Part"       %}</th>
-            <td>{% include "PnbPartKeepr/cell_img_name_link.html" with elem=object.part %}</td>
+            <th>{% trans "Part" %}</th>
+            {% include "PnbPartKeepr/cell_img_name_link.html"   with elem=object.part %}
         </tr>
         <tr>
-            <th>{% trans "Uploaded"         %}</th>
-            <td>{{ object.uploadedAt|naturaltime }}</td>
+            <th>{% trans "Uploaded" %}</th>
+            {% include "PnbPartKeepr/cell_date.html" with eDate=object.uploadedAt %}
         </tr>
         <tr>
             <th>{% trans "Description" %}</th>
-            <td>{{ object.description    }}</td>
+            <td>{{ object.description }}</td>
         </tr>
     </table>
 </div>

@@ -1,7 +1,17 @@
 {% load i18n %}
 
-<td class="pnbpartkeepr-elem-list-link"
+<td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
     onclick="document.location='{% url request.resolver_match.view_name pk=elem.id %}';" 
+    data-toggle="tooltip" 
+    data-placement="top" 
+    data-html="true"
+    title="
+        {% for i in elem.get_descendants %}
+        {{ i|truncatechars:15 }}</br>
+        {% empty %}
+        {% trans "empty" %}
+        {% endfor %}
+    "
     >
     <a href={% url request.resolver_match.view_name pk=elem.id %} >
         {{ elem.get_descendant_count }}

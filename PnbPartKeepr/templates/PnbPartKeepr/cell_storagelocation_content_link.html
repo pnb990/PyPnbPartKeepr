@@ -1,0 +1,9 @@
+
+<td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
+    onclick="document.location='{% url "pnbpartkeepr.part.list" %}?storageLocation_id={{ elem.id }}';" 
+    >
+    <a href='{% url "pnbpartkeepr.part.list" %}?storageLocation_id={{ elem.id }}' >
+        {{ elem.part_set.count }}
+    </a>
+</td>
+
