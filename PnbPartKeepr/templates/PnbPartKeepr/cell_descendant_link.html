@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
-    onclick="document.location='{% url request.resolver_match.view_name pk=elem.id %}';" 
+    onclick="document.location='{% url elem.get_object_url_name|add:"category.list" pk=elem.id %}';" 
     data-toggle="tooltip" 
     data-placement="top" 
     data-html="true"
@@ -13,7 +13,7 @@
         {% endfor %}
     "
     >
-    <a href={% url request.resolver_match.view_name pk=elem.id %} >
+    <a href={% url elem.get_object_url_name|add:"category.list" pk=elem.id %} >
         {{ elem.get_descendant_count }}
     </a>
 </td>

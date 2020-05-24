@@ -2,13 +2,13 @@
 
 {% if elem %}
 <td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
-    onclick="document.location='{% url request.resolver_match.view_name pk=elem.id %}';" 
+    onclick="document.location='{% url elem.get_object_url_name|add:"category.detail" pk=elem.id %}';" 
     data-toggle="tooltip" 
     data-placement="top" 
     data-html="true"
     title="{{ elem.path }}"
     >
-    <a href={% url request.resolver_match.view_name pk=elem.id %} >
+    <a href={% url elem.get_object_url_name|add:"category.detail" pk=elem.id %} >
         {{ elem }}
     </a>
 </td>

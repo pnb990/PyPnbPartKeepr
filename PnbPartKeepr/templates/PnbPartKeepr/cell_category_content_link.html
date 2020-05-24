@@ -1,8 +1,8 @@
 
 <td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
-    onclick="document.location='{% url elem.get_object_url_name %}?category_id={{ elem.id }}';" 
+    onclick="document.location='{% url elem.get_object_url_name|add:".list" %}?category_id={{ elem.id }}';" 
     >
-    <a href='{% url elem.get_object_url_name %}?category_id={{ elem.id }}' >
+    <a href='{% url elem.get_object_url_name|add:".list" %}?category_id={{ elem.id }}' >
         {{ elem.get_object_nbr }}
     </a>
 </td>

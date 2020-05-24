@@ -112,7 +112,7 @@ class PartCategory(Category):
 
     @staticmethod
     def get_object_url_name():
-        return "pnbpartkeepr.part.list"
+        return "pnbpartkeepr.part"
 
 class FootprintCategory(Category):
 
@@ -125,7 +125,7 @@ class FootprintCategory(Category):
 
     @staticmethod
     def get_object_url_name():
-        return "pnbpartkeepr.footprint.list"
+        return "pnbpartkeepr.footprint"
 
 class StorageLocationCategory(Category):
     @staticmethod
@@ -133,11 +133,11 @@ class StorageLocationCategory(Category):
         return "storage location category"
 
     def get_object_nbr(self):
-        return self.storageLocation_set.count()
+        return self.storagelocation_set.count()
 
     @staticmethod
     def get_object_url_name():
-        return "pnbpartkeepr.storagelocation.list"
+        return "pnbpartkeepr.storagelocation"
 
 ###############################################################################
 # Storage
