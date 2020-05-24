@@ -2,3 +2,4 @@
 * Allow search with selected category
 * automatically reduce image when it is uploaded.
 * storage location detail template
+* redirect to login in not logged
