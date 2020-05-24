@@ -1,0 +1,19 @@
+{% load i18n %}
+
+{% if elem %}
+<td class="pnbpartkeepr-cell pnbpartkeepr-cell-link"
+    onclick="document.location='{% url request.resolver_match.view_name pk=elem.id %}';" 
+    data-toggle="tooltip" 
+    data-placement="top" 
+    data-html="true"
+    title="{{ elem.path }}"
+    >
+    <a href={% url request.resolver_match.view_name pk=elem.id %} >
+        {{ elem }}
+    </a>
+</td>
+{% else %}
+<td>
+    {% trans "none" %}
+</td>
+{% endif %}

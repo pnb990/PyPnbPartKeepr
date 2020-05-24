@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% load static %}
+{% load humanize %}
+
+{% comment %}
+{% endcomment %}
+
+{% block page-header %}{% trans "Storage location Category" %} {{object.id}}{% endblock %}
+
+{% block page-content %}
+<div>
+    <table class="table">
+        <tr>
+            <th>{% trans "Name"             %}</th>
+            <td>{{ object.name              }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Parent"           %}</th>
+            {% include "PnbPartKeepr/cell_category_link.html"           with elem=object.parent %}
+        </tr>
+        <tr>
+            <th>{% trans "Children"         %}</th>
+            {% include "PnbPartKeepr/cell_descendant_link.html"         with elem=object %}
+        </tr>
+        <tr>
+            <th>{% trans "Storage location inside" %}</th>
+            {% include "PnbPartKeepr/cell_category_content_link.html"   with elem=object %}
+        </tr>
+        <tr>
+            <th>{% trans "Description"      %}</th>
+            <td>{{ object.description       }}</td>
+        </tr>
+    </table>
+</div>
+{% include "PnbPartKeepr/button_action.html" with elem=object %}
+{% endblock %}
+
