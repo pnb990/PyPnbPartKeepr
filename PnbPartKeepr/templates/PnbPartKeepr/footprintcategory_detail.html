@@ -5,11 +5,6 @@
 {% load static %}
 {% load humanize %}
 
-{% load mptt_tags %}
-
-{% comment %}
-{% endcomment %}
-
 {% block page-header %}{% trans "Footprint" %} {{ object.id }}{% endblock %}
 
 {% block page-content %}
@@ -17,11 +12,23 @@
     <table class="table">
         <tr>
             <th>{% trans "Name"             %}</th>
-            <td>{{ object.name }}</td>
+            <td>{{ object.name              }}</td>
         </tr>
         <tr>
-            <th>{% trans "Category"         %}</th>
-            <td>{{ object.category.path  }}</td>
+            <th>{% trans "Parent"           %}</th>
+            {% include "PnbPartKeepr/cell_category_link.html"           with elem=object.parent %}
+        </tr>
+        <tr>
+            <th>{% trans "Children"         %}</th>
+            {% include "PnbPartKeepr/cell_descendant_link.html"         with elem=object %}
+        </tr>
+        <tr>
+            <th>{% trans "Footprints inside"%}</th>
+            {% include "PnbPartKeepr/cell_category_content_link.html"   with elem=object %}
+        </tr>
+        <tr>
+            <th>{% trans "Description"      %}</th>
+            <td>{{ object.description       }}</td>
         </tr>
     </table>
 </div>

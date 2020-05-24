@@ -1,4 +1,3 @@
-* storage location: Add a button for see all entry
 * Allow search with selected category
 * automatically reduce image when it is uploaded.
 * storage location detail template

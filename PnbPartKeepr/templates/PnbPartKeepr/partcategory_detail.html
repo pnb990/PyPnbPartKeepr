@@ -15,15 +15,23 @@
     <table class="table">
         <tr>
             <th>{% trans "Name"             %}</th>
-            <td>{{ object.name        }}</td>
+            <td>{{ object.name              }}</td>
         </tr>
         <tr>
             <th>{% trans "Parent"           %}</th>
-            <td>{{ object.parent      }}</td>
+            {% include "PnbPartKeepr/cell_category_link.html"           with elem=object.parent %}
+        </tr>
+        <tr>
+            <th>{% trans "Children"         %}</th>
+            {% include "PnbPartKeepr/cell_descendant_link.html"         with elem=object %}
+        </tr>
+        <tr>
+            <th>{% trans "Parts inside"     %}</th>
+            {% include "PnbPartKeepr/cell_category_content_link.html"   with elem=object %}
         </tr>
         <tr>
             <th>{% trans "Description"      %}</th>
-            <td>{{ object.description }}</td>
+            <td>{{ object.description       }}</td>
         </tr>
     </table>
 </div>
