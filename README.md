@@ -108,6 +108,15 @@ setfacl -R -m u:www-data:rwX media
 setfacl -R -m d:u:www-data:rwX media
 ```
 
+#### with gunicon
+```
+pip install gunicon
+```
+create symbolic link of pnbpartkeepr_systemd_venv.service in 
+/etc/systemd/system/
+
+
+
 #### mode 1 not best one
 Put folowing in file /etc/apache2/sites-available/PyPnbPartKeepr.conf
 then a2en PyPnbPartKeepr
@@ -166,6 +175,20 @@ Require all granted
 </Directory>
 ```
 
+allow apache access 
+```
+setfacl -R -m u:www-data:rX .
+setfacl -R -m d:u:www-data:rX .
+setfacl -R -m u:www-data:rwX media
+setfacl -R -m d:u:www-data:rwX media
+```
+
+then install apache WSGI
+```
+sudo apt-get install libapache2-mod-wsgi-py3
+sudo a2enmod wsgi
+sudo a2ensite PyPnbPartKeepr.conf
+```
 
 ### Some use full command for debug
 
