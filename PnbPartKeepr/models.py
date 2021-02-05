@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.urls import reverse
+from django.urls import reverse,reverse_lazy
 
 from phone_field import PhoneField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -100,7 +100,6 @@ class Category(ReverseUrlMixin,MPTTModel):
         if name != None:
             s = s+sep+name
         return s
-
 
 class PartCategory(Category):
     @staticmethod
@@ -871,6 +870,9 @@ class StockEntry(ReverseUrlMixin,models.Model):
 
     def __str__(self):
         return "stock entry of {}".format(self.part)
+
+    def get_success_url(self):
+        return reverse_lazy('pnbpartkeepr.stockentry.list', kwargs={'pk': self.part.pk})
 
 
 ###############################################################################
