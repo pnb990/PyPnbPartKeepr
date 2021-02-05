@@ -26,6 +26,7 @@ class Cfg(object):
                 'DB_PASS'           : 'PartKeeprPsqlPass',
                 'DB_HOST'           : '127.0.0.1',
                 'DB_PORT'           : '5432',
+                'BACKUP_DIR'        : '/var/backups/pnbpartkeepr/',
                 'EMAIL_HOST'        : 'localhost',
                 'EMAIL_PORT'        : 25,
                 'EMAIL_USER'        : None,
@@ -119,6 +120,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'dbbackup',
     'phone_field',
     'djmoney',
     'bootstrap4',
@@ -217,6 +219,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Backup
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': cfg.BACKUP_DIR }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
