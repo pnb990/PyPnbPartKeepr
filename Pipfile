@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "<4.0.0.0,>=3.0"
+django-bootstrap4 = "*"
+django-cleanup = "*"
+django-jsonify = "*"
+django-dbbackup = "*"
+django-money = "*"
+django-debug-toolbar = "*"
+django-phone-field = "*"
+django-mptt = "*"
+django-view-breadcrumbs = "*"
+django-extensions = "*"
+psycopg2 ="<3.0.0.0,>=2.7.0.0"
+whitenoise = "*"
+pillow = "*"
+legacy-cgi = "*"
+
+[dev-packages]
+gunicorn = "*"
+
+[requires]
+python_version = "3.13"

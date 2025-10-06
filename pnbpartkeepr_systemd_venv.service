@@ -14,7 +14,7 @@ User=pnb666
 Group=pnb666
 UMask=007
 
-ExecStart=/usr/local/PnbPartKeeper/venv/bin/gunicorn -b 0.0.0.0:8086 PyPnbPartKeepr.wsgi
+ExecStart={pipenv --venv}/bin/gunicorn -b 0.0.0.0:8086 PyPnbPartKeepr.wsgi
 
 Restart=on-failure
 

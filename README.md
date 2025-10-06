@@ -7,7 +7,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### installing needed package
 ```
-sudo apt-get install python3-pip python3-dev python3-virtualenv virtualenv postgresql libpq-dev postgresql-client
+sudo apt-get install pipenv postgresql postgresql-client
 ```
 
 ### Clone repo
@@ -32,7 +32,7 @@ Create Database owner partkeeprpsqluser with PartKeeprPsqlPass passwords.
 ```
 CREATE ROLE partkeeprpsqluser PASSWORD 'PartKeeprPsqlPass' LOGIN;
 ```
-it is recommanded to change it but set corresponding environment variable DB_USERNAME and DB_USERPASS
+it is recommended to change it but set corresponding environment variable DB_USERNAME and DB_USERPASS
 or update PyPnbPartKeepr/settings.
 
 Then create database partkeeprpsqldb
@@ -44,29 +44,25 @@ or update PyPnbPartKeepr/settings.
 
 Exit psql client
 ```
-exit
+\q
 ```
 
 ### create virtual environment for this application
 
 Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
 
-So in top folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
-```
-virtualenv -p /usr/bin/python3 venv
-source venv/bin/activate
+So in folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
+```bash
+export PIPENV_VENV_IN_PROJECT=1 # optional and don't forget later
 cd PyPnbPartKeepr
-pip install -r requirements.txt
-pip install -r requirements-mysql.txt
+pipenv install
+```
+or for development version
+```bash
+pipenv install --dev
 ```
 
 ### create table and admin user
-
-# don't forget if not done yet
-```
-source venv/bin/activate
-cd PyPnbPartKeepr
-```
 
 copy PyPnbPartKeepr-dist.conf.json in PyPnbPartKeepr.conf.json or /etc/PyPnbPartKeepr.conf.json and update value.
 ```
@@ -75,17 +71,17 @@ copy PyPnbPartKeepr-dist.conf.json PyPnbPartKeepr.conf.json
 
 Update database schema
 ```
-python manage.py migrate
+pipenv run python manage.py migrate
 ```
 
 Create administrator
 ```
-python manage.py createsuperuser
+pipenv run python manage.py createsuperuser
 ```
 
 each time you change static files need to do this:
 ```
-python manage.py collectstatic
+pipenv run python manage.py collectstatic
 ```
 
 
@@ -110,12 +106,10 @@ setfacl -R -m d:u:www-data:rwX media
 
 #### with gunicon
 ```
-pip install gunicon
+pip install -d
 ```
 create symbolic link of pnbpartkeepr_systemd_venv.service in 
 /etc/systemd/system/
-
-
 
 #### mode 1 not best one
 Put folowing in file /etc/apache2/sites-available/PyPnbPartKeepr.conf
@@ -124,7 +118,7 @@ then a2en PyPnbPartKeepr
 Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
 
 WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
-WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
+WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/.venv
 WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
 
 Alias /media/  ${PY_PNB_PARTKEEPR_PATH}/media/
