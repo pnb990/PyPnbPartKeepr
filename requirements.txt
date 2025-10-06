@@ -12,3 +12,4 @@ django_extensions
 psycopg2>=2.7.0.0,<3.0.0.0
 whitenoise
 pillow
+psycopg2
