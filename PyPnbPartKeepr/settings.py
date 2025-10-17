@@ -21,24 +21,26 @@ TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
 class Cfg(object):
     def __init__(self,pathList):
         self.cfg = {
-                'DB_NAME'           : 'partkeeprpsqldb',
-                'DB_USER'           : 'partkeeprpsqluser',
-                'DB_PASS'           : 'PartKeeprPsqlPass',
-                'DB_HOST'           : '127.0.0.1',
-                'DB_PORT'           : '5432',
-                'BACKUP_DIR'        : '/var/backups/pnbpartkeepr/',
-                'EMAIL_HOST'        : 'localhost',
-                'EMAIL_PORT'        : 25,
-                'EMAIL_USER'        : None,
-                'EMAIL_PASS'        : None,
-                'EMAIL_USE_TLS'     : False,
-                'EMAIL_USE_SSL'     : False,
-                'SECRET_KEY'        : 'CHANGE_ME!!!!',
-                'HTTPS_ENABLED'     : False,
-                'DEBUG'             : False,
-                'DEBUG_TOOLBAR'     : False,
-                'DEBUG_NO_CACHES'   : False,
-                'ALLOWED_HOSTS'     : []
+                'DB_NAME'               : 'partkeeprpsqldb',
+                'DB_USER'               : 'partkeeprpsqluser',
+                'DB_PASS'               : 'PartKeeprPsqlPass',
+                'DB_HOST'               : '127.0.0.1',
+                'DB_PORT'               : '5432',
+                'BACKUP_DIR'            : '/var/backups/pnbpartkeepr/',
+                'EMAIL_HOST'            : 'localhost',
+                'EMAIL_PORT'            : 25,
+                'EMAIL_USER'            : None,
+                'EMAIL_PASS'            : None,
+                'EMAIL_USE_TLS'         : False,
+                'EMAIL_USE_SSL'         : False,
+                'SECRET_KEY'            : 'CHANGE_ME!!!!',
+                'HTTPS_ENABLED'         : False,
+                'DEBUG'                 : False,
+                'DEBUG_TOOLBAR'         : False,
+                'DEBUG_NO_CACHES'       : False,
+                'APP_ROOT_URL'          : '',
+                'ALLOWED_HOSTS'         : [],
+                'CSRF_TRUSTED_ORIGINS'  : [],
                 }
         for filename in pathList:
             if os.path.isfile(filename):
@@ -95,10 +97,7 @@ DEBUG_NO_CACHES     = cfg.DEBUG_NO_CACHES
 
 ALLOWED_HOSTS       = cfg.ALLOWED_HOSTS
 
-
-
-
-
+CSRF_TRUSTED_ORIGINS = cfg.CSRF_TRUSTED_ORIGINS
 
 
 SECURE_HSTS_INCLUDE_SUBDOMAINS  =HTTPS_ENABLED
@@ -253,6 +252,10 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+APP_ROOT_URL = os.environ.get('APP_ROOT_URL', '')
+STATIC_URL = f'{APP_ROOT_URL}/static/'
+MEDIA_URL = f'{APP_ROOT_URL}/media/'
 
 STATIC_URL          = '/static/'
 MEDIA_URL           = '/media/'

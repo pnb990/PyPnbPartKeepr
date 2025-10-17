@@ -1,27 +1,29 @@
 {
-    "DB_NAME"           : "partkeeprpsqldb",
-    "DB_USER"           : "partkeeprpsqluser",
-    "DB_PASS"           : "PartKeeprPsqlPass",
-    "DB_HOST"           : "127.0.0.1",
-    "DB_PORT"           : "5432",
+    "DB_NAME"               : "partkeeprpsqldb",
+    "DB_USER"               : "partkeeprpsqluser",
+    "DB_PASS"               : "PartKeeprPsqlPass",
+    "DB_HOST"               : "127.0.0.1",
+    "DB_PORT"               : "5432",
 
-    "EMAIL_HOST"        : "localhost",
-    "EMAIL_PORT"        : 25,
-    "EMAIL_USER"        : null,
-    "EMAIL_PASS"        : null,
+    "EMAIL_HOST"            : "localhost",
+    "EMAIL_PORT"            : 25,
+    "EMAIL_USER"            : null,
+    "EMAIL_PASS"            : null,
 
-    "EMAIL_USE_TLS"     : false,
-    "EMAIL_USE_SSL"     : false,
+    "EMAIL_USE_TLS"         : false,
+    "EMAIL_USE_SSL"         : false,
 
-    "SECRET_KEY"        : "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).",
+    "SECRET_KEY"            : "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead).",
 
-    "HTTPS_ENABLED"     : false,
+    "HTTPS_ENABLED"         : false,
 
-    "DEBUG"             : false,
-    "DEBUG_TOOLBAR"     : false,
-    "DEBUG_NO_CACHES"   : false,
+    "DEBUG"                 : false,
+    "DEBUG_TOOLBAR"         : false,
+    "DEBUG_NO_CACHES"       : false,
 
-    "ALLOWED_HOSTS"     : []
+    "APP_ROOT_URL"          : "",
+    "ALLOWED_HOSTS"         : [],
+    "CSRF_TRUSTED_ORIGINS"  : []
 }
 
 

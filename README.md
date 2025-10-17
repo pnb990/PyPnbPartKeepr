@@ -112,62 +112,7 @@ create symbolic link of pnbpartkeepr_systemd_venv.service in
 /etc/systemd/system/
 
 #### mode 1 not best one
-Put folowing in file /etc/apache2/sites-available/PyPnbPartKeepr.conf
-then a2en PyPnbPartKeepr
-```
-Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
-
-WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
-WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/.venv
-WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
-
-Alias /media/  ${PY_PNB_PARTKEEPR_PATH}/media/
-Alias /static/ ${PY_PNB_PARTKEEPR_PATH}/staticfiles/
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/staticfiles>
-Require all granted
-</Directory>
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/media>
-Require all granted
-</Directory>
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr>
-<Files wsgi.py>
-Require all granted
-</Files>
-</Directory>
-```
-
-#### Apache Daemon more responsive
-
-```
-Define PY_PNB_PARTKEEPR_PATH /srv/disk1/PyPnbPartKeepr/PyPnbPartKeepr
-
-WSGIDaemonProcess example.com python-home=${PY_PNB_PARTKEEPR_PATH}/../venv python-path=${PY_PNB_PARTKEEPR_PATH}
-WSGIProcessGroup example.com
-
-WSGIScriptAlias /PnbPartKeepr ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr/wsgi.py
-#WSGIPythonHome ${PY_PNB_PARTKEEPR_PATH}/../venv
-#WSGIPythonPath ${PY_PNB_PARTKEEPR_PATH}
-
-Alias /media/  ${PY_PNB_PARTKEEPR_PATH}/media/
-Alias /static/ ${PY_PNB_PARTKEEPR_PATH}/staticfiles/
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/staticfiles>
-Require all granted
-</Directory>
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/media>
-Require all granted
-</Directory>
-
-<Directory ${PY_PNB_PARTKEEPR_PATH}/PyPnbPartKeepr>
-<Files wsgi.py>
-Require all granted
-</Files>
-</Directory>
-```
+copy site-PyPnbPartKeepr.conf file into /etc/apache2/sites-available/PyPnbPartKeepr.conf
 
 allow apache access 
 ```
@@ -181,7 +126,7 @@ then install apache WSGI
 ```
 sudo apt-get install libapache2-mod-wsgi-py3
 sudo a2enmod wsgi
-sudo a2ensite PyPnbPartKeepr.conf
+sudo a2ensite site-PyPnbPartKeepr.conf
 ```
 
 ### Some use full command for debug
