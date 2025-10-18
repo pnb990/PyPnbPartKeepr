@@ -253,12 +253,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-APP_ROOT_URL = os.environ.get('APP_ROOT_URL', '')
+APP_ROOT_URL = cfg.APP_ROOT_URL
 STATIC_URL = f'{APP_ROOT_URL}/static/'
 MEDIA_URL = f'{APP_ROOT_URL}/media/'
-
-STATIC_URL          = '/static/'
-MEDIA_URL           = '/media/'
 
 LOGIN_URL           = 'login'
 LOGIN_REDIRECT_URL  = 'home'
