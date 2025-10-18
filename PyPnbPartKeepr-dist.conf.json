@@ -22,8 +22,12 @@
     "DEBUG_NO_CACHES"       : false,
 
     "APP_ROOT_URL"          : "",
-    "ALLOWED_HOSTS"         : [],
-    "CSRF_TRUSTED_ORIGINS"  : []
+    "ALLOWED_HOSTS"         : [
+        # "www.exemple.com"
+    ],
+    "CSRF_TRUSTED_ORIGINS"  : [
+        # "http://www.exemple.com"
+    ]
 }
 
 

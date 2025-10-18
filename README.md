@@ -129,6 +129,22 @@ sudo a2enmod wsgi
 sudo a2ensite site-PyPnbPartKeepr.conf
 ```
 
+and for reverse proxy:
+```
+    <Location "/PnbPartKeepr">
+        Require all granted
+
+        ProxyPass "http://localhost:83/PnbPartKeepr/"
+        ProxyPassReverse http://127.0.0.1:83/PnbPartKeepr/
+
+        ProxyPreserveHost On
+        RequestHeader set X-Forwarded-Proto "https"
+        RequestHeader set X-Forwarded-Host  "btvangers.no-ip.org"
+        RequestHeader set X-Forwarded-Port  "443"
+
+    </Location>
+```
+
 ### Some use full command for debug
 
 Before using Django commande don't forget to source django_set_env.sh
