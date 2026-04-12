@@ -64,9 +64,9 @@ pipenv install --dev
 
 ### create table and admin user
 
-copy PyPnbPartKeepr-dist.conf.json in PyPnbPartKeepr.conf.json or /etc/PyPnbPartKeepr.conf.json and update value.
+copy PyPnbPartKeepr-dist.conf.yaml in PyPnbPartKeepr.conf.yaml or /etc/PyPnbPartKeepr.conf.yaml and update value.
 ```
-copy PyPnbPartKeepr-dist.conf.json PyPnbPartKeepr.conf.json
+cp PyPnbPartKeepr-dist.conf.yaml PyPnbPartKeepr.conf.yaml
 ```
 
 Update database schema

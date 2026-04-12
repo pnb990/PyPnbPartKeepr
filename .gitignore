@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 /media
 /staticfiles
-PyPnbPartKeepr.conf.json
+PyPnbPartKeepr.conf.yaml
 
 # C extensions
 *.so

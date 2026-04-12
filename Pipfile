@@ -19,6 +19,7 @@ psycopg2 ="<3.0.0.0,>=2.7.0.0"
 whitenoise = "*"
 pillow = "*"
 legacy-cgi = "*"
+pyyaml = "*"
 
 [dev-packages]
 gunicorn = "*"
