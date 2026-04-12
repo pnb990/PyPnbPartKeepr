@@ -1,0 +1,77 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Django: runserver",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["runserver", "--noreload"],
+            "django": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        },
+        {
+            "name": "Django: tests (all)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["test", "--verbosity=2"],
+            "django": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        },
+        {
+            "name": "Django: tests (PnbPartKeepr)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["test", "PnbPartKeepr", "--verbosity=2"],
+            "django": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        },
+        {
+            "name": "Django: dbbackup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["dbbackup", "--clean"],
+            "django": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        },
+        {
+            "name": "Django: mediabackup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["mediabackup", "--clean"],
+            "django": true,
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        },
+        {
+            "name": "importFromPartKeepr",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/importFromParkKeepr.py",
+            "args": [],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "PyPnbPartKeepr.settings"
+            }
+        }
+    ]
+}
