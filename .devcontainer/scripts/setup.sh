@@ -30,10 +30,10 @@ else
 fi
 
 echo "Running database migrations..."
-pipenv run ./manage.py migrate
+pipenv run python3 ./manage.py migrate
 
 echo "Creating superuser account..."
-cat <<EOF | pipenv run ./manage.py shell
+cat <<EOF | pipenv run python3 ./manage.py shell
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -56,6 +56,6 @@ sudo setfacl -R -m u:${USER}:rwX ${BACKUP_DIR:-/var/partkeepr/backups}
 sudo setfacl -R -m d:u:${USER}:rwX ${BACKUP_DIR:-/var/partkeepr/backups}
 
 echo "Collecting static files..."
-pipenv run ./manage.py collectstatic --noinput
+pipenv run python3 ./manage.py collectstatic --noinput
 
 echo "Development environment setup complete."
