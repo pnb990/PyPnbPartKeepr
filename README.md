@@ -84,18 +84,6 @@ each time you change static files need to do this:
 pipenv run python manage.py collectstatic
 ```
 
-
-### importing old PartKeepr data
-
-To import old database and file use importFromParkKeepr script.
-
-See help with python importFromParkKeepr -h
-
-exemple:
-```
-./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
-```
-
 ### Apache configuration
 
 First in addition to allow reading, you need to allow writing in media folder:
