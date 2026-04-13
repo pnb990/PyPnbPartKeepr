@@ -43,17 +43,17 @@ User.objects.filter(username='admin').exists() or \
 EOF
 
 echo "Setting up media and static directories..."
-sudo mkdir -p ${MEDIA_ROOT:-/var/partkeepr/media}
-sudo setfacl -R -m u:${USER}:rwX ${MEDIA_ROOT:-/var/partkeepr/media}
-sudo setfacl -R -m d:u:${USER}:rwX ${MEDIA_ROOT:-/var/partkeepr/media}
+sudo mkdir -p ${MEDIA_ROOT}
+sudo setfacl -R -m u:${USER}:rwX ${MEDIA_ROOT}
+sudo setfacl -R -m d:u:${USER}:rwX ${MEDIA_ROOT}
 
-sudo mkdir -p ${STATIC_ROOT:-/var/partkeepr/static}
-sudo setfacl -R -m u:${USER}:rwX ${STATIC_ROOT:-/var/partkeepr/static}
-sudo setfacl -R -m d:u:${USER}:rwX ${STATIC_ROOT:-/var/partkeepr/static}
+sudo mkdir -p ${STATIC_ROOT}
+sudo setfacl -R -m u:${USER}:rwX ${STATIC_ROOT}
+sudo setfacl -R -m d:u:${USER}:rwX ${STATIC_ROOT}
 
-sudo mkdir -p ${BACKUP_DIR:-/var/partkeepr/backups}
-sudo setfacl -R -m u:${USER}:rwX ${BACKUP_DIR:-/var/partkeepr/backups}
-sudo setfacl -R -m d:u:${USER}:rwX ${BACKUP_DIR:-/var/partkeepr/backups}
+sudo mkdir -p ${BACKUP_DIR}
+sudo setfacl -R -m u:${USER}:rwX ${BACKUP_DIR}
+sudo setfacl -R -m d:u:${USER}:rwX ${BACKUP_DIR}
 
 echo "Collecting static files..."
 pipenv run python3 ./manage.py collectstatic --noinput

@@ -29,6 +29,8 @@ class Cfg(object):
             "DB_HOST": "127.0.0.1",
             "DB_PORT": "5432",
             "BACKUP_DIR": "/var/backups/pnbpartkeepr/",
+            "MEDIA_ROOT": os.path.join(BASE_DIR, "media"),
+            "STATIC_ROOT": os.path.join(BASE_DIR, "staticfiles"),
             "EMAIL_HOST": "localhost",
             "EMAIL_PORT": 25,
             "EMAIL_USER": None,
@@ -260,12 +262,11 @@ BREADCRUMBS_HOME_LABEL = "Home"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = cfg.STATIC_ROOT
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = cfg.MEDIA_ROOT
 
 APP_ROOT_URL = cfg.APP_ROOT_URL
 STATIC_URL = f"{APP_ROOT_URL}/static/"
