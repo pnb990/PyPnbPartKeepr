@@ -3,13 +3,13 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-/usr/sbin/service bdws_systemd_venv status
+/usr/sbin/service apache2 status
 if [ "$?" == "0" ]
 then
     echo ""
     echo "*********************************************************************"
     echo "Cannot deploy on running service stop it beffore :"
-    echo "    sudo service bdws_systemd_venv stop"
+    echo "    sudo service apache2 stop"
     echo "*********************************************************************"
     exit 1
 fi
@@ -24,4 +24,4 @@ pipenv run ./manage.py collectstatic --no-input
 
 echo "You can start service with following command :"
 echo "    sudo systemctl daemon-reload"
-echo "    sudo service bdws_systemd_venv start"
+echo "    sudo service apache2 start"
