@@ -180,7 +180,7 @@ DEBUG_NO_CACHES=True
 
 Use upgrade.sh or follow command below
 ```
-sudo service bdws_systemd_venv stop
+sudo service apache2 stop
 git pull
 git submodule update --init --recursive
 export PIPENV_VENV_IN_PROJECT=1
@@ -188,7 +188,7 @@ pipenv install
 pipenv run ./manage.py migrate
 pipenv run ./manage.py collectstatic
 sudo systemctl daemon-reload
-sudo service bdws_systemd_venv start
+sudo service apache2 start
 ```
 
 ### Backup
@@ -202,7 +202,7 @@ pipenv run ./manage.py mediabackup --clean
 
 To automatise backup put in crontab the line below
 ```
- 27    40      5       *       *       *       /usr/local/bdws/bdws_serverpy/backup.sh
+ 27    40      5       *       *       *       /usr/local/pypartkeeper/backup.sh
 ```
 
 ### Restore
@@ -223,15 +223,16 @@ su postgres -c psql
 
 Drop and create new empty database
 ```
-DROP DATABASE bdwspsqldb; CREATE DATABASE bdwspsqldb OWNER 'bdwspsqluser';
+DROP DATABASE partkeeprpsqldb; CREATE DATABASE partkeeprpsqldb OWNER 'partkeeprpsqluser';
+SELECT datname,
+       pg_encoding_to_char(encoding) AS encoding,
+       datcollate,
+       datctype
+FROM pg_database
+ORDER BY datname;
 ```
 
-Check encoding 'UTF8' with '\l' command
-```
-    Name    |    Owner     | Encoding  | Collate | Ctype | ICU Locale | Locale Provider |   Access privileges
-------------+--------------+-----------+---------+-------+------------+-----------------+-----------------------
- bdwspsqldb | bdwspsqluser | UTF8      | C       | C     |            | libc            |
-```
+Check encoding 'UTF8'
 
 Exit pg client
 ```
@@ -245,21 +246,26 @@ then create a temp directory inside
 
 If database is not setted:
 ```bash
-pipenv run ./manage.py migrate # if database was just created
 pipenv run ./manage.py dbrestore -I [backup_file.psql]
+pipenv run ./manage.py migrate
 pipenv run ./manage.py mediarestore -I [backup_file.tar]
 pipenv run ./manage.py collectstatic
 ```
 if some data not works (too long ... ), edit file and retry... :(
 
-### restore in devcontainer
+
+### in devcontainer
+
+#### Start server
+Start server in devcontainer with command below and check if you can access to http://localhost:8000
 
 ```bash
-docker cp backup.psql.bin my_devcontainer-db-1:/tmp/
-docker exec -it my_devcontainer-db-1 \
-    pg_restore \
-        --dbname=postgresql://partkeeprpsqluser@db:5432/partkeeprpsqldb \
-        --single-transaction --clean --if-exists \
-        /tmp/backup.psql.bin
+pipenv run ./manage.py runserver 0.0.0.0:8000
 ```
+
+#### connect to database
+```bash
+docker exec -it my_devcontainer-db-1 psql -U postgres
+```
+
 
