@@ -31,7 +31,7 @@ services:
     command: sleep infinity
 
   db:
-    image: postgres:14.18-bookworm
+    image: postgres:17-trixie
     restart: unless-stopped
     shm_size: 128mb
     volumes:
