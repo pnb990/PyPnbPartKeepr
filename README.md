@@ -176,5 +176,79 @@ DEBUG_TOOLBAR=True
 DEBUG_NO_CACHES=True
 #ALLOWED_HOSTS=['MyPnbPartKeepr.com']
 
+### Upgrade
+
+Use upgrade.sh or follow command below
 ```
+sudo service bdws_systemd_venv stop
+git pull
+git submodule update --init --recursive
+export PIPENV_VENV_IN_PROJECT=1
+pipenv install
+pipenv run ./manage.py migrate
+pipenv run ./manage.py collectstatic
+sudo systemctl daemon-reload
+sudo service bdws_systemd_venv start
+```
+
+### Backup
+
+Create a backup, in python environment:
+
+```
+pipenv run ./manage.py dbbackup --clean
+pipenv run ./manage.py mediabackup --clean
+```
+
+To automatise backup put in crontab the line below
+```
+ 27    40      5       *       *       *       /usr/local/bdws/bdws_serverpy/backup.sh
+```
+
+### Restore
+
+Check in /etc/postgresql/x/main/postgresql.conf that below lines are same as backup server.
+'''
+lc_messages = 'fr_FR.UTF-8'
+lc_monetary = 'fr_FR.UTF-8'
+lc_numeric = 'fr_FR.UTF-8'
+lc_time = 'fr_FR.UTF-8'
+'''
+and check this page for help https://www.shubhamdipt.com/blog/how-to-change-postgresql-database-encoding-to-utf8/
+
+Clean up database:
+```
+su postgres -c psql
+```
+
+Drop and create new empty database
+```
+DROP DATABASE bdwspsqldb; CREATE DATABASE bdwspsqldb OWNER 'bdwspsqluser';
+```
+
+Check encoding 'UTF8' with '\l' command
+```
+    Name    |    Owner     | Encoding  | Collate | Ctype | ICU Locale | Locale Provider |   Access privileges
+------------+--------------+-----------+---------+-------+------------+-----------------+-----------------------
+ bdwspsqldb | bdwspsqluser | UTF8      | C       | C     |            | libc            |
+```
+
+exit pg client
+```
+exit
+```
+
+Restore a backup, in python environment:
+
+Before check 'BACKUP_DIR' in configuration files
+then create a temp directory inside
+
+If database is not setted:
+```
+pipenv run ./manage.py migrate # if database was just created
+pipenv run ./manage.py dbrestore -I [backup_file.psql]
+pipenv run ./manage.py mediarestore -I [backup_file.tar]
+pipenv run ./manage.py collectstatic
+```
+if some data not works (too long ... ), edit file and retry... :(
 
