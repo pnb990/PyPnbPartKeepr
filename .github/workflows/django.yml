@@ -17,7 +17,7 @@ jobs:
         run: pipenv install --deploy
 
       - name: Set up the database
-        run: ls
+        run: ls -al
 
       - name: Run Django tests
         run: pipenv run ./manage.py test --verbosity=2
