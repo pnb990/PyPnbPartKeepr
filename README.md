@@ -217,7 +217,7 @@ lc_time = 'fr_FR.UTF-8'
 and check this page for help https://www.shubhamdipt.com/blog/how-to-change-postgresql-database-encoding-to-utf8/
 
 Clean up database:
-```
+```bash
 su postgres -c psql
 ```
 
@@ -233,7 +233,7 @@ Check encoding 'UTF8' with '\l' command
  bdwspsqldb | bdwspsqluser | UTF8      | C       | C     |            | libc            |
 ```
 
-exit pg client
+Exit pg client
 ```
 exit
 ```
@@ -244,11 +244,22 @@ Before check 'BACKUP_DIR' in configuration files
 then create a temp directory inside
 
 If database is not setted:
-```
+```bash
 pipenv run ./manage.py migrate # if database was just created
 pipenv run ./manage.py dbrestore -I [backup_file.psql]
 pipenv run ./manage.py mediarestore -I [backup_file.tar]
 pipenv run ./manage.py collectstatic
 ```
 if some data not works (too long ... ), edit file and retry... :(
+
+### restore in devcontainer
+
+```bash
+docker cp backup.psql.bin my_devcontainer-db-1:/tmp/
+docker exec -it my_devcontainer-db-1 \
+    pg_restore \
+        --dbname=postgresql://partkeeprpsqluser@db:5432/partkeeprpsqldb \
+        --single-transaction --clean --if-exists \
+        /tmp/backup.psql.bin
+```
 
