@@ -16,5 +16,8 @@ jobs:
       - name: Install dependencies
         run: pipenv install --deploy
 
+      - name: Set up the database
+        run: ls
+
       - name: Run Django tests
         run: pipenv run ./manage.py test --verbosity=2
