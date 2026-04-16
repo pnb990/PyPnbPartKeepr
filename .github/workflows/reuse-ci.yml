@@ -1,0 +1,20 @@
+---
+
+"on":
+  push:
+
+jobs:
+  reuse:
+    runs-on: PIPENV
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Install pipenv
+        run: which pipenv || (apt-get update && apt-get install -y pipenv)
+
+      - name: Install dependencies
+        run: pipenv install --deploy --dev
+
+      - name: Check REUSE compliance
+        run: pipenv run reuse lint

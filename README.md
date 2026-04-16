@@ -64,9 +64,9 @@ pipenv install --dev
 
 ### create table and admin user
 
-copy PyPnbPartKeepr-dist.conf.json in PyPnbPartKeepr.conf.json or /etc/PyPnbPartKeepr.conf.json and update value.
+copy PyPnbPartKeepr-dist.conf.yaml in PyPnbPartKeepr.conf.yaml or /etc/PyPnbPartKeepr.conf.yaml and update value.
 ```
-copy PyPnbPartKeepr-dist.conf.json PyPnbPartKeepr.conf.json
+cp PyPnbPartKeepr-dist.conf.yaml PyPnbPartKeepr.conf.yaml
 ```
 
 Update database schema
@@ -82,18 +82,6 @@ pipenv run python manage.py createsuperuser
 each time you change static files need to do this:
 ```
 pipenv run python manage.py collectstatic
-```
-
-
-### importing old PartKeepr data
-
-To import old database and file use importFromParkKeepr script.
-
-See help with python importFromParkKeepr -h
-
-exemple:
-```
-./importFromParkKeepr.py testdb -u TestUser -P TestPass --host 127.0.0.1 -d ../data_old
 ```
 
 ### Apache configuration
@@ -188,5 +176,96 @@ DEBUG_TOOLBAR=True
 DEBUG_NO_CACHES=True
 #ALLOWED_HOSTS=['MyPnbPartKeepr.com']
 
+### Upgrade
+
+Use upgrade.sh or follow command below
 ```
+sudo service apache2 stop
+git pull
+git submodule update --init --recursive
+export PIPENV_VENV_IN_PROJECT=1
+pipenv install
+pipenv run ./manage.py migrate
+pipenv run ./manage.py collectstatic
+sudo systemctl daemon-reload
+sudo service apache2 start
+```
+
+### Backup
+
+Create a backup, in python environment:
+
+```
+pipenv run ./manage.py dbbackup --clean
+pipenv run ./manage.py mediabackup --clean
+```
+
+To automatise backup put in crontab the line below
+```
+ 27    40      5       *       *       *       /usr/local/pypartkeeper/backup.sh
+```
+
+### Restore
+
+Check in /etc/postgresql/x/main/postgresql.conf that below lines are same as backup server.
+'''
+lc_messages = 'fr_FR.UTF-8'
+lc_monetary = 'fr_FR.UTF-8'
+lc_numeric = 'fr_FR.UTF-8'
+lc_time = 'fr_FR.UTF-8'
+'''
+and check this page for help https://www.shubhamdipt.com/blog/how-to-change-postgresql-database-encoding-to-utf8/
+
+Clean up database:
+```bash
+su postgres -c psql
+```
+
+Drop and create new empty database
+```
+DROP DATABASE partkeeprpsqldb; CREATE DATABASE partkeeprpsqldb OWNER 'partkeeprpsqluser';
+SELECT datname,
+       pg_encoding_to_char(encoding) AS encoding,
+       datcollate,
+       datctype
+FROM pg_database
+ORDER BY datname;
+```
+
+Check encoding 'UTF8'
+
+Exit pg client
+```
+exit
+```
+
+Restore a backup, in python environment:
+
+Before check 'BACKUP_DIR' in configuration files
+then create a temp directory inside
+
+If database is not setted:
+```bash
+pipenv run ./manage.py dbrestore -I [backup_file.psql]
+pipenv run ./manage.py migrate
+pipenv run ./manage.py mediarestore -I [backup_file.tar]
+pipenv run ./manage.py collectstatic
+```
+if some data not works (too long ... ), edit file and retry... :(
+
+
+### in devcontainer
+
+#### Start server
+Start server in devcontainer with command below and check if you can access to http://localhost:8000
+
+```bash
+pipenv run ./manage.py runserver 0.0.0.0:8000
+```
+
+#### connect to database
+```bash
+docker exec -it my_devcontainer-db-1 psql -U postgres
+```
+
 

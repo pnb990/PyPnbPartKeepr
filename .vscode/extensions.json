@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        // Python / Debug
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.isort",
+        // Django
+        "batisteo.vscode-django",
+        "monosans.djlint",
+        // Base de données
+        "ckolkman.vscode-postgres"
+    ]
+}

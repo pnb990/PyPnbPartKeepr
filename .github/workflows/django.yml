@@ -1,0 +1,23 @@
+---
+
+"on":
+  push:
+
+jobs:
+  django:
+    runs-on: PIPENV
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Install pipenv
+        run: which pipenv || (apt-get update && apt-get install -y pipenv libpq-dev)
+
+      - name: Install dependencies
+        run: pipenv install --deploy
+
+      - name: Set up the database
+        run: ls -al
+
+      - name: Run Django tests
+        run: pipenv run ./manage.py test --verbosity=2
