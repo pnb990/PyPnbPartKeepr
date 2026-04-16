@@ -181,12 +181,15 @@ DEBUG_NO_CACHES=True
 Use upgrade.sh or follow command below
 ```
 sudo service apache2 stop
+
 git pull
 git submodule update --init --recursive
+
 export PIPENV_VENV_IN_PROJECT=1
-pipenv install
+pipenv install --deploy
 pipenv run ./manage.py migrate
 pipenv run ./manage.py collectstatic
+
 sudo systemctl daemon-reload
 sudo service apache2 start
 ```
