@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Pierre-Noel Bouteville  <pnb990@gmail.com>
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # PyPnbPartKeepr
 New Django Version From scratch of PartKeepr
 This README would normally document whatever steps are necessary to get your application up and running.
@@ -6,12 +12,12 @@ This README would normally document whatever steps are necessary to get your app
 
 
 ### installing needed package
-```
+```bash
 sudo apt-get install pipenv postgresql postgresql-client
 ```
 
 ### Clone repo
-```
+```bash
 git clone -b production https://github.com/pnb990/PyPnbPartKeepr.git
 ```
 
@@ -19,18 +25,23 @@ git clone -b production https://github.com/pnb990/PyPnbPartKeepr.git
 
 Add password to postgres user for administration of this
 
-```
+if you not yet created psql user password.
+```bash
 sudo passwd postgres
 ```
 
 Connecting to postgres
-```
+```bash
 su postgres -c psql
 ```
 
 Create Database owner partkeeprpsqluser with PartKeeprPsqlPass passwords.
 ```
 CREATE ROLE partkeeprpsqluser PASSWORD 'PartKeeprPsqlPass' LOGIN;
+```
+or if already exist
+```
+ALTER USER partkeeprpsqluser WITH PASSWORD 'PartKeeprPsqlPass';
 ```
 it is recommended to change it but set corresponding environment variable DB_USERNAME and DB_USERPASS
 or update PyPnbPartKeepr/settings.
@@ -39,26 +50,34 @@ Then create database partkeeprpsqldb
 ```
 CREATE DATABASE partkeeprpsqldb OWNER 'partkeeprpsqluser';
 ```
+or if already exist
+```
+ALTER DATABASE partkeeprpsqldb OWNER TO partkeeprpsqluser;
+```
 You may change database name but set corresponding environment variable DB_USERNAME and DB_USERPASS
 or update PyPnbPartKeepr/settings.
 
 Exit psql client
 ```
-\q
+exit
 ```
 
 ### create virtual environment for this application
 
 Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
 
-So in folder of PyPnbPartKeepr, last line is only needed if you want import data from PartKeepr:
+#### Pipenv (use virtanv)
+
+Note for production don't forget to set PIPENV_VENV_IN_PROJECT=1 to keep virtual environment in project folder.
+
+So in folder of PyPnbPartKeepr, where Pipfile is present:
 ```bash
 export PIPENV_VENV_IN_PROJECT=1 # optional and don't forget later
-cd PyPnbPartKeepr
 pipenv install
 ```
 or for development version
 ```bash
+export PIPENV_VENV_IN_PROJECT=1
 pipenv install --dev
 ```
 
@@ -69,19 +88,24 @@ copy PyPnbPartKeepr-dist.conf.yaml in PyPnbPartKeepr.conf.yaml or /etc/PyPnbPart
 cp PyPnbPartKeepr-dist.conf.yaml PyPnbPartKeepr.conf.yaml
 ```
 
+Update PyBdwsServer.conf.yaml and for SECRET_KEY you may use
+```bash
+tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50
+```
+
 Update database schema
 ```
-pipenv run python manage.py migrate
+pipenv run ./manage.py migrate
 ```
 
 Create administrator
 ```
-pipenv run python manage.py createsuperuser
+pipenv run ./manage.py createsuperuser
 ```
 
 each time you change static files need to do this:
 ```
-pipenv run python manage.py collectstatic
+pipenv run ./manage.py collectstatic
 ```
 
 ### Apache configuration
@@ -144,13 +168,13 @@ source ~/django_set_env.sh
 Apply database migration
 
 ```
-./manage migrate
+pipenv run ./manage migrate
 ```
 
 Create super user
 
 ```
-./manage.py createsuperuser
+pipenv run ./manage.py createsuperuser
 ```
 
 For debug start :
@@ -256,19 +280,37 @@ pipenv run ./manage.py collectstatic
 ```
 if some data not works (too long ... ), edit file and retry... :(
 
+### DevContainer
+To use the devcontainer, you need to have Docker installed and the Remote -
+Containers extension for Visual Studio Code.
 
-### in devcontainer
+Install Docker: https://docs.docker.com/engine/install/debian/
+
+#### with VScode
+Then, open the project in Visual Studio Code and click on the green button in
+the bottom left corner to reopen the folder in a container.
+
+#### with command line
+install devcontainer-cli:
+```
+npm install -g @devcontainers/cli
+```
+
+Then, you can use the following command to build and run the devcontainer:
+
+```bash
+devcontainer up --workspace-folder .
+```
 
 #### Start server
 Start server in devcontainer with command below and check if you can access to http://localhost:8000
 
 ```bash
-pipenv run ./manage.py runserver 0.0.0.0:8000
+devcontainer exec --workspace-folder . \
+                 pipenv run ./manage.py runserver 0.0.0.0:8000
 ```
 
 #### connect to database
 ```bash
 docker exec -it my_devcontainer-db-1 psql -U postgres
 ```
-
-
