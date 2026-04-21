@@ -1,4 +1,6 @@
 #!/bin/sh -e
+# SPDX-FileCopyrightText: 2025 Pierre-Noel Bouteville <pnb990@gmail.com>
+# SPDX-License-Identifier: BSD-3-Clause
 
 set -x
 
@@ -36,7 +38,7 @@ echo "Creating superuser account..."
 cat <<EOF | pipenv run python3 ./manage.py shell
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+User = get_user_model()  # get the currently active user model,
 
 User.objects.filter(username='admin').exists() or \
     User.objects.create_superuser('admin', 'admin@example.com', 'pass')
