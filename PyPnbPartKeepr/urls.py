@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2025 Pierre-Noel Bouteville  <pnb990@gmail.com>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 """PyPnbPartKeepr URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -15,7 +20,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include,path
+from django.urls import include, path
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 
