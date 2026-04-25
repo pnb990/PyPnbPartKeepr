@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Pierre-Noel Bouteville <pnb990@gmail.com>
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
 from django.core.exceptions import ImproperlyConfigured,PermissionDenied
 from django.urls import reverse_lazy
