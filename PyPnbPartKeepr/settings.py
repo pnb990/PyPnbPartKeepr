@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2025 Pierre-Noel Bouteville  <pnb990@gmail.com>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 """
 Django settings for PyPnbPartKeepr project.
 

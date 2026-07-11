@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# SPDX-FileCopyrightText: 2026 Pierre-Noel Bouteville <pnb990@gmail.com>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 # This script fixes Git worktree configuration inside a devcontainer.
 # It detects if the workspace is a worktree and sets GIT_COMMON_DIR, GIT_DIR, GIT_WORK_TREE accordingly.
 # Requires the master repo to be mounted at /home/dev/master.
