@@ -7,8 +7,11 @@
 "on":
   push:
 
+# NOTE: this project still uses pipenv, and the published images ship uv
+# only. Migrate it to uv (pyproject + uv.lock) to run in
+# `container: image: pnb990/python3:ci-4999611e8691571ca308b4058be173a359542be6` and drop the install steps below.
 jobs:
-  django:
+  test-django:
     runs-on: PIPENV
     steps:
       - name: Checkout the repo
