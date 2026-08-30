@@ -78,6 +78,12 @@ curl -LsSf https://astral.sh/uv/install.sh | \
 uv keeps the virtual environment in `.venv` inside the project, so nothing
 has to be exported to place it there.
 
+`.venv` is built on the system interpreter (`/usr/bin/python3`), not on one
+uv downloads. This is enforced by `python-preference = "only-system"` in
+pyproject.toml and it is not cosmetic: apache loads that venv through
+`python-home` and mod_wsgi is built against Debian's python. See Mode 2
+below.
+
 So in folder of PyPnbPartKeepr, where pyproject.toml is present:
 ```bash
 uv sync --no-dev
@@ -122,15 +128,27 @@ setfacl -R -m u:www-data:rwX media
 setfacl -R -m d:u:www-data:rwX media
 ```
 
-#### Mode 1: gunicorn service (recommended)
+#### Mode 1: gunicorn service
 
-gunicorn is a runtime dependency, so the `uv sync` above already installed it
-in `.venv`; there is nothing more to install here.
+gunicorn is only needed by this mode, so it sits in its own dependency group
+and `uv sync --no-dev` does not install it. Ask for it explicitly:
+```bash
+uv sync --frozen --no-dev --group gunicorn
+```
 
 create symbolic link of pnbpartkeepr_systemd_venv.service in
 /etc/systemd/system/
 
-#### Mode 2: apache mod_wsgi (not the best one)
+#### Mode 2: apache mod_wsgi (in production)
+
+This is the mode in use. apache runs the application itself, in process, so
+gunicorn plays no part here.
+
+`site-PyPnbPartKeepr.conf` points mod_wsgi at the venv with
+`python-home=${PY_PNB_VENV_PATH}`. mod_wsgi is compiled against Debian's
+python, so the venv has to be built on that same `/usr/bin/python3` -- which
+is what `python-preference = "only-system"` guarantees. A venv built on an
+interpreter uv downloaded will not load.
 
 copy site-PyPnbPartKeepr.conf file into /etc/apache2/sites-available/PyPnbPartKeepr.conf
 
@@ -149,7 +167,10 @@ sudo a2enmod wsgi
 sudo a2ensite site-PyPnbPartKeepr.conf
 ```
 
-and for reverse proxy:
+The vhost above is the internal apache, listening on port 83. A second
+apache sits in front of it and terminates https, proxying through to it --
+hence the X-Forwarded-* headers, which is how the application sees the
+original scheme, host and port. On that front apache:
 ```
     <Location "/PnbPartKeepr">
         Require all granted

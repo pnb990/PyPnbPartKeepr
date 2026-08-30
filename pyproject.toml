@@ -24,12 +24,15 @@ dependencies = [
     "whitenoise",
     "pillow",
     "pyyaml",
-    # Runtime, not tooling: pnbpartkeepr_systemd_venv.service execs it,
-    # so `uv sync --no-dev` on the production host must install it.
-    "gunicorn",
 ]
 
 [dependency-groups]
+# Only the gunicorn deployment mode needs it, and that is not the mode in
+# production (apache serves the app through mod_wsgi). Kept out of the
+# default install, opted into with `uv sync --group gunicorn`.
+gunicorn = [
+    "gunicorn",
+]
 dev = [
     "pycodestyle",
     "pylint",
@@ -45,7 +48,17 @@ dev = [
 
 [tool.uv]
 package = false
-default-groups = "all"
+
+# Not "all": --no-dev only drops the `dev` group, so any other default group
+# would still be installed on the production host.
+default-groups = ["dev"]
+
+# apache loads the interpreter through `python-home=.venv`
+# (site-PyPnbPartKeepr.conf) and mod_wsgi is built against Debian's python.
+# Left to itself uv builds .venv on a standalone interpreter it downloads --
+# 3.14 today -- which mod_wsgi cannot load. Pin it to the system one, the
+# same one the CI and devcontainer images carry from apt.
+python-preference = "only-system"
 
 [[tool.uv.index]]
 name = "pypi"

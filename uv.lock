@@ -626,7 +626,6 @@ dependencies = [
     { name = "django-money" },
     { name = "django-mptt" },
     { name = "django-phone-field" },
-    { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "pyyaml" },
@@ -646,6 +645,9 @@ dev = [
     { name = "pylint-django" },
     { name = "reuse" },
 ]
+gunicorn = [
+    { name = "gunicorn" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -657,7 +659,6 @@ requires-dist = [
     { name = "django-money" },
     { name = "django-mptt" },
     { name = "django-phone-field" },
-    { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "pyyaml" },
@@ -677,6 +678,7 @@ dev = [
     { name = "pylint-django" },
     { name = "reuse" },
 ]
+gunicorn = [{ name = "gunicorn" }]
 
 [[package]]
 name = "python-debian"
