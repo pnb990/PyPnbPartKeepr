@@ -8,6 +8,7 @@ They render the real templates, which is what makes them worth running: a
 Django upgrade that breaks a template tag shows up here and nowhere else.
 """
 
+from django.conf import settings
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -26,8 +27,13 @@ TEST_STORAGES = {
     },
 }
 
+# Same reason: whitenoise warns "No directory at: .../staticfiles/" on every
+# run because nothing collected into it. Serving static files is not what
+# these tests are about, so the middleware is dropped instead of silenced.
+TEST_MIDDLEWARE = [m for m in settings.MIDDLEWARE if "whitenoise" not in m]
 
-@override_settings(STORAGES=TEST_STORAGES)
+
+@override_settings(STORAGES=TEST_STORAGES, MIDDLEWARE=TEST_MIDDLEWARE)
 class LoginRequiredTest(TestCase):
     """Every CRUD view carries LoginRequiredMixin. Losing it on one of them
     would expose the whole inventory, and nothing else would notice."""
@@ -67,7 +73,7 @@ class LoginRequiredTest(TestCase):
                 self.assertRedirectsToLogin(reverse(name))
 
 
-@override_settings(STORAGES=TEST_STORAGES)
+@override_settings(STORAGES=TEST_STORAGES, MIDDLEWARE=TEST_MIDDLEWARE)
 class ListViewTest(TestCase):
     def setUp(self):
         self.client.force_login(make_user())
@@ -108,7 +114,7 @@ class ListViewTest(TestCase):
         self.assertEqual(response.context["object"], self.resistor)
 
 
-@override_settings(STORAGES=TEST_STORAGES)
+@override_settings(STORAGES=TEST_STORAGES, MIDDLEWARE=TEST_MIDDLEWARE)
 class CategoryListViewTest(TestCase):
     """Category lists show one level of the tree at a time: the root page is
     the categories without a parent, and /list/<pk> the children of <pk>."""
@@ -116,22 +122,49 @@ class CategoryListViewTest(TestCase):
     def setUp(self):
         self.client.force_login(make_user())
         self.root = make_part_category("Passive")
+        self.other_root = make_part_category("Active")
         self.child = make_part_category("Resistor", parent=self.root)
+        self.other_child = make_part_category("Capacitor", parent=self.root)
 
     def test_the_root_list_shows_only_top_level_categories(self):
         response = self.client.get(reverse("pnbpartkeepr.partcategory.list"))
         self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            response.context["object_list"], [self.root, self.other_root]
+        )
+
+    def test_the_root_list_can_be_searched(self):
+        response = self.client.get(
+            reverse("pnbpartkeepr.partcategory.list"), {"name": "ssiv"}
+        )
         self.assertCountEqual(response.context["object_list"], [self.root])
+
+    def test_searching_stays_inside_the_level_being_listed(self):
+        """The tree filter is applied on top of the search, so a name that
+        only matches a child is not found from the root page."""
+        response = self.client.get(
+            reverse("pnbpartkeepr.partcategory.list"), {"name": "Resistor"}
+        )
+        self.assertCountEqual(response.context["object_list"], [])
 
     def test_the_list_of_a_category_shows_its_children(self):
         response = self.client.get(
             reverse("pnbpartkeepr.partcategory.list", args=[self.root.id])
         )
         self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            response.context["object_list"], [self.child, self.other_child]
+        )
+
+    def test_the_children_list_can_be_searched(self):
+        response = self.client.get(
+            reverse("pnbpartkeepr.partcategory.list", args=[self.root.id]),
+            {"name": "sist"},
+        )
         self.assertCountEqual(response.context["object_list"], [self.child])
 
 
-@override_settings(STORAGES=TEST_STORAGES)
+@override_settings(STORAGES=TEST_STORAGES, MIDDLEWARE=TEST_MIDDLEWARE)
 class DeleteGuardTest(TestCase):
     """DeleteView.get_object refuses to delete something still referenced.
     Without the guard the PROTECT foreign keys would turn into a 500."""

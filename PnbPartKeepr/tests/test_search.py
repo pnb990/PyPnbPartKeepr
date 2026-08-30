@@ -125,3 +125,46 @@ class FootprintSearchTest(TestCase):
             models.Footprint.objects.all(), get("storageLocation=Drawer")
         )
         self.assertCountEqual(found, [self.smd, self.dip])
+
+
+class CategorySearchTest(TestCase):
+    """Category declares SearchFields, and the list pages render a search box
+    from it, but it did not inherit SearchMixin -- so the box filtered
+    nothing. These cover the wiring, on every flavour of category."""
+
+    def setUp(self):
+        self.passive = models.PartCategory.objects.create(
+            name="Passive", description="resistors, capacitors, inductors"
+        )
+        self.active = models.PartCategory.objects.create(
+            name="Active", description="semiconductors"
+        )
+
+    def search(self, query_string, model=None):
+        model = model or models.PartCategory
+        return model.queryset(model.objects.all(), get(query_string))
+
+    def test_a_category_can_be_searched_at_all(self):
+        self.assertCountEqual(self.search("name=ssiv"), [self.passive])
+
+    def test_the_description_is_searchable_too(self):
+        self.assertCountEqual(
+            self.search("description=semiconductor"), [self.active]
+        )
+
+    def test_an_empty_value_still_is_not_a_filter(self):
+        self.assertCountEqual(
+            self.search("name="), [self.passive, self.active]
+        )
+
+    def test_the_other_category_models_are_searchable_as_well(self):
+        for model in (
+            models.FootprintCategory,
+            models.StorageLocationCategory,
+        ):
+            with self.subTest(model=model.__name__):
+                kept = model.objects.create(name="Through hole")
+                model.objects.create(name="Surface mount")
+                self.assertCountEqual(
+                    self.search("name=hole", model=model), [kept]
+                )
