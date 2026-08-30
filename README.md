@@ -122,14 +122,16 @@ setfacl -R -m u:www-data:rwX media
 setfacl -R -m d:u:www-data:rwX media
 ```
 
-#### with gunicon
-```
-pip install -d
-```
-create symbolic link of pnbpartkeepr_systemd_venv.service in 
+#### Mode 1: gunicorn service (recommended)
+
+gunicorn is a runtime dependency, so the `uv sync` above already installed it
+in `.venv`; there is nothing more to install here.
+
+create symbolic link of pnbpartkeepr_systemd_venv.service in
 /etc/systemd/system/
 
-#### mode 1 not best one
+#### Mode 2: apache mod_wsgi (not the best one)
+
 copy site-PyPnbPartKeepr.conf file into /etc/apache2/sites-available/PyPnbPartKeepr.conf
 
 allow apache access 
