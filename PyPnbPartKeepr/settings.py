@@ -17,6 +17,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import sys
+import tempfile
 
 import yaml
 
@@ -211,6 +212,21 @@ DATABASES = {
         },
     }
 }
+
+
+# Covers regular testing and django-coverage
+if "test" in sys.argv or "test_coverage" in sys.argv:
+    print("Test Mode")
+    # Create a unique temporary directory for test database
+    _test_db_dir = tempfile.mkdtemp(prefix="pypnbpartkeepr_test_")
+    _test_db_path = os.path.join(_test_db_dir, "test_db.sqlite3")
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "TEST": {
+            "NAME": _test_db_path,
+        },
+    }
 
 
 # Password validation

@@ -7,24 +7,25 @@
 "on":
   push:
 
-# NOTE: this project still uses pipenv, and the published images ship uv
-# only. Migrate it to uv (pyproject + uv.lock) to run in
-# `container: image: pnb990/python3:ci-4999611e8691571ca308b4058be173a359542be6` and drop the install steps below.
 jobs:
   test-django:
-    runs-on: PIPENV
+    # node for the JavaScript actions, git and uv all come from the image,
+    # built by soft-lib/docker-images. Pinned to a commit tag: bumping it
+    # is a reviewable commit here, rolling back is a git revert.
+    runs-on: debian
+    container:
+      image: pnb990/python3:ci-4999611e8691571ca308b4058be173a359542be6
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Install pipenv
-        run: which pipenv || (apt-get update && apt-get install -y pipenv libpq-dev)
-
+      # --frozen, so a stale uv.lock fails the run instead of silently
+      # resolving to something else.
       - name: Install dependencies
-        run: pipenv install --deploy
+        run: uv sync --dev --frozen
 
-      - name: Set up the database
-        run: ls -al
-
+      # No `services:` and no postgres here: settings.py swaps DATABASES for
+      # a throwaway sqlite file when "test" is in argv, so the suite needs
+      # nothing but the image.
       - name: Run Django tests
-        run: pipenv run ./manage.py test --verbosity=2
+        run: uv run ./manage.py test --verbosity=2

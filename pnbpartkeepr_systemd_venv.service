@@ -18,7 +18,11 @@ User=pnb666
 Group=pnb666
 UMask=007
 
-ExecStart={pipenv --venv}/bin/gunicorn -b 0.0.0.0:8086 PyPnbPartKeepr.wsgi
+# The checkout is owned by the deploying user; this service user only has
+# read access to it, so it must NOT mutate the venv. --no-sync tells uv to
+# run the environment as-is instead of re-syncing .venv (which would need
+# write access).
+ExecStart=uv run --no-sync gunicorn -b 0.0.0.0:8086 PyPnbPartKeepr.wsgi
 
 Restart=on-failure
 

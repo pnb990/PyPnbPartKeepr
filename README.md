@@ -13,7 +13,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### installing needed package
 ```bash
-sudo apt-get install pipenv postgresql postgresql-client
+sudo apt-get install postgresql postgresql-client
 ```
 
 ### Clone repo
@@ -66,19 +66,25 @@ exit
 
 Generally you need to create an virtual environment except if you have all needed package listed in requirements.txt
 
-#### Pipenv (use virtanv)
+#### uv (virtual environment)
 
-Note for production don't forget to set PIPENV_VENV_IN_PROJECT=1 to keep virtual environment in project folder.
-
-So in folder of PyPnbPartKeepr, where Pipfile is present:
+Install uv system-wide so the systemd service (running as another user) finds
+it in its PATH (`/usr/local/bin` is part of systemd's default PATH):
 ```bash
-export PIPENV_VENV_IN_PROJECT=1 # optional and don't forget later
-pipenv install
+curl -LsSf https://astral.sh/uv/install.sh | \
+  sudo env UV_INSTALL_DIR=/usr/local/bin INSTALLER_NO_MODIFY_PATH=1 sh
 ```
-or for development version
+
+uv keeps the virtual environment in `.venv` inside the project, so nothing
+has to be exported to place it there.
+
+So in folder of PyPnbPartKeepr, where pyproject.toml is present:
 ```bash
-export PIPENV_VENV_IN_PROJECT=1
-pipenv install --dev
+uv sync --no-dev
+```
+or for development version (includes dev dependencies)
+```bash
+uv sync --dev
 ```
 
 ### create table and admin user
@@ -95,17 +101,17 @@ tr -dc 'a-z0-9!@#$%^&*(-_=+)' < /dev/urandom | head -c50
 
 Update database schema
 ```
-pipenv run ./manage.py migrate
+uv run ./manage.py migrate
 ```
 
 Create administrator
 ```
-pipenv run ./manage.py createsuperuser
+uv run ./manage.py createsuperuser
 ```
 
 each time you change static files need to do this:
 ```
-pipenv run ./manage.py collectstatic
+uv run ./manage.py collectstatic
 ```
 
 ### Apache configuration
@@ -168,13 +174,13 @@ source ~/django_set_env.sh
 Apply database migration
 
 ```
-pipenv run ./manage migrate
+uv run ./manage migrate
 ```
 
 Create super user
 
 ```
-pipenv run ./manage.py createsuperuser
+uv run ./manage.py createsuperuser
 ```
 
 For debug start :
@@ -209,10 +215,9 @@ sudo service apache2 stop
 git pull
 git submodule update --init --recursive
 
-export PIPENV_VENV_IN_PROJECT=1
-pipenv install --deploy
-pipenv run ./manage.py migrate
-pipenv run ./manage.py collectstatic
+uv sync --frozen --no-dev
+uv run ./manage.py migrate
+uv run ./manage.py collectstatic
 
 sudo systemctl daemon-reload
 sudo service apache2 start
@@ -223,8 +228,8 @@ sudo service apache2 start
 Create a backup, in python environment:
 
 ```
-pipenv run ./manage.py dbbackup --clean
-pipenv run ./manage.py mediabackup --clean
+uv run --no-sync ./manage.py dbbackup --clean
+uv run --no-sync ./manage.py mediabackup --clean
 ```
 
 To automatise backup put in crontab the line below
@@ -273,10 +278,10 @@ then create a temp directory inside
 
 If database is not setted:
 ```bash
-pipenv run ./manage.py dbrestore -I [backup_file.psql]
-pipenv run ./manage.py migrate
-pipenv run ./manage.py mediarestore -I [backup_file.tar]
-pipenv run ./manage.py collectstatic
+uv run ./manage.py dbrestore -I [backup_file.psql]
+uv run ./manage.py migrate
+uv run ./manage.py mediarestore -I [backup_file.tar]
+uv run ./manage.py collectstatic
 ```
 if some data not works (too long ... ), edit file and retry... :(
 
@@ -307,7 +312,7 @@ Start server in devcontainer with command below and check if you can access to h
 
 ```bash
 devcontainer exec --workspace-folder . \
-                 pipenv run ./manage.py runserver 0.0.0.0:8000
+                 uv run ./manage.py runserver 0.0.0.0:8000
 ```
 
 #### connect to database

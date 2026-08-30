@@ -17,10 +17,12 @@ fi
 git pull
 git submodule update --init --recursive
 
-export PIPENV_VENV_IN_PROJECT=1
-pipenv install --deploy
-pipenv run ./manage.py migrate
-pipenv run ./manage.py collectstatic --no-input
+# uv keeps .venv inside the project by default, so nothing has to be
+# exported to place it there. --frozen installs uv.lock as committed and
+# fails on a stale lock instead of silently resolving something else.
+uv sync --frozen --no-dev
+uv run ./manage.py migrate
+uv run ./manage.py collectstatic --no-input
 
 echo "You can start service with following command :"
 echo "    sudo systemctl daemon-reload"

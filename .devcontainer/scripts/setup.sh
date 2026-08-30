@@ -9,8 +9,8 @@ echo "Setting up the development environment..."
 echo "Creating PostgreSQL database and user..."
 .devcontainer/scripts/create_db.sh
 
-echo "Setting up Python virtual environment with Pipenv..."
-pipenv sync --dev
+echo "Setting up Python virtual environment with uv..."
+uv sync --dev --frozen
 
 echo "Copying configuration files..."
 if [ ! -f PyPnbPartKeepr.conf.yaml ]; then
@@ -32,10 +32,10 @@ else
 fi
 
 echo "Running database migrations..."
-pipenv run python3 ./manage.py migrate
+uv run python3 ./manage.py migrate
 
 echo "Creating superuser account..."
-cat <<EOF | pipenv run python3 ./manage.py shell
+cat <<EOF | uv run python3 ./manage.py shell
 from django.contrib.auth import get_user_model
 
 User = get_user_model()  # get the currently active user model,
@@ -58,6 +58,6 @@ sudo setfacl -R -m u:${USER}:rwX ${BACKUP_DIR}
 sudo setfacl -R -m d:u:${USER}:rwX ${BACKUP_DIR}
 
 echo "Collecting static files..."
-pipenv run python3 ./manage.py collectstatic --noinput
+uv run python3 ./manage.py collectstatic --noinput
 
 echo "Development environment setup complete."

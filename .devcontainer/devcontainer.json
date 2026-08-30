@@ -31,7 +31,7 @@
                 "mutantdino.resourcemonitor"
             ],
             "settings": {
-                "python.pipenvPath": "/usr/bin/pipenv"
+                "python-envs.defaultEnvManager": "ms-python.python:uv"
             }
         }
     },
