@@ -8,7 +8,6 @@ from django.template.context_processors import csrf
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from view_breadcrumbs import ListBreadcrumbMixin
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import generic

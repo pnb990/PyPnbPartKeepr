@@ -116,16 +116,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "4.2.30"
+version = "5.2.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/11/b5/f1a53dc68da6429d6e0345bb848161e2381a2e9f02700148911e8582c2b3/django-4.2.30.tar.gz", hash = "sha256:4ebc7a434e3819db6cf4b399fb5b3f536310a30e8486f08b66886840be84b37c", size = 10468707, upload-time = "2026-04-07T14:05:45.57Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d5/d8/43e9d000519adceb189620b6869ff88031e046df91c2e9da72f8f6918399/django-5.2.17.tar.gz", hash = "sha256:9d4d93be539a18ab80d058eb515900e10951e04c537c5a6b394fc49528d3251f", size = 10889740, upload-time = "2026-08-04T15:04:03.173Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/b7/a7c96f239cf91313a6589233fed55111c7063b26683b226802732c455dbc/django-4.2.30-py3-none-any.whl", hash = "sha256:4d07aaf1c62f9984842b67c2874ebbf7056a17be253860299b93ae1881faad65", size = 7997231, upload-time = "2026-04-07T14:05:38.241Z" },
+    { url = "https://files.pythonhosted.org/packages/df/f8/ce120525ca78f12b07daf65786679c5d0b54a75285a8958d3ae55e39da35/django-5.2.17-py3-none-any.whl", hash = "sha256:f04fb3b36ee119e1af4fa1d397d5fd6cf12700f49321e84d4f4c642c5b1973db", size = 8315563, upload-time = "2026-08-04T15:03:59.1Z" },
 ]
 
 [[package]]
@@ -200,12 +200,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-jsonify"
-version = "0.3.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ca/d4/c8dc84ffb33b1dcb969d3db0715b92dc9d662eb7cb722fc919a42a57d77e/django-jsonify-0.3.0.tar.gz", hash = "sha256:51d7cb8cb5e1fd4b32b76b4e200833f499aad5b01feb2de8c1e3b3507f1bbbc4", size = 2510, upload-time = "2014-09-08T20:58:17.512Z" }
-
-[[package]]
 name = "django-money"
 version = "3.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -271,18 +265,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-view-breadcrumbs"
-version = "2.5.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a7/96/25123c58f6f4a5dc207f285a0c0ddaad106792b603bdd7687e2dedc39ea5/django-view-breadcrumbs-2.5.1.tar.gz", hash = "sha256:b214c3758f6159d1ad8d76a21e7430a9f208be52fc79ba021e13a2ee675dbb3b", size = 47740, upload-time = "2023-11-07T01:28:13.412Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/c9/71dd2ed51e24a236b8267ddfa1ab2863647468f7a720aaa6151c336057a5/django_view_breadcrumbs-2.5.1-py3-none-any.whl", hash = "sha256:0405af06d416c661edfea8d0b5023b37ec016edfb9ce8646c6b4a39127d48620", size = 25774, upload-time = "2023-11-07T01:28:11.289Z" },
-]
-
-[[package]]
 name = "docutils"
 version = "0.23"
 source = { registry = "https://pypi.org/simple" }
@@ -345,15 +327,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d", size = 245115, upload-time = "2025-03-05T20:05:02.478Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl", hash = "sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67", size = 134899, upload-time = "2025-03-05T20:05:00.369Z" },
-]
-
-[[package]]
-name = "legacy-cgi"
-version = "2.6.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f4/9c/91c7d2c5ebbdf0a1a510bfa0ddeaa2fbb5b78677df5ac0a0aa51cf7125b0/legacy_cgi-2.6.4.tar.gz", hash = "sha256:abb9dfc7835772f7c9317977c63253fd22a7484b5c9bbcdca60a29dcce97c577", size = 24603, upload-time = "2025-10-27T05:20:05.395Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/7e/e7394eeb49a41cc514b3eb49020223666cbf40d86f5721c2f07871e6d84a/legacy_cgi-2.6.4-py3-none-any.whl", hash = "sha256:7e235ce58bf1e25d1fc9b2d299015e4e2cd37305eccafec1e6bac3fc04b878cd", size = 20035, upload-time = "2025-10-27T05:20:04.289Z" },
 ]
 
 [[package]]
@@ -650,12 +623,10 @@ dependencies = [
     { name = "django-cleanup" },
     { name = "django-dbbackup" },
     { name = "django-extensions" },
-    { name = "django-jsonify" },
     { name = "django-money" },
     { name = "django-mptt" },
     { name = "django-phone-field" },
-    { name = "django-view-breadcrumbs" },
-    { name = "legacy-cgi" },
+    { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "pyyaml" },
@@ -669,7 +640,6 @@ dev = [
     { name = "django-debug-toolbar" },
     { name = "django-stubs" },
     { name = "docutils" },
-    { name = "gunicorn" },
     { name = "pycodestyle" },
     { name = "pydotplus" },
     { name = "pylint" },
@@ -679,17 +649,15 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "django", specifier = ">=4.0,<5.0" },
+    { name = "django", specifier = ">=5.2,<6.0" },
     { name = "django-bootstrap4" },
     { name = "django-cleanup" },
     { name = "django-dbbackup" },
     { name = "django-extensions" },
-    { name = "django-jsonify" },
     { name = "django-money" },
     { name = "django-mptt" },
     { name = "django-phone-field" },
-    { name = "django-view-breadcrumbs" },
-    { name = "legacy-cgi" },
+    { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "pyyaml" },
@@ -703,7 +671,6 @@ dev = [
     { name = "django-debug-toolbar" },
     { name = "django-stubs" },
     { name = "docutils" },
-    { name = "gunicorn" },
     { name = "pycodestyle" },
     { name = "pydotplus" },
     { name = "pylint" },
