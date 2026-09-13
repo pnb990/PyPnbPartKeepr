@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: 2026 Pierre-Noel Bouteville <pnb990@gmail.com>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+[project]
+name = "pypnbpartkeepr"
+version = "0.1.0"
+description = "New Django version from scratch of PartKeepr"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    # 5.2 is the last LTS every dependency here supports: django-money,
+    # django-mptt and django-extensions all stop at 5.2.
+    "django>=5.2,<6.0",
+    "django-bootstrap4",
+    "django-cleanup",
+    "django-dbbackup",
+    "django-money",
+    "django-phone-field",
+    "django-mptt",
+    "django-extensions",
+    #"psycopg2>=2.7.0,<3.0.0",
+    "psycopg2-binary",
+    "whitenoise",
+    "pillow",
+    "pyyaml",
+]
+
+[dependency-groups]
+# Only the gunicorn deployment mode needs it, and that is not the mode in
+# production (apache serves the app through mod_wsgi). Kept out of the
+# default install, opted into with `uv sync --group gunicorn`.
+gunicorn = [
+    "gunicorn",
+]
+dev = [
+    "pycodestyle",
+    "pylint",
+    "black",
+    "reuse",
+    "astroid>=3.2.2",
+    "docutils",
+    "pydotplus",
+    "pylint-django",
+    "django-debug-toolbar",
+    "django-stubs",
+]
+
+[tool.uv]
+package = false
+
+# Not "all": --no-dev only drops the `dev` group, so any other default group
+# would still be installed on the production host.
+default-groups = ["dev"]
+
+# apache loads the interpreter through `python-home=.venv`
+# (site-PyPnbPartKeepr.conf) and mod_wsgi is built against Debian's python.
+# Left to itself uv builds .venv on a standalone interpreter it downloads --
+# 3.14 today -- which mod_wsgi cannot load. Pin it to the system one, the
+# same one the CI and devcontainer images carry from apt.
+python-preference = "only-system"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"

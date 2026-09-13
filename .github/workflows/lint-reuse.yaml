@@ -7,21 +7,23 @@
 "on":
   push:
 
-# NOTE: this project still uses pipenv, and the published images ship uv
-# only. Migrate it to uv (pyproject + uv.lock) to run in
-# `container: image: pnb990/python3:ci-4999611e8691571ca308b4058be173a359542be6` and drop the install steps below.
 jobs:
   lint-reuse:
-    runs-on: PIPENV
+    # node for the JavaScript actions, git and uv all come from the image,
+    # built by soft-lib/docker-images. Pinned to a commit tag: bumping it
+    # is a reviewable commit here, rolling back is a git revert.
+    runs-on: debian
+    container:
+      image: pnb990/python3:ci-4999611e8691571ca308b4058be173a359542be6
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Install pipenv
-        run: which pipenv || (apt-get update && apt-get install -y pipenv)
-
+      # `uv run`, not `uvx`: reuse is a dependency of this project, so the
+      # version that lints here is the one pinned in uv.lock and the one a
+      # developer gets locally.
       - name: Install dependencies
-        run: pipenv install --deploy --dev
+        run: uv sync --dev --frozen
 
       - name: Check REUSE compliance
-        run: pipenv run reuse lint
+        run: uv run reuse lint

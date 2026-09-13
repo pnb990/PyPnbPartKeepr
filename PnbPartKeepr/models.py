@@ -49,14 +49,12 @@ class SearchMixin(object):
             if not val:
                 continue
             if name.endswith('_id'):
-                print(name)
                 name = name[:-3]
                 if name in cls.SearchFields:
                     kwargs = { name +"__id": val }
                     queryset = queryset.filter(**kwargs)
             elif name in cls.SearchFields:
                 kwargs = { cls.SearchFields[name]: val }
-                print(kwargs)
                 queryset = queryset.filter(**kwargs)
         return queryset
 
@@ -65,7 +63,7 @@ class SearchMixin(object):
 # Category
 ###############################################################################
 
-class Category(ReverseUrlMixin,MPTTModel):
+class Category(ReverseUrlMixin,SearchMixin,MPTTModel):
     class Meta:
         abstract = True
         ordering = ['name']

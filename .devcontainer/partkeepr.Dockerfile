@@ -25,8 +25,10 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     python3 \
     python3-dev \
     gcc \
-    pipenv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 FROM partkeepr-base AS partkeepr-dev
 
